@@ -12,7 +12,7 @@ public class PredatorControls : MonoBehaviour
 
     public bool circaStrike;
     public float speed;
-
+    public Animator foxAnimator;
 
 
     void Update()
@@ -25,24 +25,27 @@ public class PredatorControls : MonoBehaviour
         if(circaStrike)
         {
             fox.SetActive(true);
-
             predator.transform.position = Vector3.MoveTowards(predator.transform.position, player.transform.position, speed*Time.deltaTime);
             predator.transform.LookAt(player.transform.position, Vector3.up);
+        }
+        else
+        {
+            foxAnimator.speed = 0f;
         }
     }
 
     void strike()
     {
+        // Set the predator's spawning position to the closest spawning position from the player
         predator.transform.position = findClosestSpawningPosition(player.transform.position);
         circaStrike=true;
-        
-    // Set the predator's spawning position to the closest spawning position from the player
+        foxAnimator.speed = 1f;
 
     }
 
     public void setAttack(float attackingProb)
     {
-        float attackingTime = Random.Range(0.0f, 10.0f);
+        float attackingTime = Random.Range(2.0f, 9.0f);
         float rand = Random.Range(0.0f, 1.0f);
 
         if (rand<attackingProb)
@@ -55,8 +58,8 @@ public class PredatorControls : MonoBehaviour
     void OnDisable() 
     {
         fox.SetActive(false);
-        circaStrike=false;
-        
+        CancelInvoke("strike");
+        circaStrike=false; 
     }
 
     Vector3 findClosestSpawningPosition(Vector3 playerPosition)

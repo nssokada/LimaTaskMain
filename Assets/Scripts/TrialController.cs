@@ -41,8 +41,11 @@ public class TrialController : MonoBehaviour
         choose.SetActive(false);
         yield return new WaitForSeconds(2.0f);
         move.SetActive(false);
+    }
 
-
+    public void endDisplay()
+    {
+        //Insert UI for end display here
     }
 
     public void setProbability(float attackingProb)

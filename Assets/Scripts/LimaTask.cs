@@ -21,7 +21,7 @@ public class LimaTask : MonoBehaviour
 
 
     bool trial_timeUp;
-    bool trial_endable;
+    public bool trialEndable;
     Vector3 home;
     bool cookies;
     
@@ -37,7 +37,7 @@ public class LimaTask : MonoBehaviour
 
     public void startNextTrial()
     {
-        trial_endable = true;
+        trialEndable = true;
         int trialNum = PlayerPrefs.GetInt("trialNum");
         trial  = SessionGenerator.GetComponent<SessionGenerator>().trials[trialNum];
         StartCoroutine(LimaSpawnSequence(trial));
@@ -70,8 +70,6 @@ public class LimaTask : MonoBehaviour
     public void ClickingPeriod()
     {
         player.GetComponent<PlayerMovement>().clickingPeriod = true;
-        //Do something fancy with mouse?
-
     }
 
      public void EffortPeriod()
@@ -90,7 +88,7 @@ public class LimaTask : MonoBehaviour
     IEnumerator freeMovement()
     { 
         yield return new WaitForSeconds(10.0f);
-        EndTrial();
+        if(trialEndable) EndTrial();
     }
 
  
@@ -102,15 +100,14 @@ public class LimaTask : MonoBehaviour
 
     public void EndTrial()
     {
+        trialEndable = false;
         StopCoroutine("freeMovement");
         StartCoroutine(TrialEndRoutine(trial));
-                togglePredator();
     }
 
     public void OnTrialEnd()
     {
         //NEED TO PUSH DATA HERE
-
         int trialNum = PlayerPrefs.GetInt("trialNum");
         trialNum++;
         PlayerPrefs.SetInt("trialNum", trialNum);
@@ -131,13 +128,14 @@ public class LimaTask : MonoBehaviour
     IEnumerator TrialEndRoutine(LimaTrial trial)
     {
         player.GetComponent<PlayerMovement>().effortPeriod = false;
+        predator.GetComponent<PredatorControls>().circaStrike = false;
         yield return new WaitForSeconds(2.0f);
         arena.SetActive(false);
         map.SetActive(false);
         toggleRewards(trial);
         togglePlayer();
         toggleProbability(trial);
-
+        togglePredator();
         OnTrialEnd();
     }
 #endregion

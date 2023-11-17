@@ -24,23 +24,25 @@ public class PlayerManager : MonoBehaviour
 
         else if(carrying)
         {
-            if (other.gameObject.tag == "Safety")
+            
+            if(task.GetComponent<LimaTask>().trialEndable)
             {
-                Destroy(transform.GetChild(3).gameObject);
-                player.GetComponent<PlayerMovement>().stepSize = 1;
-                task.GetComponent<LimaTask>().EndTrial();
-                Debug.Log("earn reward");
-                carrying = false; 
+                if (other.gameObject.tag == "Safety")
+                {
+                    Destroy(transform.GetChild(3).gameObject);
+                    player.GetComponent<PlayerMovement>().stepSize = 1;
+                    task.GetComponent<LimaTask>().EndTrial();
+                    Debug.Log("earn reward");
+                    carrying = false; 
+                }
+                 else if (other.gameObject.tag == "Predator")
+                {
+                    Destroy(transform.GetChild(3).gameObject);
+                    player.GetComponent<PlayerMovement>().stepSize = 1;
+                    task.GetComponent<LimaTask>().EndTrial();
+                    carrying = false; 
+                }      
             }
-
-
-            else if (other.gameObject.tag == "Predator")
-            {
-                Destroy(transform.GetChild(3).gameObject);
-                player.GetComponent<PlayerMovement>().stepSize = 1;
-                task.GetComponent<LimaTask>().EndTrial();
-                carrying = false; 
-            }        
         }
     }
 
