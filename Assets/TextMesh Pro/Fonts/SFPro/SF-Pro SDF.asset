@@ -60,9 +60,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
   m_Name: SF-Pro SDF
   m_EditorClassIdentifier: 
-  hashCode: 0
+  hashCode: 1525688260
   material: {fileID: 1331670112173965912}
-  materialHashCode: 0
+  materialHashCode: 254605412
   m_Version: 1.1.0
   m_SourceFontFileGUID: 5ad8e62964a454012bd6daba6cb25c87
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 5ad8e62964a454012bd6daba6cb25c87, type: 3}
@@ -2844,9 +2844,9 @@ Material:
     - _OutlineWidth: 0
     - _PerspectiveFilter: 0.875
     - _Reflectivity: 10
-    - _ScaleRatioA: 1
-    - _ScaleRatioB: 1
-    - _ScaleRatioC: 1
+    - _ScaleRatioA: 0.8333333
+    - _ScaleRatioB: 0.6770833
+    - _ScaleRatioC: 0.6770833
     - _ScaleX: 1
     - _ScaleY: 1
     - _ShaderFlags: 0
