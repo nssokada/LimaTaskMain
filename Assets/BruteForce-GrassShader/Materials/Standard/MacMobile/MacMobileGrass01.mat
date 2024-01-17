@@ -51,7 +51,7 @@ Material:
     - _FadeDistanceEnd: 50
     - _FadeDistanceStart: 40
     - _GrassSaturation: 2
-    - _GrassShading: 0.228
+    - _GrassShading: 0.437
     - _GrassThinness: 0.44
     - _GrassThinnessIntersection: 0.19
     - _NoisePower: 0

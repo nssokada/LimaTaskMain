@@ -7,15 +7,16 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: New Material
+  m_Name: HighEffort
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ALPHAPREMULTIPLY_ON
+  - _EMISSION
   - _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
   m_InvalidKeywords: []
-  m_LightmapFlags: 4
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 3000
@@ -71,7 +72,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.121
     - _GlossyReflections: 1
-    - _Metallic: 0
+    - _Metallic: 0.121
     - _Mode: 3
     - _OcclusionStrength: 1
     - _Parallax: 0.02
@@ -81,6 +82,6 @@ Material:
     - _UVSec: 0
     - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 0.8113208, g: 0.019134922, b: 0.019134922, a: 0.74509805}
-    - _EmissionColor: {r: 0.04127569, g: 0, b: 0, a: 1}
+    - _Color: {r: 0.8113208, g: 0.019134922, b: 0.019134922, a: 0.3764706}
+    - _EmissionColor: {r: 0.1981132, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

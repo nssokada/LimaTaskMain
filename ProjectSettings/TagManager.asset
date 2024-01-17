@@ -9,6 +9,9 @@ TagManager:
   - Cookie
   - Bounds
   - Predator
+  - HighEffort
+  - LowEffort
+  - MediumEffort
   layers:
   - Default
   - TransparentFX

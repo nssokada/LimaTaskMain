@@ -59,7 +59,7 @@ public class LimaTask : MonoBehaviour
         //Set Rewards -> Spawns 2 cookies based on trial information
         toggleRewards(trial);     
         yield return new WaitForSeconds(1.0f);
-
+        //check this out next
                
         ClickingPeriod();  
         Debug.Log("End Lima Sequence");   
@@ -70,6 +70,8 @@ public class LimaTask : MonoBehaviour
     public void ClickingPeriod()
     {
         player.GetComponent<PlayerMovement>().clickingPeriod = true;
+        //check this
+        //try this out
     }
 
      public void EffortPeriod()
@@ -172,7 +174,7 @@ public class LimaTask : MonoBehaviour
            if(player.GetComponent<PlayerManager>().carrying)
            {
                 player.GetComponent<PlayerManager>().carrying = false;
-                Destroy(player.transform.GetChild(3).gameObject);
+                Destroy(player.transform.GetChild(4).gameObject);
            }
            player.transform.position = home;
            player.SetActive(false);
