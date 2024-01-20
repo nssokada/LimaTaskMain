@@ -51,20 +51,27 @@ public class PlayerManager : MonoBehaviour
         }
 
     
-          // Check if the collider in the trigger area has a specific tag
         if (other.CompareTag("HighEffort"))
         {
-            player.GetComponent<PlayerMovement>().stepSize = player.GetComponent<PlayerMovement>().stepSize/4;
+            player.GetComponent<PlayerMovement>().stepSize = 0.25f;
+            player.GetComponent<PlayerMovement>().pressLimit = 8;
+            player.GetComponent<PlayerMovement>().resetEnergy();
         }
 
         if (other.CompareTag("MediumEffort"))
         {
-            player.GetComponent<PlayerMovement>().stepSize = player.GetComponent<PlayerMovement>().stepSize/3;
+            player.GetComponent<PlayerMovement>().stepSize = 0.5f;
+            player.GetComponent<PlayerMovement>().pressLimit = 6;
+            player.GetComponent<PlayerMovement>().resetEnergy();
+
         }
 
         if (other.CompareTag("LowEffort"))
         {
-            player.GetComponent<PlayerMovement>().stepSize = player.GetComponent<PlayerMovement>().stepSize/2;
+            player.GetComponent<PlayerMovement>().stepSize = 0.5f;
+            player.GetComponent<PlayerMovement>().pressLimit = 4;
+            player.GetComponent<PlayerMovement>().resetEnergy();
+
         }
        
     }

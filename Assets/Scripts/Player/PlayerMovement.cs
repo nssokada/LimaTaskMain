@@ -7,16 +7,16 @@ public class PlayerMovement : MonoBehaviour
 {
 
     public GameObject player;
-    // public GameObject target;
-
+    public GameObject HeadsUpDisplay;
     public float speed = 5;
-
+    public int pressLimit;
     PlayerInput playerInput;
     InputAction moveAction;
     Animator animator;
     private bool isMoving = false;
     public bool effortPeriod;
     public bool clickingPeriod;
+    public int numPress;
 
     public GameObject centerPt;
     public float radius;
@@ -34,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnEffort()
     {
-        if(effortPeriod==true)
+        if(effortPeriod==true && numPress<pressLimit)
         {
             Vector3 newPosition = transform.position + (transform.forward * stepSize);
 
@@ -47,15 +47,32 @@ public class PlayerMovement : MonoBehaviour
                 transform.position = newPosition;
             }
             animator.Play("Running");
+            HeadsUpDisplay.GetComponent<UIController>().DecreaseEnergy();
+            numPress++;
+
+            if(numPress==pressLimit)  StartCoroutine(CoolDown());
         }
     }
+
+    IEnumerator CoolDown()
+    {
+        yield return new WaitForSeconds(1f);
+        resetEnergy();
+    }
+
+    public void resetEnergy()
+    {
+        HeadsUpDisplay.GetComponent<UIController>().SetEnergy(pressLimit/10f);
+        numPress=0;
+    }
+
+
+
 
     void Update()
     {
         if(effortPeriod==true)
         {          
-            // drift();
-          
             RotatePlayer();
         }
     }
