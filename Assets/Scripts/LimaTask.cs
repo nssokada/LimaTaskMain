@@ -16,7 +16,6 @@ public class LimaTask : MonoBehaviour
 
     public GameObject probabilityDisplay;
 
-
     private LimaTrial trial;
 
 
@@ -24,7 +23,9 @@ public class LimaTask : MonoBehaviour
     public bool trialEndable;
     Vector3 home;
     bool cookies;
-    
+    float movementStartTime; //likely will change this to trial start time
+    public GameObject HeadsUpDisplay;
+
   
 
 #region  Running a Trial
@@ -79,8 +80,8 @@ public class LimaTask : MonoBehaviour
 
         Debug.Log("Starting freemovement Sequence");   
 
-        player.GetComponent<PlayerMovement>().effortPeriod = true;
-         
+       
+        toggleEffort();
          //Sets Predator probability and attack 
         togglePredator();
         setPredator(trial);  
@@ -89,6 +90,7 @@ public class LimaTask : MonoBehaviour
 
     IEnumerator freeMovement()
     { 
+        InvokeRepeating("UpdateTimer", 0f, 1f);
         yield return new WaitForSeconds(10.0f);
         if(trialEndable) EndTrial();
     }
@@ -104,7 +106,9 @@ public class LimaTask : MonoBehaviour
     {
         trialEndable = false;
         StopCoroutine("freeMovement");
+        CancelInvoke("UpdateTimer");
         StartCoroutine(TrialEndRoutine(trial));
+            
     }
 
     public void OnTrialEnd()
@@ -138,6 +142,7 @@ public class LimaTask : MonoBehaviour
         togglePlayer();
         toggleProbability(trial);
         togglePredator();
+        resetTimer();
         OnTrialEnd();
     }
 #endregion
@@ -148,8 +153,9 @@ public class LimaTask : MonoBehaviour
     {
         if(!probabilityDisplay.activeSelf)
         {
-            probabilityDisplay.SetActive(true);
             trialController.GetComponent<TrialController>().setProbability(trial.attackingProb);
+            probabilityDisplay.SetActive(true);
+
         }
 
         else
@@ -171,12 +177,14 @@ public class LimaTask : MonoBehaviour
            player.GetComponent<PlayerManager>().playerState = "0";
            player.GetComponent<PlayerMovement>().effortPeriod = false;
            player.GetComponent<PlayerMovement>().clickingPeriod = false;
+           player.GetComponent<PlayerMovement>().resetEffort();
            if(player.GetComponent<PlayerManager>().carrying)
            {
                 player.GetComponent<PlayerManager>().carrying = false;
                 Destroy(player.transform.GetChild(4).gameObject);
            }
            player.transform.position = home;
+
            player.SetActive(false);
         }
     }
@@ -192,6 +200,11 @@ public class LimaTask : MonoBehaviour
         {
            predator.SetActive(false);
         }
+    }
+
+    void toggleEffort()
+    {
+         player.GetComponent<PlayerMovement>().enableEffort();
     }
 
 
@@ -219,6 +232,34 @@ public class LimaTask : MonoBehaviour
 
 #endregion
 
+#region Continous Methods
 
+
+
+ void UpdateTimer()
+    {
+        // Assuming movementStartTimeHeadsUpDisplay is a GameObject with UIController script attached
+        UIController uiController = HeadsUpDisplay.GetComponent<UIController>();
+
+        if (uiController != null)
+        {
+            // Call the DecreaseTime method from UIController
+            uiController.DecreaseTime();
+        }
+    }
+
+
+ void resetTimer()
+    {
+        // Assuming movementStartTimeHeadsUpDisplay is a GameObject with UIController script attached
+        UIController uiController = HeadsUpDisplay.GetComponent<UIController>();
+
+        if (uiController != null)
+        {
+            // Call the DecreaseTime method from UIController
+            uiController.SetTime(1f);
+        }
+    }
+#endregion
    
 }

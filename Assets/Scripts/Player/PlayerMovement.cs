@@ -10,6 +10,10 @@ public class PlayerMovement : MonoBehaviour
     public GameObject HeadsUpDisplay;
     public float speed = 5;
     public int pressLimit;
+
+    public static int defaultPressLimit = 2;
+    public static int defaultStepSize = 1;
+
     PlayerInput playerInput;
     InputAction moveAction;
     Animator animator;
@@ -66,7 +70,20 @@ public class PlayerMovement : MonoBehaviour
         numPress=0;
     }
 
+    public void enableEffort()
+    {
+        effortPeriod = true;
+        HeadsUpDisplay.GetComponent<UIController>().SetEnergy(pressLimit/10f);
+        HeadsUpDisplay.SetActive(true);
+    }
+    public void resetEffort()
+    {
+        pressLimit = defaultPressLimit;
+        stepSize = defaultStepSize;
+        numPress=0;
+        HeadsUpDisplay.SetActive(false);
 
+    }
 
 
     void Update()

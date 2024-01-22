@@ -17,8 +17,9 @@ public class SessionGenerator : MonoBehaviour
     public LimaTrial trial;
     public int numTrials;
 
-    public void ButtonWrapper()
-    {
+
+
+    private void Start() {
         GenerateExperiment();
     }
 

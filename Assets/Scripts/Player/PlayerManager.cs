@@ -8,6 +8,7 @@ public class PlayerManager : MonoBehaviour
     public GameObject player;
     public GameObject task;
     public string playerState;
+    public string cookieState;
 
     private void OnTriggerEnter(Collider other) 
     {
@@ -15,8 +16,19 @@ public class PlayerManager : MonoBehaviour
         if(!carrying){
             if (other.gameObject.tag == "Cookie")
             {
-                other.transform.parent = transform; 
-                player.GetComponent<PlayerMovement>().stepSize = 1f/other.gameObject.GetComponent<Cookie>().weight;
+                other.transform.parent = transform;
+
+                if(other.gameObject.GetComponent<Cookie>().weight>1) 
+                {
+                    cookieState = "heavy";
+                    player.GetComponent<PlayerMovement>().stepSize = 0.25f;
+                }
+                else 
+                {
+                    cookieState = "light";
+                    player.GetComponent<PlayerMovement>().stepSize = 0.5f;
+                }
+ 
                 task.GetComponent<LimaTask>().EffortPeriod();
                 carrying = true; 
             }
@@ -48,32 +60,115 @@ public class PlayerManager : MonoBehaviour
                     player.transform.position = newPosition;
                 }      //Maybe this 
             }
+
+                if (other.CompareTag("HighEffort"))
+            {
+                if(cookieState=="heavy")
+                {
+                    player.GetComponent<PlayerMovement>().stepSize = 0.1f;
+                    player.GetComponent<PlayerMovement>().pressLimit = 8;
+                    player.GetComponent<PlayerMovement>().resetEnergy();
+                }
+                else if(cookieState=="light")
+                {
+                    player.GetComponent<PlayerMovement>().stepSize = 0.1625f;
+                    player.GetComponent<PlayerMovement>().pressLimit = 8;
+                    player.GetComponent<PlayerMovement>().resetEnergy();
+                }
+
+            }
+
+            if (other.CompareTag("MediumEffort"))
+            {
+                if(cookieState=="heavy")
+                {
+                    player.GetComponent<PlayerMovement>().stepSize = 0.2f;
+                    player.GetComponent<PlayerMovement>().pressLimit = 4;
+                    player.GetComponent<PlayerMovement>().resetEnergy();
+                }
+                else if(cookieState=="light")
+                {
+                    player.GetComponent<PlayerMovement>().stepSize = 0.325f;
+                    player.GetComponent<PlayerMovement>().pressLimit = 4;
+                    player.GetComponent<PlayerMovement>().resetEnergy();
+                }
+            }
+
+            if (other.CompareTag("LowEffort"))
+            {
+                if(cookieState=="heavy")
+                {
+                    player.GetComponent<PlayerMovement>().stepSize = 0.26f;
+                    player.GetComponent<PlayerMovement>().pressLimit = 3;
+                    player.GetComponent<PlayerMovement>().resetEnergy();
+                }
+                else if(cookieState=="light")
+                {
+                    player.GetComponent<PlayerMovement>().stepSize = 0.43f;
+                    player.GetComponent<PlayerMovement>().pressLimit = 3;
+                    player.GetComponent<PlayerMovement>().resetEnergy();
+                }
+            }
         }
 
     
-        if (other.CompareTag("HighEffort"))
+       
+       
+    }
+
+    private void OnTriggerExit(Collider other) {
+        if(carrying)
         {
-            player.GetComponent<PlayerMovement>().stepSize = 0.25f;
-            player.GetComponent<PlayerMovement>().pressLimit = 8;
-            player.GetComponent<PlayerMovement>().resetEnergy();
+            if (other.CompareTag("HighEffort"))
+            {
+            if(cookieState=="heavy")
+            {
+                player.GetComponent<PlayerMovement>().stepSize = 0.15f;
+                player.GetComponent<PlayerMovement>().pressLimit = 2;
+                player.GetComponent<PlayerMovement>().resetEnergy();
+            }
+            else if(cookieState=="light")
+            {
+                player.GetComponent<PlayerMovement>().stepSize = 0.5f;
+                player.GetComponent<PlayerMovement>().pressLimit = 2;
+                player.GetComponent<PlayerMovement>().resetEnergy();
+            }
+
         }
 
         if (other.CompareTag("MediumEffort"))
         {
-            player.GetComponent<PlayerMovement>().stepSize = 0.5f;
-            player.GetComponent<PlayerMovement>().pressLimit = 6;
-            player.GetComponent<PlayerMovement>().resetEnergy();
-
+            if(cookieState=="heavy")
+            {
+                player.GetComponent<PlayerMovement>().stepSize = 0.15f;
+                player.GetComponent<PlayerMovement>().pressLimit = 2;
+                player.GetComponent<PlayerMovement>().resetEnergy();
+            }
+            else if(cookieState=="light")
+            {
+                player.GetComponent<PlayerMovement>().stepSize = 0.5f;
+                player.GetComponent<PlayerMovement>().pressLimit = 2;
+                player.GetComponent<PlayerMovement>().resetEnergy();
+            }
         }
 
         if (other.CompareTag("LowEffort"))
         {
-            player.GetComponent<PlayerMovement>().stepSize = 0.5f;
-            player.GetComponent<PlayerMovement>().pressLimit = 4;
-            player.GetComponent<PlayerMovement>().resetEnergy();
-
+             if(cookieState=="heavy")
+            {
+                player.GetComponent<PlayerMovement>().stepSize = 0.15f;
+                player.GetComponent<PlayerMovement>().pressLimit = 2;
+                player.GetComponent<PlayerMovement>().resetEnergy();
+            }
+            else if(cookieState=="light")
+            {
+                player.GetComponent<PlayerMovement>().stepSize = 0.5f;
+                player.GetComponent<PlayerMovement>().pressLimit = 2;
+                player.GetComponent<PlayerMovement>().resetEnergy();
+            }
         }
-       
+
+        } 
     }
 
     // private void OnTriggerStay(Collider other)
