@@ -21,19 +21,66 @@ public class PlayerMovement : MonoBehaviour
     public bool effortPeriod;
     public bool clickingPeriod;
     public int numPress;
-
+     Vector3 movementDirection;
     public GameObject centerPt;
     public float radius;
     public float debugLineWidth;
-    public float stepSize = 1f; // The distance the player moves with each step
-    // Start is called before the first frame update
+    public float stepSize = 1f; 
+
+
+    public float resistance;
+    public float rotationSpeed;
+    public float theta;
+
     void Start()
     {
         animator = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
-        moveAction = playerInput.actions.FindAction("Move");
+        // moveAction = playerInput.actions.FindAction("Move");
     }
 
+
+    void move()
+    {
+        //  if(effortPeriod==true)
+        //  {
+        //     float horizontalInput = Input.GetAxis("Horizontal");
+        //     float verticalInput = Input.GetAxis("Vertical");
+
+        //      movementDirection = new Vector3(horizontalInput, 0, verticalInput).normalized;
+        //      transform.Translate(movementDirection * 2f * Time.deltaTime);
+            
+        //      animator.SetBool("IsRunning", true);
+           
+        // }
+                if (effortPeriod == true)
+        {
+            float verticalInput = Input.GetAxis("Vertical"); // Get input for forward movement along the y-axis
+            float horizontalInput = Input.GetAxis("Horizontal"); // Get input for rotation along the x-axis
+
+            Vector3 movementDirection = new Vector3(horizontalInput, 0, verticalInput).normalized; // Use vertical input for forward movement
+            Vector3 mover = new Vector3(0,0, verticalInput*verticalInput); // Use horizontal input for rotation
+
+
+
+            if (movementDirection != Vector3.zero)
+            {
+                // Calculate the target rotation based on the movement direction
+                Quaternion targetRotation = Quaternion.LookRotation(movementDirection);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 1f);
+                            // Move the player forward based on movement direction
+                transform.Translate(mover * speed * Time.deltaTime);
+                animator.SetBool("IsRunning", true);
+        
+            }
+            else
+            {
+                animator.SetBool("IsRunning", false);
+            }
+
+        }
+
+    }
 
 
     void OnEffort()
@@ -90,7 +137,9 @@ public class PlayerMovement : MonoBehaviour
     {
         if(effortPeriod==true)
         {          
-            RotatePlayer();
+            move();
+            drift();
+            // RotatePlayer();
         }
     }
 
@@ -172,6 +221,36 @@ public class PlayerMovement : MonoBehaviour
             yield return null;
         }
     }
+
+
+    void drift()
+        {
+           
+            
+            // Calculate the direction vector from the player to the target
+            Vector3 targetDirection = centerPt.transform.position - transform.position;
+
+            Debug.DrawRay(transform.position, targetDirection, Color.blue, debugLineWidth);
+
+            // Apply the offset angle
+            Quaternion targetRotation = Quaternion.Euler(0, theta, 0);                
+        
+            // Calculate the drift vector (45 degrees away from the target direction)
+            Vector3 driftVector =targetRotation * targetDirection;
+
+            // Normalize the drift vector and scale it by the drift speed
+            driftVector = driftVector.normalized * resistance;
+            Debug.DrawRay(transform.position, driftVector, Color.red, debugLineWidth);
+            // Apply the drift vector to the player's position
+            Vector3 newPosition = transform.position + driftVector * Time.deltaTime;
+            float distanceFromCenter = Vector3.Distance(centerPt.transform.position, newPosition);
+            if (distanceFromCenter <= radius)
+            {
+                // Apply the drift vector to the player's position
+                transform.position = newPosition;
+            }
+        }
+
 }
 
 
@@ -188,34 +267,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void drift()
-    {
-        float driftSpeed= 1f;
-        float rotationSpeed= 200f;
-
-        float offsetAngle =135f;
-        
-         // Calculate the direction vector from the player to the target
-        Vector3 targetDirection = centerPt.transform.position - transform.position;
-
-        Debug.DrawRay(transform.position, targetDirection, Color.blue, debugLineWidth);
-
-        // Apply the offset angle
-        Quaternion targetRotation = Quaternion.Euler(0, offsetAngle, 0);                
-    
-        // Calculate the drift vector (45 degrees away from the target direction)
-        Vector3 driftVector =targetRotation * targetDirection;
-
-        // Normalize the drift vector and scale it by the drift speed
-        driftVector = driftVector.normalized * driftSpeed;
-        Debug.DrawRay(transform.position, driftVector, Color.red, debugLineWidth);
-        // Apply the drift vector to the player's position
-        Vector3 newPosition = transform.position + driftVector * Time.deltaTime;
-        float distanceFromCenter = Vector3.Distance(centerPt.transform.position, newPosition);
-        if (distanceFromCenter <= radius)
-        {
-            // Apply the drift vector to the player's position
-            transform.position = newPosition;
-        }
+   
     }
     **/

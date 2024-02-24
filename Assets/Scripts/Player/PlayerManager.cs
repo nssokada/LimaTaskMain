@@ -32,6 +32,13 @@ public class PlayerManager : MonoBehaviour
                 task.GetComponent<LimaTask>().EffortPeriod();
                 carrying = true; 
             }
+
+            if (other.CompareTag("Wind"))
+            {
+                Debug.Log("we've got wind");
+                player.GetComponent<PlayerMovement>().resistance = other.GetComponent<Wind>().resistance;
+                player.GetComponent<PlayerMovement>().theta = other.GetComponent<Wind>().theta;
+            }
         }
 
         else if(carrying)
@@ -109,6 +116,13 @@ public class PlayerManager : MonoBehaviour
                     player.GetComponent<PlayerMovement>().resetEnergy();
                 }
             }
+
+            if (other.CompareTag("Wind"))
+            {
+                Debug.Log("we've got wind");
+                player.GetComponent<PlayerMovement>().resistance = other.GetComponent<Wind>().resistance;
+                player.GetComponent<PlayerMovement>().theta = other.GetComponent<Wind>().theta;
+            }
         }
 
     
@@ -117,58 +131,47 @@ public class PlayerManager : MonoBehaviour
     }
 
     private void OnTriggerExit(Collider other) {
-        if(carrying)
-        {
-            if (other.CompareTag("HighEffort"))
+
+          if (other.CompareTag("Wind"))
             {
-            if(cookieState=="heavy")
-            {
-                player.GetComponent<PlayerMovement>().stepSize = 0.15f;
-                player.GetComponent<PlayerMovement>().pressLimit = 2;
-                player.GetComponent<PlayerMovement>().resetEnergy();
-            }
-            else if(cookieState=="light")
-            {
-                player.GetComponent<PlayerMovement>().stepSize = 0.5f;
-                player.GetComponent<PlayerMovement>().pressLimit = 2;
-                player.GetComponent<PlayerMovement>().resetEnergy();
+                Debug.Log("we'vRE DONE");
+                player.GetComponent<PlayerMovement>().resistance = 0f;
+                player.GetComponent<PlayerMovement>().theta = 0f;
             }
 
-        }
+        // if (other.CompareTag("MediumEffort"))
+        // {
+        //     if(cookieState=="heavy")
+        //     {
+        //         player.GetComponent<PlayerMovement>().stepSize = 0.15f;
+        //         player.GetComponent<PlayerMovement>().pressLimit = 2;
+        //         player.GetComponent<PlayerMovement>().resetEnergy();
+        //     }
+        //     else if(cookieState=="light")
+        //     {
+        //         player.GetComponent<PlayerMovement>().stepSize = 0.5f;
+        //         player.GetComponent<PlayerMovement>().pressLimit = 2;
+        //         player.GetComponent<PlayerMovement>().resetEnergy();
+        //     }
+        // }
 
-        if (other.CompareTag("MediumEffort"))
-        {
-            if(cookieState=="heavy")
-            {
-                player.GetComponent<PlayerMovement>().stepSize = 0.15f;
-                player.GetComponent<PlayerMovement>().pressLimit = 2;
-                player.GetComponent<PlayerMovement>().resetEnergy();
-            }
-            else if(cookieState=="light")
-            {
-                player.GetComponent<PlayerMovement>().stepSize = 0.5f;
-                player.GetComponent<PlayerMovement>().pressLimit = 2;
-                player.GetComponent<PlayerMovement>().resetEnergy();
-            }
-        }
+        // if (other.CompareTag("LowEffort"))
+        // {
+        //      if(cookieState=="heavy")
+        //     {
+        //         player.GetComponent<PlayerMovement>().stepSize = 0.15f;
+        //         player.GetComponent<PlayerMovement>().pressLimit = 2;
+        //         player.GetComponent<PlayerMovement>().resetEnergy();
+        //     }
+        //     else if(cookieState=="light")
+        //     {
+        //         player.GetComponent<PlayerMovement>().stepSize = 0.5f;
+        //         player.GetComponent<PlayerMovement>().pressLimit = 2;
+        //         player.GetComponent<PlayerMovement>().resetEnergy();
+        //     }
+        // }
 
-        if (other.CompareTag("LowEffort"))
-        {
-             if(cookieState=="heavy")
-            {
-                player.GetComponent<PlayerMovement>().stepSize = 0.15f;
-                player.GetComponent<PlayerMovement>().pressLimit = 2;
-                player.GetComponent<PlayerMovement>().resetEnergy();
-            }
-            else if(cookieState=="light")
-            {
-                player.GetComponent<PlayerMovement>().stepSize = 0.5f;
-                player.GetComponent<PlayerMovement>().pressLimit = 2;
-                player.GetComponent<PlayerMovement>().resetEnergy();
-            }
-        }
-
-        } 
+        // } 
     }
 
     // private void OnTriggerStay(Collider other)

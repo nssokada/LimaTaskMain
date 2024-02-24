@@ -12,6 +12,7 @@ TagManager:
   - HighEffort
   - LowEffort
   - MediumEffort
+  - Wind
   layers:
   - Default
   - TransparentFX
