@@ -13,6 +13,7 @@ public class LimaTask : MonoBehaviour
 
     public GameObject arena;
     public GameObject map;
+    public GameObject wind;
 
     public GameObject probabilityDisplay;
 
@@ -71,8 +72,6 @@ public class LimaTask : MonoBehaviour
     public void ClickingPeriod()
     {
         player.GetComponent<PlayerMovement>().clickingPeriod = true;
-        //check this
-        //try this out
     }
 
      public void EffortPeriod()
@@ -82,6 +81,7 @@ public class LimaTask : MonoBehaviour
 
        
         toggleEffort();
+        toggleWind();
          //Sets Predator probability and attack 
         togglePredator();
         setPredator(trial);  
@@ -142,6 +142,7 @@ public class LimaTask : MonoBehaviour
         togglePlayer();
         toggleProbability(trial);
         togglePredator();
+        toggleWind();
         resetTimer();
         OnTrialEnd();
     }
@@ -207,6 +208,20 @@ public class LimaTask : MonoBehaviour
          player.GetComponent<PlayerMovement>().enableEffort();
     }
 
+    void toggleWind()
+    {
+          if(!wind.activeSelf)
+        {
+            wind.SetActive(true);
+            wind.GetComponent<WindController>().activateWindLayer(player.GetComponent<PlayerManager>().playerLayer);
+        }
+        else
+        {
+           wind.GetComponent<WindController>().deactivateWindLayer();
+           wind.SetActive(false);
+        }
+    }
+
 
     void toggleRewards(LimaTrial trial)
     {
@@ -220,7 +235,6 @@ public class LimaTask : MonoBehaviour
         {
             trialController.GetComponent<TrialController>().despawnRewards();
             cookies = false;
-
         }
 
     }

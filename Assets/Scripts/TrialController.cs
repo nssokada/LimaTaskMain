@@ -15,6 +15,7 @@ public class TrialController : MonoBehaviour
     public GameObject player;
     bool moveInstruct;
     GameObject cookiePos;
+    string cookieLayer;
 
     void update()
     {
@@ -73,14 +74,17 @@ public class TrialController : MonoBehaviour
         if(x>0)
         {
              cookiePos = cookieFar[y];
+             cookieLayer = "far";
         }
         else
         {
              cookiePos = cookieClose[y];
+             cookieLayer = "close";
         }
         GameObject newCookie = Instantiate(cookiePrefab, cookiePos.transform.position, cookiePos.transform.rotation);
         newCookie.GetComponent<Cookie>().weight = weight;
         newCookie.GetComponent<Cookie>().rewardValue = rewardValue;
+        newCookie.GetComponent<Cookie>().layer = cookieLayer;
         newCookie.GetComponent<Cookie>().setCookieColor();
         newCookie.GetComponent<Cookie>().setCookieSize();
         newCookie.SetActive(true);

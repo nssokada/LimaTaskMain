@@ -225,8 +225,7 @@ public class PlayerMovement : MonoBehaviour
 
     void drift()
         {
-           
-            
+             
             // Calculate the direction vector from the player to the target
             Vector3 targetDirection = centerPt.transform.position - transform.position;
 

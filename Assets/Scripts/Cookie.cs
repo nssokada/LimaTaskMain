@@ -6,6 +6,7 @@ public class Cookie: MonoBehaviour
 {
     public float weight; //heavy =4.54
     public float rewardValue; //heavy =4.54
+    public string layer;
     public Material chocolate;
     public Material plain;
 

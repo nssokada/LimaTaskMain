@@ -9,6 +9,7 @@ public class PlayerManager : MonoBehaviour
     public GameObject task;
     public string playerState;
     public string cookieState;
+    public string playerLayer;
 
     private void OnTriggerEnter(Collider other) 
     {
@@ -21,11 +22,13 @@ public class PlayerManager : MonoBehaviour
                 if(other.gameObject.GetComponent<Cookie>().weight>1) 
                 {
                     cookieState = "heavy";
+                    playerLayer = other.gameObject.GetComponent<Cookie>().layer;
                     player.GetComponent<PlayerMovement>().stepSize = 0.25f;
                 }
                 else 
                 {
                     cookieState = "light";
+                    playerLayer = other.gameObject.GetComponent<Cookie>().layer;
                     player.GetComponent<PlayerMovement>().stepSize = 0.5f;
                 }
  
@@ -35,7 +38,6 @@ public class PlayerManager : MonoBehaviour
 
             if (other.CompareTag("Wind"))
             {
-                Debug.Log("we've got wind");
                 player.GetComponent<PlayerMovement>().resistance = other.GetComponent<Wind>().resistance;
                 player.GetComponent<PlayerMovement>().theta = other.GetComponent<Wind>().theta;
             }
@@ -119,7 +121,6 @@ public class PlayerManager : MonoBehaviour
 
             if (other.CompareTag("Wind"))
             {
-                Debug.Log("we've got wind");
                 player.GetComponent<PlayerMovement>().resistance = other.GetComponent<Wind>().resistance;
                 player.GetComponent<PlayerMovement>().theta = other.GetComponent<Wind>().theta;
             }
