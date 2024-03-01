@@ -10,6 +10,7 @@ public class PlayerManager : MonoBehaviour
     public string playerState;
     public string cookieState;
     public string playerLayer;
+    public GameObject HeadsUpDisplay;
 
     private void OnTriggerEnter(Collider other) 
     {
@@ -38,6 +39,8 @@ public class PlayerManager : MonoBehaviour
 
             if (other.CompareTag("Wind"))
             {
+                 Vector3 driftVector = player.GetComponent<PlayerMovement>().driftdrawVector; 
+                HeadsUpDisplay.GetComponent<UIController>().setWind(driftVector,other.GetComponent<Wind>().resistance);
                 player.GetComponent<PlayerMovement>().resistance = other.GetComponent<Wind>().resistance;
                 player.GetComponent<PlayerMovement>().theta = other.GetComponent<Wind>().theta;
             }
@@ -121,6 +124,8 @@ public class PlayerManager : MonoBehaviour
 
             if (other.CompareTag("Wind"))
             {
+                Vector3 driftVector = player.GetComponent<PlayerMovement>().driftdrawVector; 
+                HeadsUpDisplay.GetComponent<UIController>().setWind(driftVector,other.GetComponent<Wind>().resistance);
                 player.GetComponent<PlayerMovement>().resistance = other.GetComponent<Wind>().resistance;
                 player.GetComponent<PlayerMovement>().theta = other.GetComponent<Wind>().theta;
             }
@@ -135,7 +140,8 @@ public class PlayerManager : MonoBehaviour
 
           if (other.CompareTag("Wind"))
             {
-                Debug.Log("we'vRE DONE");
+                Vector3 driftVector = player.GetComponent<PlayerMovement>().driftdrawVector; 
+                HeadsUpDisplay.GetComponent<UIController>().setWind(driftVector,other.GetComponent<Wind>().resistance);
                 player.GetComponent<PlayerMovement>().resistance = 0f;
                 player.GetComponent<PlayerMovement>().theta = 0f;
             }

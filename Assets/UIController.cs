@@ -10,14 +10,18 @@ public class UIController : MonoBehaviour
 
     public Slider timeSlider;
     public float timeDecreaseRate = 0.01f;
+    public GameObject windSignal;
 
-    public void DecreaseEnergy()
+    public Material high;
+    public Material medium;
+    public Material low;
+
+
+    public void DecreaseEnergy(float energyValue)
     {
-        // Decrease energy
-        energySlider.value -= energyDecreaseRate;
-
-        // Clamp the energy value to ensure it doesn't go below 0
-        energySlider.value = Mathf.Max(energySlider.value, 0f);
+        float energy =  energySlider.value;
+        float decrease = energy - energyValue;
+        energySlider.value = decrease;
     }
     public void SetEnergy(float energyValue)
     {
@@ -37,4 +41,32 @@ public class UIController : MonoBehaviour
         // Set Time
         timeSlider.value =timeValue;
     }
+
+    public void setWind(Vector3 drift, float resistance)
+    {
+        // change sprite color
+        if (resistance == 5)
+        {
+            windSignal.GetComponent<MeshRenderer>().material = high;
+        }
+        else if (resistance == 3)
+        {
+            windSignal.GetComponent<MeshRenderer>().material = medium;
+        }
+        else
+        {
+            windSignal.GetComponent<MeshRenderer>().material = low;
+        }
+
+        Quaternion targetRotation = Quaternion.LookRotation(drift.normalized, Vector3.up);
+
+        // Reset x rotation to zero
+        Vector3 euler = targetRotation.eulerAngles;
+        euler.x = 0;
+        targetRotation = Quaternion.Euler(euler);
+
+        // Apply rotation
+        windSignal.transform.rotation = targetRotation;
+    }
 }
+

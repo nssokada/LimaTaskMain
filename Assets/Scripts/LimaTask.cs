@@ -179,6 +179,8 @@ public class LimaTask : MonoBehaviour
            player.GetComponent<PlayerMovement>().effortPeriod = false;
            player.GetComponent<PlayerMovement>().clickingPeriod = false;
            player.GetComponent<PlayerMovement>().resetEffort();
+           player.GetComponent<PlayerMovement>().theta = 0f;
+           player.GetComponent<PlayerMovement>().resistance = 0f;
            if(player.GetComponent<PlayerManager>().carrying)
            {
                 player.GetComponent<PlayerManager>().carrying = false;
