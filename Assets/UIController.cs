@@ -15,6 +15,7 @@ public class UIController : MonoBehaviour
     public Material high;
     public Material medium;
     public Material low;
+    public MeshRenderer grass;
 
 
     public void DecreaseEnergy(float energyValue)
@@ -48,14 +49,19 @@ public class UIController : MonoBehaviour
         if (resistance == 5)
         {
             windSignal.GetComponent<MeshRenderer>().material = high;
+            grass.material.SetFloat("_WindMovement", 0.8f);
+
         }
         else if (resistance == 3)
         {
             windSignal.GetComponent<MeshRenderer>().material = medium;
+            grass.material.SetFloat("_WindMovement", 0.45f);
+
         }
         else
         {
             windSignal.GetComponent<MeshRenderer>().material = low;
+            grass.material.SetFloat("_WindMovement", 0.1f);
         }
 
         Quaternion targetRotation = Quaternion.LookRotation(drift.normalized, Vector3.up);

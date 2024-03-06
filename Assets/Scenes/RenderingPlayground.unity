@@ -180,6 +180,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &94367470
@@ -316,6 +317,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &221647681
@@ -470,6 +472,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &245635338
@@ -718,6 +721,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &327092535
@@ -933,6 +937,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &329864016
@@ -1159,6 +1164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &333316710
@@ -1255,7 +1261,6 @@ Transform:
   - {fileID: 539883491}
   - {fileID: 45287949}
   - {fileID: 879871476}
-  - {fileID: 2096664550}
   m_Father: {fileID: 631786693}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1672,6 +1677,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 0}
   plain: {fileID: 0}
 --- !u!114 &528363564
@@ -1688,6 +1694,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &528363565
@@ -2086,7 +2093,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &631786692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2105,8 +2112,10 @@ MonoBehaviour:
   predator: {fileID: 539883490}
   arena: {fileID: 387922968}
   map: {fileID: 2096664549}
+  wind: {fileID: 0}
   probabilityDisplay: {fileID: 879871471}
   trialEndable: 0
+  HeadsUpDisplay: {fileID: 0}
 --- !u!4 &631786693
 Transform:
   m_ObjectHideFlags: 0
@@ -2359,6 +2368,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &669075862
@@ -2491,6 +2501,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &711917598
@@ -2618,6 +2629,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &745647162
@@ -7608,6 +7620,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &804464536
@@ -7744,6 +7757,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &850726244
@@ -7793,6 +7807,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &854887430
@@ -8155,8 +8170,10 @@ MonoBehaviour:
   predator: {fileID: 0}
   arena: {fileID: 1724314526}
   map: {fileID: 0}
+  wind: {fileID: 0}
   probabilityDisplay: {fileID: 414781887}
   trialEndable: 0
+  HeadsUpDisplay: {fileID: 0}
 --- !u!4 &965221030
 Transform:
   m_ObjectHideFlags: 0
@@ -8180,7 +8197,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!43 &982483298
+--- !u!43 &1007640270
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8452,6 +8469,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &1038931228
@@ -8584,6 +8602,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &1048541883
@@ -8633,6 +8652,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &1074583498
@@ -8905,6 +8925,9 @@ MonoBehaviour:
   player: {fileID: 1094329892}
   task: {fileID: 631786691}
   playerState: 
+  cookieState: 
+  playerLayer: 
+  HeadsUpDisplay: {fileID: 0}
 --- !u!114 &1094329897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8918,13 +8941,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1094329892}
+  HeadsUpDisplay: {fileID: 0}
   speed: 0.5
+  pressLimit: 0
   effortPeriod: 0
   clickingPeriod: 0
+  numPress: 0
   centerPt: {fileID: 622516184}
   radius: 11
   debugLineWidth: 3.03
   stepSize: 1
+  resistance: 0
+  rotationSpeed: 0
+  theta: 0
+  driftVector: {x: 0, y: 0, z: 0}
+  driftdrawVector: {x: 0, y: 0, z: 0}
 --- !u!114 &1094329898
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8979,6 +9010,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &1107995341
@@ -9203,6 +9235,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &1189592783
@@ -9418,6 +9451,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &1251285799
@@ -9716,6 +9750,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &1340041921
@@ -10151,6 +10186,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &1418244303
@@ -10461,6 +10497,7 @@ GameObject:
   - component: {fileID: 1530290719}
   - component: {fileID: 1530290718}
   - component: {fileID: 1530290717}
+  - component: {fileID: 1530290721}
   m_Layer: 0
   m_Name: Grass
   m_TagString: Untagged
@@ -10570,7 +10607,21 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1530290715}
-  m_Mesh: {fileID: 982483298}
+  m_Mesh: {fileID: 1007640270}
+--- !u!114 &1530290721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1530290715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ba8068330af86f4baadc45dcf432e04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meshR: {fileID: 1530290719}
+  wind: 0
 --- !u!1 &1554289060 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9038452669546594994a8929676608a3, type: 3}
@@ -10595,6 +10646,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &1554289063
@@ -10994,6 +11046,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &1594599194
@@ -11253,6 +11306,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &1747320561
@@ -11385,6 +11439,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &1766050212
@@ -11530,6 +11585,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &1877663899
@@ -11745,6 +11801,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &1903189821
@@ -11911,6 +11968,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 0}
   plain: {fileID: 0}
 --- !u!114 &1933870574
@@ -11927,6 +11985,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &1933870575
@@ -11976,6 +12035,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &1987416031
@@ -12025,6 +12085,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &1999679338
@@ -12196,6 +12257,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &2021898964
@@ -12395,14 +12457,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2096664549}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.57159424, z: 0}
   m_LocalScale: {x: 2.2286, y: 2.2286, z: 2.2286}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 622516185}
   - {fileID: 1530290716}
-  m_Father: {fileID: 387922969}
-  m_RootOrder: -2
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2120631183
 PrefabInstance:
@@ -12515,6 +12577,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   rewardValue: 0
+  layer: 
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
 --- !u!136 &2121609549
@@ -13005,6 +13068,9 @@ MonoBehaviour:
   player: {fileID: 2123403302}
   task: {fileID: 965221028}
   playerState: 
+  cookieState: 
+  playerLayer: 
+  HeadsUpDisplay: {fileID: 0}
 --- !u!114 &2123403306
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13042,13 +13108,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 2123403302}
+  HeadsUpDisplay: {fileID: 0}
   speed: 0.5
+  pressLimit: 0
   effortPeriod: 0
   clickingPeriod: 0
+  numPress: 0
   centerPt: {fileID: 240833746}
   radius: 11
   debugLineWidth: 3.03
   stepSize: 1
+  resistance: 0
+  rotationSpeed: 0
+  theta: 0
+  driftVector: {x: 0, y: 0, z: 0}
+  driftdrawVector: {x: 0, y: 0, z: 0}
 --- !u!114 &2123403309
 MonoBehaviour:
   m_ObjectHideFlags: 0
