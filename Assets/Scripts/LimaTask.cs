@@ -7,14 +7,19 @@ public class LimaTask : MonoBehaviour
     public GameObject trialController;
     public GameObject SessionGenerator;
 
+    public GameObject endStateScreen;
+    public GameObject escapeStateScreen;
+    public GameObject freeStateScreen;
+    public GameObject capturedStateScreen;
 
     public GameObject player;
+    public PlayerManager playerManager;
     public GameObject predator;
 
     public GameObject arena;
     public GameObject map;
     public GameObject wind;
-
+   
     public GameObject probabilityDisplay;
 
     private LimaTrial trial;
@@ -79,9 +84,9 @@ public class LimaTask : MonoBehaviour
 
         Debug.Log("Starting freemovement Sequence");   
 
-       
+        HeadsUpDisplay.SetActive(true);
         toggleEffort();
-        toggleWind();
+        // toggleWind();
          //Sets Predator probability and attack 
         togglePredator();
         setPredator(trial);  
@@ -90,7 +95,7 @@ public class LimaTask : MonoBehaviour
 
     IEnumerator freeMovement()
     { 
-        InvokeRepeating("UpdateTimer", 0f, 1f);
+        InvokeRepeating("UpdateTimer", 0f, 0.01f);
         yield return new WaitForSeconds(10.0f);
         if(trialEndable) EndTrial();
     }
@@ -135,14 +140,18 @@ public class LimaTask : MonoBehaviour
     {
         player.GetComponent<PlayerMovement>().effortPeriod = false;
         predator.GetComponent<PredatorControls>().circaStrike = false;
+
+        HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0f);
+        HeadsUpDisplay.SetActive(false);
+        toggleEndStateScreen();
+        togglePlayer();
+        togglePredator();
         yield return new WaitForSeconds(2.0f);
         arena.SetActive(false);
         map.SetActive(false);
         toggleRewards(trial);
-        togglePlayer();
         toggleProbability(trial);
-        togglePredator();
-        toggleWind();
+        toggleEndStateScreen();
         resetTimer();
         OnTrialEnd();
     }
@@ -154,6 +163,7 @@ public class LimaTask : MonoBehaviour
     {
         if(!probabilityDisplay.activeSelf)
         {
+            Debug.Log("changingMaterial color");
             trialController.GetComponent<TrialController>().setProbability(trial.attackingProb);
             probabilityDisplay.SetActive(true);
 
@@ -175,16 +185,16 @@ public class LimaTask : MonoBehaviour
 
         else
         {
-           player.GetComponent<PlayerManager>().playerState = "0";
+           playerManager.playerState = "free";
            player.GetComponent<PlayerMovement>().effortPeriod = false;
            player.GetComponent<PlayerMovement>().clickingPeriod = false;
-           player.GetComponent<PlayerMovement>().resetEffort();
-           player.GetComponent<PlayerMovement>().theta = 0f;
-           player.GetComponent<PlayerMovement>().resistance = 0f;
-           if(player.GetComponent<PlayerManager>().carrying)
+           if(playerManager.carrying)
            {
-                player.GetComponent<PlayerManager>().carrying = false;
-                Destroy(player.transform.GetChild(4).gameObject);
+                playerManager.carrying = false;
+                  foreach(Transform child in player.transform)
+                    {
+                        if(child.CompareTag("Cookie")) Destroy(child.gameObject);
+                    }
            }
            player.transform.position = home;
 
@@ -210,19 +220,35 @@ public class LimaTask : MonoBehaviour
          player.GetComponent<PlayerMovement>().enableEffort();
     }
 
-    void toggleWind()
+    void toggleEndStateScreen()
     {
-          if(!wind.activeSelf)
+        if(!endStateScreen.activeSelf)
         {
-            wind.SetActive(true);
-            wind.GetComponent<WindController>().activateWindLayer(player.GetComponent<PlayerManager>().playerLayer);
+            endStateScreen.SetActive(true);
+            Debug.Log(playerManager.playerState);
+            if (playerManager.playerState.Equals("escaped"))
+            {
+                escapeStateScreen.SetActive(true);
+            }
+            else if (playerManager.playerState.Equals("captured"))
+            {
+                capturedStateScreen.SetActive(true);
+            }
+            else 
+            {
+                freeStateScreen.SetActive(true);
+            }
         }
         else
         {
-           wind.GetComponent<WindController>().deactivateWindLayer();
-           wind.SetActive(false);
+            endStateScreen.SetActive(false);
+            escapeStateScreen.SetActive(false);
+            freeStateScreen.SetActive(false);
+            capturedStateScreen.SetActive(false);
+
         }
     }
+
 
 
     void toggleRewards(LimaTrial trial)
@@ -250,8 +276,6 @@ public class LimaTask : MonoBehaviour
 
 #region Continous Methods
 
-
-
  void UpdateTimer()
     {
         // Assuming movementStartTimeHeadsUpDisplay is a GameObject with UIController script attached
@@ -260,7 +284,7 @@ public class LimaTask : MonoBehaviour
         if (uiController != null)
         {
             // Call the DecreaseTime method from UIController
-            uiController.DecreaseTime();
+            uiController.DecreaseTime(0.01f/10f);
         }
     }
 
@@ -276,6 +300,22 @@ public class LimaTask : MonoBehaviour
             uiController.SetTime(1f);
         }
     }
+#endregion
+
+#region Old Code
+    // void toggleWind()
+    // {
+    //       if(!wind.activeSelf)
+    //     {
+    //         wind.SetActive(true);
+    //         wind.GetComponent<WindController>().activateWindLayer(playerManager.playerLayer);
+    //     }
+    //     else
+    //     {
+    //        wind.GetComponent<WindController>().deactivateWindLayer();
+    //        wind.SetActive(false);
+    //     }
+    // }
 #endregion
    
 }

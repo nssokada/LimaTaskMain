@@ -60,6 +60,7 @@ public class PredatorControls : MonoBehaviour
         fox.SetActive(false);
         CancelInvoke("strike");
         circaStrike=false; 
+        predator.transform.position = spawningPositionsPredator[0];
     }
 
     Vector3 findClosestSpawningPosition(Vector3 playerPosition)

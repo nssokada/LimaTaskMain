@@ -9,7 +9,7 @@ public class PlayerManager : MonoBehaviour
     public GameObject task;
     public string playerState;
     public string cookieState;
-    public string playerLayer;
+    // public string playerLayer;
     public GameObject HeadsUpDisplay;
 
     private void OnTriggerEnter(Collider other) 
@@ -18,32 +18,28 @@ public class PlayerManager : MonoBehaviour
         if(!carrying){
             if (other.gameObject.tag == "Cookie")
             {
-                other.transform.parent = transform;
+                other.transform.parent = player.transform;
 
                 if(other.gameObject.GetComponent<Cookie>().weight>1) 
                 {
                     cookieState = "heavy";
-                    playerLayer = other.gameObject.GetComponent<Cookie>().layer;
-                    player.GetComponent<PlayerMovement>().stepSize = 0.25f;
+                    // playerLayer = other.gameObject.GetComponent<Cookie>().layer;
+                    player.GetComponent<PlayerMovement>().cookieWeight = 1f; //speed multiplier higher is faster
+                    HeadsUpDisplay.GetComponent<UIController>().SetHUDReward(other.gameObject.GetComponent<Cookie>().rewardValue);
                 }
                 else 
                 {
                     cookieState = "light";
-                    playerLayer = other.gameObject.GetComponent<Cookie>().layer;
-                    player.GetComponent<PlayerMovement>().stepSize = 0.5f;
+                    // playerLayer = other.gameObject.GetComponent<Cookie>().layer;
+                    player.GetComponent<PlayerMovement>().cookieWeight = 2f; //speed multiplier higher is faster
+                    HeadsUpDisplay.GetComponent<UIController>().SetHUDReward(other.gameObject.GetComponent<Cookie>().rewardValue);
                 }
  
                 task.GetComponent<LimaTask>().EffortPeriod();
                 carrying = true; 
             }
 
-            if (other.CompareTag("Wind"))
-            {
-                 Vector3 driftVector = player.GetComponent<PlayerMovement>().driftdrawVector; 
-                HeadsUpDisplay.GetComponent<UIController>().setWind(driftVector,other.GetComponent<Wind>().resistance);
-                player.GetComponent<PlayerMovement>().resistance = other.GetComponent<Wind>().resistance;
-                player.GetComponent<PlayerMovement>().theta = other.GetComponent<Wind>().theta;
-            }
+            
         }
 
         else if(carrying)
@@ -53,98 +49,46 @@ public class PlayerManager : MonoBehaviour
             {
                 if (other.gameObject.tag == "Safety")
                 {
-                    Destroy(player.transform.GetChild(4).gameObject);
-                    player.GetComponent<PlayerMovement>().stepSize = 1;
+                    foreach(Transform child in player.transform)
+                    {
+                        if(child.CompareTag("Cookie")) Destroy(child.gameObject);
+                    }
+                    playerState ="escaped";
                     task.GetComponent<LimaTask>().EndTrial();
                     Debug.Log("earn reward");
                     carrying = false; 
                 }
-                 else if (other.gameObject.tag == "Predator")
+                else if (other.gameObject.tag == "Predator")
                 {
-                    Destroy(player.transform.GetChild(4).gameObject);
-                    player.GetComponent<PlayerMovement>().stepSize = 1;
+                     foreach(Transform child in player.transform)
+                    {
+                        if(child.CompareTag("Cookie")) Destroy(child.gameObject);
+                    }
+                    playerState ="captured";
                     task.GetComponent<LimaTask>().EndTrial();
                     carrying = false; 
                 }
-                 else if (other.gameObject.tag == "Bounds")
-                {
-                    Vector3 newPosition = player.transform.position - (transform.forward * 0.5f);
-                    player.transform.position = newPosition;
-                }      //Maybe this 
             }
 
-                if (other.CompareTag("HighEffort"))
-            {
-                if(cookieState=="heavy")
-                {
-                    player.GetComponent<PlayerMovement>().stepSize = 0.1f;
-                    player.GetComponent<PlayerMovement>().pressLimit = 8;
-                    player.GetComponent<PlayerMovement>().resetEnergy();
-                }
-                else if(cookieState=="light")
-                {
-                    player.GetComponent<PlayerMovement>().stepSize = 0.1625f;
-                    player.GetComponent<PlayerMovement>().pressLimit = 8;
-                    player.GetComponent<PlayerMovement>().resetEnergy();
-                }
-
-            }
-
-            if (other.CompareTag("MediumEffort"))
-            {
-                if(cookieState=="heavy")
-                {
-                    player.GetComponent<PlayerMovement>().stepSize = 0.2f;
-                    player.GetComponent<PlayerMovement>().pressLimit = 4;
-                    player.GetComponent<PlayerMovement>().resetEnergy();
-                }
-                else if(cookieState=="light")
-                {
-                    player.GetComponent<PlayerMovement>().stepSize = 0.325f;
-                    player.GetComponent<PlayerMovement>().pressLimit = 4;
-                    player.GetComponent<PlayerMovement>().resetEnergy();
-                }
-            }
-
-            if (other.CompareTag("LowEffort"))
-            {
-                if(cookieState=="heavy")
-                {
-                    player.GetComponent<PlayerMovement>().stepSize = 0.26f;
-                    player.GetComponent<PlayerMovement>().pressLimit = 3;
-                    player.GetComponent<PlayerMovement>().resetEnergy();
-                }
-                else if(cookieState=="light")
-                {
-                    player.GetComponent<PlayerMovement>().stepSize = 0.43f;
-                    player.GetComponent<PlayerMovement>().pressLimit = 3;
-                    player.GetComponent<PlayerMovement>().resetEnergy();
-                }
-            }
-
-            if (other.CompareTag("Wind"))
-            {
-                Vector3 driftVector = player.GetComponent<PlayerMovement>().driftdrawVector; 
-                HeadsUpDisplay.GetComponent<UIController>().setWind(driftVector,other.GetComponent<Wind>().resistance);
-                player.GetComponent<PlayerMovement>().resistance = other.GetComponent<Wind>().resistance;
-                player.GetComponent<PlayerMovement>().theta = other.GetComponent<Wind>().theta;
-            }
+          
         }
 
     
        
        
     }
+  }
 
-    private void OnTriggerExit(Collider other) {
+  
+    // private void OnTriggerExit(Collider other) {
 
-          if (other.CompareTag("Wind"))
-            {
-                Vector3 driftVector = player.GetComponent<PlayerMovement>().driftdrawVector; 
-                HeadsUpDisplay.GetComponent<UIController>().setWind(driftVector,other.GetComponent<Wind>().resistance);
-                player.GetComponent<PlayerMovement>().resistance = 0f;
-                player.GetComponent<PlayerMovement>().theta = 0f;
-            }
+        //   if (other.CompareTag("Wind"))
+        //     {
+        //         Vector3 driftVector = player.GetComponent<PlayerMovement>().driftdrawVector; 
+        //         HeadsUpDisplay.GetComponent<UIController>().setWind(driftVector,other.GetComponent<Wind>().resistance);
+        //         player.GetComponent<PlayerMovement>().resistance = 0f;
+        //         player.GetComponent<PlayerMovement>().theta = 0f;
+        //     }
 
         // if (other.CompareTag("MediumEffort"))
         // {
@@ -179,7 +123,7 @@ public class PlayerManager : MonoBehaviour
         // }
 
         // } 
-    }
+  
 
     // private void OnTriggerStay(Collider other)
     // {
@@ -200,4 +144,67 @@ public class PlayerManager : MonoBehaviour
     //     }
     // }
 
-}
+// if (other.CompareTag("Wind"))
+//             {
+//                  Vector3 driftVector = player.GetComponent<PlayerMovement>().driftdrawVector; 
+//                 HeadsUpDisplay.GetComponent<UIController>().setWind(driftVector,other.GetComponent<Wind>().resistance);
+//                 player.GetComponent<PlayerMovement>().resistance = other.GetComponent<Wind>().resistance;
+//                 player.GetComponent<PlayerMovement>().theta = other.GetComponent<Wind>().theta;
+//             }
+
+    //   if (other.CompareTag("HighEffort"))
+    //         {
+    //             if(cookieState=="heavy")
+    //             {
+    //                 player.GetComponent<PlayerMovement>().stepSize = 0.1f;
+    //                 player.GetComponent<PlayerMovement>().pressLimit = 8;
+    //                 player.GetComponent<PlayerMovement>().resetEnergy();
+    //             }
+    //             else if(cookieState=="light")
+    //             {
+    //                 player.GetComponent<PlayerMovement>().stepSize = 0.1625f;
+    //                 player.GetComponent<PlayerMovement>().pressLimit = 8;
+    //                 player.GetComponent<PlayerMovement>().resetEnergy();
+    //             }
+
+    //         }
+
+    //         if (other.CompareTag("MediumEffort"))
+    //         {
+    //             if(cookieState=="heavy")
+    //             {
+    //                 player.GetComponent<PlayerMovement>().stepSize = 0.2f;
+    //                 player.GetComponent<PlayerMovement>().pressLimit = 4;
+    //                 player.GetComponent<PlayerMovement>().resetEnergy();
+    //             }
+    //             else if(cookieState=="light")
+    //             {
+    //                 player.GetComponent<PlayerMovement>().stepSize = 0.325f;
+    //                 player.GetComponent<PlayerMovement>().pressLimit = 4;
+    //                 player.GetComponent<PlayerMovement>().resetEnergy();
+    //             }
+    //         }
+
+    //         if (other.CompareTag("LowEffort"))
+    //         {
+    //             if(cookieState=="heavy")
+    //             {
+    //                 player.GetComponent<PlayerMovement>().stepSize = 0.26f;
+    //                 player.GetComponent<PlayerMovement>().pressLimit = 3;
+    //                 player.GetComponent<PlayerMovement>().resetEnergy();
+    //             }
+    //             else if(cookieState=="light")
+    //             {
+    //                 player.GetComponent<PlayerMovement>().stepSize = 0.43f;
+    //                 player.GetComponent<PlayerMovement>().pressLimit = 3;
+    //                 player.GetComponent<PlayerMovement>().resetEnergy();
+    //             }
+    //         }
+
+    //         if (other.CompareTag("Wind"))
+    //         {
+    //             Vector3 driftVector = player.GetComponent<PlayerMovement>().driftdrawVector; 
+    //             HeadsUpDisplay.GetComponent<UIController>().setWind(driftVector,other.GetComponent<Wind>().resistance);
+    //             player.GetComponent<PlayerMovement>().resistance = other.GetComponent<Wind>().resistance;
+    //             player.GetComponent<PlayerMovement>().theta = other.GetComponent<Wind>().theta;
+    //         }

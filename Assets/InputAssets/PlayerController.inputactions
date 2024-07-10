@@ -26,7 +26,7 @@
                 {
                     "name": "MouseClick",
                     "type": "Button",
-                    "id": "6a9d461a-9bfe-41eb-b362-a4650e4bb49f",
+                    "id": "8706bcad-ddc0-4b1a-8fb6-3f6cde79c0d5",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -157,7 +157,7 @@
                 },
                 {
                     "name": "",
-                    "id": "5bb1d09e-8203-4a8f-ba2e-bad8f2ebc098",
+                    "id": "9cc9951a-e7f0-4c06-960c-5a56794d209b",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",

@@ -8,20 +8,23 @@ public class probability : MonoBehaviour
     public Material med;
     public Material high;
 
+    public Renderer mesh;
+
     public void setProbabilityLow()
     {
-        this.GetComponent<MeshRenderer>().material = low;
+        Debug.Log("change material");
+        mesh.material = low;
     }
 
     public void setProbabilityMed()
     {
-    
-        this.GetComponent<MeshRenderer>().material = med;
+        Debug.Log("change material");
+        mesh.material = med;
     }
 
     public void setProbabilityHigh()
     {
-    
-        this.GetComponent<MeshRenderer>().material = high;
+        Debug.Log("change material");
+        mesh.material = high;
     }
 }

@@ -8,9 +8,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/IntroScene.unity
     guid: 470851144ff72b04ca30b5c3563abd94
+  - enabled: 1
+    path: Assets/Scenes/EffortCalibrator.unity
+    guid: 526c6f04a4c97b34bb2c17a7208c3da0
   - enabled: 1
     path: Assets/Scenes/GrassTest.unity
     guid: 12cdda01ebed5c642860bff320206f36

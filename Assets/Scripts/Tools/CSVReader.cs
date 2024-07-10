@@ -19,11 +19,11 @@ public class CSVReader
     private int cookie1PosX;
     private int cookie1PosY;
     private float cookie1Weight;
-    private float cookie1RewardValue;
+    private int cookie1RewardValue;
     private int cookie2PosX;
     private int cookie2PosY;
     private float cookie2Weight;
-    private float cookie2RewardValue;
+    private int cookie2RewardValue;
 
 
     private LimaTrial trial;
@@ -59,11 +59,11 @@ public class CSVReader
             int.TryParse(data[10*(i+1)+2], out cookie1PosX);
             int.TryParse(data[10*(i+1)+3], out cookie1PosY);
             float.TryParse(data[10*(i+1)+4], out cookie1Weight);
-            float.TryParse(data[10*(i+1)+5], out cookie1RewardValue);
+            int.TryParse(data[10*(i+1)+5], out cookie1RewardValue);
             int.TryParse(data[10*(i+1)+6], out cookie2PosX);
             int.TryParse(data[10*(i+1)+7], out cookie2PosY);
             float.TryParse(data[10*(i+1)+8], out cookie2Weight);
-            float.TryParse(data[10*(i+1)+9], out cookie2RewardValue);
+            int.TryParse(data[10*(i+1)+9], out cookie2RewardValue);
             trial = new LimaTrial(attackingProb, cookie1PosX, cookie1PosY, cookie1Weight, cookie1RewardValue, cookie2PosX, cookie2PosY, cookie2Weight, cookie2RewardValue);
             trials.Add(trial);
         }

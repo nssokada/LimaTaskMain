@@ -51,17 +51,18 @@ public class TrialController : MonoBehaviour
 
     public void setProbability(float attackingProb)
     {
-        if(attackingProb==0.9)
+        Debug.Log("probability is"+attackingProb);
+        if(attackingProb==0.9f)
         {
-            Debug.Log("set hight");
+            Debug.Log("set high");
             probability.GetComponent<probability>().setProbabilityHigh();
         }
-        if(attackingProb==0.5)
+        if(attackingProb==0.5f)
         {
             Debug.Log("set med");
             probability.GetComponent<probability>().setProbabilityMed();
         }
-        if(attackingProb==0.1)
+        if(attackingProb==0.1f)
         {
             Debug.Log("set low");
             probability.GetComponent<probability>().setProbabilityLow();
@@ -69,22 +70,22 @@ public class TrialController : MonoBehaviour
 
     }
 
-    public void spawnRewards(int x, int y, float weight, float rewardValue)
+    public void spawnRewards(int x, int y, float weight, int rewardValue)
     {
         if(x>0)
         {
              cookiePos = cookieFar[y];
-             cookieLayer = "far";
+            //  cookieLayer = "far";
         }
         else
         {
              cookiePos = cookieClose[y];
-             cookieLayer = "close";
+            //  cookieLayer = "close";
         }
         GameObject newCookie = Instantiate(cookiePrefab, cookiePos.transform.position, cookiePos.transform.rotation);
         newCookie.GetComponent<Cookie>().weight = weight;
         newCookie.GetComponent<Cookie>().rewardValue = rewardValue;
-        newCookie.GetComponent<Cookie>().layer = cookieLayer;
+        // newCookie.GetComponent<Cookie>().layer = cookieLayer;
         newCookie.GetComponent<Cookie>().setCookieColor();
         newCookie.GetComponent<Cookie>().setCookieSize();
         newCookie.SetActive(true);
