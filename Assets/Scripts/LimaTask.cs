@@ -57,8 +57,8 @@ public class LimaTask : MonoBehaviour
         
         //Set Probabilty -> sets probability material shows probability display for 1 second 
         toggleProbability(trial);
-        yield return new WaitForSeconds(1.0f);
         map.SetActive(true);
+        yield return new WaitForSeconds(1.0f);
         //Set Player -> sets player home status, enables player
         togglePlayer();     
         yield return new WaitForSeconds(1.0f);

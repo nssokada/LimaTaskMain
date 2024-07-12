@@ -8,7 +8,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/IntroScene.unity
     guid: 470851144ff72b04ca30b5c3563abd94
   - enabled: 1
@@ -17,5 +17,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GrassTest.unity
     guid: 12cdda01ebed5c642860bff320206f36
+  - enabled: 1
+    path: Assets/Scenes/Tutorial.unity
+    guid: 017438218e6b74c74a5b86b010e9567e
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 78c1db26323dc0b45a0bf9cf26d1b580, type: 2}

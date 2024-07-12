@@ -1,0 +1,30 @@
+fileFormatVersion: 2
+guid: cfc503a4bdd41684680138e6d139d2bf
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Lora
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 17483670c66ca484c9257c0a0b63421f, type: 3}
+  - {fileID: 12800000, guid: dddc958dd51c1b141a7c1fd86d89f2a4, type: 3}
+  - {fileID: 12800000, guid: 00067e3731256bb419234ea88b9be23e, type: 3}
+  - {fileID: 12800000, guid: 7a7c545eaeca2f0499c8c209eabda3f9, type: 3}
+  - {fileID: 12800000, guid: e6925a03a1eb3f74ba34cb28b6943d6a, type: 3}
+  - {fileID: 12800000, guid: 9c9e7693ff8bde949a4b19502db77864, type: 3}
+  - {fileID: 12800000, guid: a443870d190e9614991f58e332db6b80, type: 3}
+  - {fileID: 12800000, guid: 88537daac5454564ea8306b9c72ad5f6, type: 3}
+  - {fileID: 12800000, guid: 4ca358e566dd2054aacb746f7e024a0d, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

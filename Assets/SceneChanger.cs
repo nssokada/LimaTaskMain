@@ -18,6 +18,6 @@ public class SceneChanger : MonoBehaviour
     }
      public void ChangeScene()
     {
-        SceneManager.LoadScene("GrassTest");
+        SceneManager.LoadScene("Tutorial");
     }
 }
