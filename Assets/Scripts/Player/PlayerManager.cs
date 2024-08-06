@@ -35,7 +35,7 @@ public class PlayerManager : MonoBehaviour
                     HeadsUpDisplay.GetComponent<UIController>().SetHUDReward(other.gameObject.GetComponent<Cookie>().rewardValue);
                 }
  
-                task.GetComponent<LimaTask>().EffortPeriod();
+                task.GetComponent<LimaTask>().EnableEffortPhase();
                 carrying = true; 
             }
 

@@ -200,11 +200,15 @@ public class PlayerMovement : MonoBehaviour
     {
          if(effortPeriod==true)
         {
-            float currentTime = Time.time;
-            latency = currentTime - lastPressTime;
-            Debug.Log("Latency between spacebar presses: " + latency + " seconds");
-            lastPressTime = currentTime;
-            effort();
+            if (Keyboard.current.sKey.isPressed && Keyboard.current.dKey.isPressed && Keyboard.current.fKey.isPressed)
+            {
+                float currentTime = Time.time;
+                latency = currentTime - lastPressTime;
+                Debug.Log("Latency between spacebar presses: " + latency + " seconds");
+                lastPressTime = currentTime;
+                effort();
+            }
+
         }
     }
 

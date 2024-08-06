@@ -72,14 +72,15 @@ public class EffortCalibrator : MonoBehaviour
     {
         if(pressable)
         {
-            HeadsUpDisplay.GetComponent<UIController>().IncreaseEnergy(0.01f);
-
-
-            //Catch values for Latency Calculation:
-            float pressTime = Time.time;
-            pressTimes.Add(pressTime);
-
-            counter++;
+            if (Keyboard.current.sKey.isPressed && Keyboard.current.dKey.isPressed && Keyboard.current.fKey.isPressed)
+            {
+                HeadsUpDisplay.GetComponent<UIController>().IncreaseEnergy(0.01f);
+                //Catch values for Latency Calculation:
+                float pressTime = Time.time;
+                pressTimes.Add(pressTime);
+                counter++;
+            }
+          
         }
        
     }

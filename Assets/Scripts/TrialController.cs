@@ -85,7 +85,6 @@ public class TrialController : MonoBehaviour
         GameObject newCookie = Instantiate(cookiePrefab, cookiePos.transform.position, cookiePos.transform.rotation);
         newCookie.GetComponent<Cookie>().weight = weight;
         newCookie.GetComponent<Cookie>().rewardValue = rewardValue;
-        // newCookie.GetComponent<Cookie>().layer = cookieLayer;
         newCookie.GetComponent<Cookie>().setCookieColor();
         newCookie.GetComponent<Cookie>().setCookieSize();
         newCookie.SetActive(true);

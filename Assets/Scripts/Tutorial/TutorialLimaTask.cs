@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LimaTask : MonoBehaviour
+public class TutorialLimaTask : MonoBehaviour
 {
+
     public GameObject trialController;
-    public GameObject SessionGenerator;
+    public GameObject TutorialController;
 
     public GameObject endStateScreen;
     public GameObject escapeStateScreen;
@@ -18,11 +19,8 @@ public class LimaTask : MonoBehaviour
 
     public GameObject arena;
     public GameObject map;
-    public GameObject wind;
    
     public GameObject probabilityDisplay;
-
-    private LimaTrial trial;
 
 
     bool trial_timeUp;
@@ -32,132 +30,67 @@ public class LimaTask : MonoBehaviour
     float movementStartTime; //likely will change this to trial start time
     public GameObject HeadsUpDisplay;
 
-  
 
-#region  Running a Trial
+
+#region  Running the Tutorial
 
     //Upon enabling this gameobject the first trial will run.
     public void OnEnable()
     {
-       startNextTrial();
+       startTutorialCase();
     }
 
-    public void startNextTrial()
+    public void startTutorialCase()
     {
         trialEndable = true;
-        int trialNum = PlayerPrefs.GetInt("trialNum");
-        trial  = SessionGenerator.GetComponent<SessionGenerator>().trials[trialNum];
-        StartCoroutine(LimaSpawnSequence(trial));
-        //NEED TO INVOKE DATA METHODS
+        int  tutorialType = 1;
+       switch (tutorialType)
+        {
+            case 1:
+                StartCoroutine(CookieSelection());
+                break;
+            case 2:
+                StartCoroutine(CookieSelection());
+                break;
+            case 3:
+                StartCoroutine(CookieSelection());
+                break;
+            case 4:
+                StartCoroutine(CookieSelection());
+                break;
+        }
     }
 
-    IEnumerator LimaSpawnSequence(LimaTrial trial)
+#endregion 
+
+
+#region  Cookie Selection: Intro 1
+    
+    private IEnumerator CookieSelection()
     {
         arena.SetActive(true);
-        
-        //Set Probabilty -> sets probability material shows probability display for 1 second 
-        toggleProbability(trial);
         map.SetActive(true);
-        yield return new WaitForSeconds(1.0f);
-        //Set Player -> sets player home status, enables player
         togglePlayer();     
         yield return new WaitForSeconds(1.0f);
 
-        //Set Rewards -> Spawns 2 cookies based on trial information
-        toggleRewards(trial);     
-        yield return new WaitForSeconds(1.0f);
-        //check this out next
+        setCookie(0,0,0f,0);     
                
         EnableClickingPeriod();  
-        Debug.Log("End Lima Sequence");   
     }
 
+#endregion 
 
-    //This period is ended by PlayerManager when player picks up the cookie
+
+
+
+
+#region  Wrappers and Helpers
+
+ //This period is ended by PlayerManager when player picks up the cookie
     public void EnableClickingPeriod()
     {
         player.GetComponent<PlayerMovement>().clickingPeriod = true;
     }
-
-     public void EnableEffortPhase()
-    {
-
-        Debug.Log("Starting freemovement Sequence");   
-
-        HeadsUpDisplay.SetActive(true);
-        toggleEffort();
-        // toggleWind();
-         //Sets Predator probability and attack 
-        togglePredator();
-        setPredator(trial);  
-        StartCoroutine("freeMovement");
-    }
-
-    IEnumerator freeMovement()
-    { 
-        InvokeRepeating("UpdateTimer", 0f, 0.01f);
-        yield return new WaitForSeconds(10.0f);
-        if(trialEndable) EndTrial();
-    }
-
- 
-
-
-#endregion
-
-#region  Ending a Trial
-
-    public void EndTrial()
-    {
-        trialEndable = false;
-        StopCoroutine("freeMovement");
-        CancelInvoke("UpdateTimer");
-        StartCoroutine(TrialEndRoutine(trial));
-            
-    }
-
-    public void OnTrialEnd()
-    {
-        //NEED TO PUSH DATA HERE
-        int trialNum = PlayerPrefs.GetInt("trialNum");
-        trialNum++;
-        PlayerPrefs.SetInt("trialNum", trialNum);
-
-        if(trialNum < SessionGenerator.GetComponent<SessionGenerator>().numTrials)
-        {
-            Debug.Log("trialNum"+trialNum);
-            Debug.Log("evaluating next");
-            startNextTrial();
-        }
-        else
-        {
-            Application.Quit();
-            Debug.Log("end reached");
-        }        
-    }
-
-    IEnumerator TrialEndRoutine(LimaTrial trial)
-    {
-        player.GetComponent<PlayerMovement>().effortPeriod = false;
-        predator.GetComponent<PredatorControls>().circaStrike = false;
-
-        HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0f);
-        HeadsUpDisplay.SetActive(false);
-        toggleEndStateScreen();
-        togglePlayer();
-        togglePredator();
-        yield return new WaitForSeconds(2.0f);
-        arena.SetActive(false);
-        map.SetActive(false);
-        toggleRewards(trial);
-        toggleProbability(trial);
-        toggleEndStateScreen();
-        resetTimer();
-        OnTrialEnd();
-    }
-#endregion
-
-#region  Wrappers and Helpers
    
  void toggleProbability(LimaTrial trial)
     {
@@ -249,6 +182,21 @@ public class LimaTask : MonoBehaviour
         }
     }
 
+     void setCookie(int x, int y, float weight, int value)
+    {
+        if(!cookies)
+        {
+            trialController.GetComponent<TrialController>().spawnRewards(x,y,weight,value);
+            cookies = true;
+        }
+        else
+        {
+            trialController.GetComponent<TrialController>().despawnRewards();
+            cookies = false;
+        }
+
+    }
+
 
 
     void toggleRewards(LimaTrial trial)
@@ -302,20 +250,5 @@ public class LimaTask : MonoBehaviour
     }
 #endregion
 
-#region Old Code
-    // void toggleWind()
-    // {
-    //       if(!wind.activeSelf)
-    //     {
-    //         wind.SetActive(true);
-    //         wind.GetComponent<WindController>().activateWindLayer(playerManager.playerLayer);
-    //     }
-    //     else
-    //     {
-    //        wind.GetComponent<WindController>().deactivateWindLayer();
-    //        wind.SetActive(false);
-    //     }
-    // }
-#endregion
-   
+
 }
