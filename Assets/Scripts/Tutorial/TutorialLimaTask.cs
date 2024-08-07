@@ -22,6 +22,7 @@ public class TutorialLimaTask : MonoBehaviour
    
     public GameObject probabilityDisplay;
 
+    private LimaTrial trial;
 
     bool trial_timeUp;
     public bool trialEndable;
@@ -37,26 +38,33 @@ public class TutorialLimaTask : MonoBehaviour
     //Upon enabling this gameobject the first trial will run.
     public void OnEnable()
     {
-       startTutorialCase();
+       gameStateController("tutorialIntro");
     }
 
-    public void startTutorialCase()
-    {
-        trialEndable = true;
-        int  tutorialType = 1;
-       switch (tutorialType)
+
+/// <GameStateController>
+/// This is a game state controller for the Tutorial. It controls the shift in states within the tutorial of the game. 
+/// Reference the main game state controller for more specifics.
+/// </summary>
+/// <param name="gameState"></param>
+    public void gameStateController(string gameState)
+    {   
+        switch (gameState)
         {
-            case 1:
+            case "tutorialIntro":
                 StartCoroutine(CookieSelection());
                 break;
-            case 2:
-                StartCoroutine(CookieSelection());
+            case "clickingPeriod":
+                EnableClickingPeriod();
                 break;
-            case 3:
-                StartCoroutine(CookieSelection());
+            case "effortPeriod":
+                EnableEffortPhase();
                 break;
-            case 4:
-                StartCoroutine(CookieSelection());
+            case "endingPeriod":
+                // EndTrial();
+                break;
+            case "nextTrialPeriod":
+                // OnTrialEnd();
                 break;
         }
     }
@@ -91,6 +99,23 @@ public class TutorialLimaTask : MonoBehaviour
     {
         player.GetComponent<PlayerMovement>().clickingPeriod = true;
     }
+
+    public void EnableEffortPhase()
+        {
+
+            Debug.Log("Starting freemovement Sequence");   
+
+            HeadsUpDisplay.SetActive(true);
+            toggleEffort();
+            // toggleWind();
+            //Sets Predator probability and attack 
+            togglePredator();
+            setPredator(trial);  
+            StartCoroutine("freeMovement");
+        }
+
+
+
    
  void toggleProbability(LimaTrial trial)
     {
