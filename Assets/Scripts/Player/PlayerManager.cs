@@ -35,7 +35,7 @@ public class PlayerManager : MonoBehaviour
                     HeadsUpDisplay.GetComponent<UIController>().SetHUDReward(other.gameObject.GetComponent<Cookie>().rewardValue);
                 }
  
-                task.GetComponent<LimaTask>().EnableEffortPhase();
+                task.GetComponent<LimaTask>().gameStateController("effortPeriod");
                 carrying = true; 
             }
 
@@ -54,7 +54,7 @@ public class PlayerManager : MonoBehaviour
                         if(child.CompareTag("Cookie")) Destroy(child.gameObject);
                     }
                     playerState ="escaped";
-                    task.GetComponent<LimaTask>().EndTrial();
+                    task.GetComponent<LimaTask>().gameStateController("endingPeriod");
                     Debug.Log("earn reward");
                     carrying = false; 
                 }
@@ -65,7 +65,7 @@ public class PlayerManager : MonoBehaviour
                         if(child.CompareTag("Cookie")) Destroy(child.gameObject);
                     }
                     playerState ="captured";
-                    task.GetComponent<LimaTask>().EndTrial();
+                    task.GetComponent<LimaTask>().gameStateController("endingPeriod");
                     carrying = false; 
                 }
             }

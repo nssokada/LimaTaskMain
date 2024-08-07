@@ -47,8 +47,30 @@ public class LimaTask : MonoBehaviour
         trialEndable = true;
         int trialNum = PlayerPrefs.GetInt("trialNum");
         trial  = SessionGenerator.GetComponent<SessionGenerator>().trials[trialNum];
-        StartCoroutine(LimaSpawnSequence(trial));
+        gameStateController("spawningPeriod");
         //NEED TO INVOKE DATA METHODS
+    }
+
+    public void gameStateController(string gameState)
+    {   
+        switch (gameState)
+        {
+            case "spawningPeriod":
+                StartCoroutine(LimaSpawnSequence(trial));
+                break;
+            case "clickingPeriod":
+                EnableClickingPeriod();
+                break;
+            case "effortPeriod":
+                EnableEffortPhase();
+                break;
+            case "endingPeriod":
+                EndTrial();
+                break;
+            case "nextTrialPeriod":
+                OnTrialEnd();
+                break;
+        }
     }
 
     IEnumerator LimaSpawnSequence(LimaTrial trial)
@@ -68,7 +90,7 @@ public class LimaTask : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
         //check this out next
                
-        EnableClickingPeriod();  
+        gameStateController("clickingPeriod");
         Debug.Log("End Lima Sequence");   
     }
 
@@ -97,7 +119,8 @@ public class LimaTask : MonoBehaviour
     { 
         InvokeRepeating("UpdateTimer", 0f, 0.01f);
         yield return new WaitForSeconds(10.0f);
-        if(trialEndable) EndTrial();
+        if(trialEndable)    gameStateController("endingPeriod");
+
     }
 
  
@@ -153,7 +176,7 @@ public class LimaTask : MonoBehaviour
         toggleProbability(trial);
         toggleEndStateScreen();
         resetTimer();
-        OnTrialEnd();
+        gameStateController("nextTrialPeriod");
     }
 #endregion
 
