@@ -6,7 +6,7 @@ public class TutorialLimaTask : MonoBehaviour
 {
 
     public GameObject trialController;
-    public GameObject TutorialController;
+    public TutorialController TutorialController;
 
     public GameObject endStateScreen;
     public GameObject escapeStateScreen;
@@ -38,7 +38,7 @@ public class TutorialLimaTask : MonoBehaviour
     //Upon enabling this gameobject the first trial will run.
     public void OnEnable()
     {
-       gameStateController("tutorialIntro");
+       gameStateController(TutorialController.tutorialState);
     }
 
 
@@ -52,6 +52,7 @@ public class TutorialLimaTask : MonoBehaviour
         switch (gameState)
         {
             case "tutorialIntro":
+                Debug.Log("Running tutorial intro");
                 StartCoroutine(CookieSelection());
                 break;
             case "clickingPeriod":
