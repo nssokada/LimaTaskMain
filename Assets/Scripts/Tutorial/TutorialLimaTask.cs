@@ -46,6 +46,7 @@ public class TutorialLimaTask : MonoBehaviour
     public void OnEnable()
     {
        numCookies=0;
+       Debug.Log(numCookies);
        gameStateController(TutorialController.tutorialState);
     }
 
@@ -62,15 +63,24 @@ public class TutorialLimaTask : MonoBehaviour
             case "cookieSelection":
                 Debug.Log("Running tutorial intro");
                 if(numCookies<=3) StartCoroutine(CookieSelection());
-                else if (numCookies<=4) StartCoroutine(endCookieSelection());
+                else StartCoroutine(endCookieSelection());
                 break;
             case "effortIntro":
                 keysSetUp();
                 break;
-            case "endingPeriod":
-                // EndTrial();
+            case "navigationTutorial":
+                trialEndable = true;
+                if(numCookies<=3) StartCoroutine(navigationTutorial());
+                else StartCoroutine(endNavigationTutorial());
+                break;
+            case "navigationTutorialEffortPeriod":
+                EnableEffortPhase(0);
+                break;
+             case "endingPeriod":
+                EndTrial();
                 break;
             case "nextTrialPeriod":
+                if (TutorialController.tutorialState == "navigationTutorial")  gameStateController("navigationTutorial");
                 // OnTrialEnd();
                 break;
         }
@@ -107,9 +117,12 @@ public class TutorialLimaTask : MonoBehaviour
 
       private IEnumerator endCookieSelection()
     {
-        togglePlayer();  
+        //something weird is happening here so we need to set this up like this. I will evaluate in code review on Friday
+        setCookie(Random.Range(0,1),Random.Range(0,6),0f,0);
+        togglePlayer();
+        Debug.Log("last call");
         instructText.text = "Great work! Now let's learn about movement in the game!";
-        yield return new WaitForSeconds(5.0f);
+        yield return new WaitForSeconds(4.0f);
         HeadsUpDisplay.SetActive(false);   
         SwitchToTutorial("effortIntro");
     }
@@ -151,8 +164,11 @@ public class TutorialLimaTask : MonoBehaviour
 
      private IEnumerator endEffortIntro()
     {
-        EffortDisplay.GetComponent<UIController>().energyText.text = "Great work! Now let's learn more about navigating the map";
-        yield return new WaitForSeconds(8.0f);
+        EffortDisplay.GetComponent<UIController>().energyText.text = "Great work!";
+        yield return new WaitForSeconds(4.0f);
+        EffortDisplay.GetComponent<UIController>().energyText.text = "Now let's learn about navigating the game!";
+        yield return new WaitForSeconds(4.0f);
+        EffortDisplay.SetActive(false);
         SwitchToTutorial("navigationTutorial");
     }
 
@@ -160,6 +176,98 @@ public class TutorialLimaTask : MonoBehaviour
 
 
 #endregion
+
+
+#region Navigation Tutorial
+
+private IEnumerator navigationTutorial()
+{
+    
+        HeadsUpDisplay.SetActive(true);
+        instructText.text = "Click on the cookie to begin!";
+        arena.SetActive(true);
+        map.SetActive(true);
+        togglePlayer();     
+        yield return new WaitForSeconds(1.0f);
+
+        setCookie(Random.Range(0,1),Random.Range(0,6),1f,1);
+        Debug.Log("set cookie");
+
+        EnableClickingPeriod(); 
+        numCookies++;
+}
+
+private IEnumerator endNavigationTutorial()
+{        
+    
+        HeadsUpDisplay.SetActive(true);
+        instructText.text = "Great work!";
+        yield return new WaitForSeconds(2.0f);
+        instructText.text = "Now let's learn about the cookies";
+        yield return new WaitForSeconds(2.0f);
+        EffortDisplay.SetActive(false);
+        SwitchToTutorial("navigationTutorial");
+}
+
+
+#endregion
+
+
+
+#region  Ending a Trial
+
+    public void EndTrial()
+    {
+        trialEndable = false;
+        StopCoroutine("freeMovement");
+        CancelInvoke("UpdateTimer");
+        StartCoroutine(TrialEndRoutine(trial));
+            
+    }
+
+    // public void OnTrialEnd()
+    // {
+    //     //NEED TO PUSH DATA HERE
+    //     int trialNum = PlayerPrefs.GetInt("trialNum");
+    //     trialNum++;
+    //     PlayerPrefs.SetInt("trialNum", trialNum);
+
+    //     if(trialNum < SessionGenerator.GetComponent<SessionGenerator>().numTrials)
+    //     {
+    //         Debug.Log("trialNum"+trialNum);
+    //         Debug.Log("evaluating next");
+    //         startNextTrial();
+    //     }
+    //     else
+    //     {
+    //         Application.Quit();
+    //         Debug.Log("end reached");
+    //     }        
+    // }
+
+    IEnumerator TrialEndRoutine(LimaTrial trial)
+    {
+        player.GetComponent<PlayerMovement>().effortPeriod = false;
+        predator.GetComponent<PredatorControls>().circaStrike = false;
+
+        HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0f);
+        HeadsUpDisplay.SetActive(false);
+        toggleEndStateScreen();
+        togglePlayer();
+        togglePredator();
+        yield return new WaitForSeconds(2.0f);
+        arena.SetActive(false);
+        map.SetActive(false);
+        // toggleRewards();
+        // toggleProbability();
+        setCookie(Random.Range(0,1),Random.Range(0,6),0f,0);
+        toggleEndStateScreen();
+        gameStateController("nextTrialPeriod");
+    }
+#endregion
+
+
+
 
 
 #region  Wrappers and Helpers
@@ -178,9 +286,18 @@ public class TutorialLimaTask : MonoBehaviour
         player.GetComponent<PlayerMovement>().clickingPeriod = true;
     }
 
-    public void EnableEffortPhase()
-        {
 
+     public void EnableEffortPhase(int version)
+    {
+        if (version == 0)
+        {
+            Debug.Log("Starting freemovement Sequence");   
+            instructText.text = "Now bring the cookie back to safety";
+            HeadsUpDisplay.SetActive(true);
+            toggleEffort();
+        }
+        else if (version == 1)
+        {
             Debug.Log("Starting freemovement Sequence");   
 
             HeadsUpDisplay.SetActive(true);
@@ -191,16 +308,15 @@ public class TutorialLimaTask : MonoBehaviour
             setPredator(trial);  
             StartCoroutine("freeMovement");
         }
-
-
+      
+    }
 
    
- void toggleProbability(LimaTrial trial)
+ void toggleProbability()
     {
         if(!probabilityDisplay.activeSelf)
         {
             Debug.Log("changingMaterial color");
-            trialController.GetComponent<TrialController>().setProbability(trial.attackingProb);
             probabilityDisplay.SetActive(true);
 
         }
@@ -221,11 +337,16 @@ public class TutorialLimaTask : MonoBehaviour
 
         else
         {
+            Debug.Log("Toggle player off");
            playerManager.playerState = "free";
            player.GetComponent<PlayerMovement>().effortPeriod = false;
            player.GetComponent<PlayerMovement>().clickingPeriod = false;
+           
+           Debug.Log("playerManager.carrying"+playerManager.carrying);
+           
            if(playerManager.carrying)
            {
+                Debug.Log("does this work?");
                 playerManager.carrying = false;
                   foreach(Transform child in player.transform)
                     {
@@ -294,7 +415,6 @@ public class TutorialLimaTask : MonoBehaviour
         }
         else
         {
-            trialController.GetComponent<TrialController>().despawnRewards();
             cookies = false;
         }
 

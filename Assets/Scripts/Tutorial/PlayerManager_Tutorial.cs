@@ -27,9 +27,9 @@ public class PlayerManager_Tutorial : PlayerManager
                     player.GetComponent<PlayerMovement>().cookieWeight = 2f; //speed multiplier higher is faster
                     HeadsUpDisplay.GetComponent<UIController>().SetHUDReward(other.gameObject.GetComponent<Cookie>().rewardValue);
                 }
-                
-                task.GetComponent<TutorialLimaTask>().gameStateController("cookieSelection");
                 carrying = true; 
+                if (task.GetComponent<TutorialLimaTask>().TutorialController.tutorialState == "cookieSelection") task.GetComponent<TutorialLimaTask>().gameStateController("cookieSelection");
+                else if (task.GetComponent<TutorialLimaTask>().TutorialController.tutorialState == "navigationTutorial") task.GetComponent<TutorialLimaTask>().gameStateController("navigationTutorialEffortPeriod");
             }
 
             
@@ -47,6 +47,9 @@ public class PlayerManager_Tutorial : PlayerManager
                         if(child.CompareTag("Cookie")) Destroy(child.gameObject);
                     }
                     playerState ="escaped";
+                    
+                    
+                   
                     task.GetComponent<TutorialLimaTask>().gameStateController("endingPeriod");
                     Debug.Log("earn reward");
                     carrying = false; 
