@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using TMPro;
 using UnityEngine.SceneManagement;
 using System;
 
@@ -17,6 +18,9 @@ public class TutorialController : MonoBehaviour
 
     public string tutorialState;
 
+    public TMP_Text instructText;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +29,7 @@ public class TutorialController : MonoBehaviour
             videoPlayer.clip = videoOptions[currentVideoIndex];
             videoPlayer.loopPointReached += OnVideoEnd;
             videoPlayer.Play();
-            tutorialState = "tutorialIntro";
+            tutorialState = "cookieSelection";
         }
     }
 
@@ -42,6 +46,7 @@ public class TutorialController : MonoBehaviour
         {
             currentVideoIndex = index;
             videoPlayer.clip = videoOptions[currentVideoIndex];
+            videoPlayer.loopPointReached += OnVideoEnd;
             videoPlayer.Play();
         }
         else
@@ -55,19 +60,53 @@ public class TutorialController : MonoBehaviour
 
     public void SwitchToTask()
     {
-         instructUI.SetActive(false);
-         task.SetActive(true);
-
+        ToggleTask();
     }
-    public void NextVideo()
+    
+    public void ToggleTask()
     {
+        bool isTaskActive = task.activeSelf;
+
+        instructUI.SetActive(isTaskActive);
+        task.SetActive(!isTaskActive);
+    }
+
+    public void ToggleUIAndVideoCanvas()
+    {
+        bool isInstructUIActive = instructUI.activeSelf;
+
+        // Toggle the active states of instructUI and videoCanvas
+        instructUI.SetActive(!isInstructUIActive);
+        videoCanvas.SetActive(isInstructUIActive);
+
+        switch (tutorialState)
+        {
+            case "cookieSelection":
+                instructText.text = "Press \"Next\" to start practicing how to select cookies.\n Press \"Watch Again\" if you need to review the instructions on selecting cookies in the game.";
+                break;
+            case "effortIntro":
+                instructText.text = "Press \"Next\" to start practicing how to adjust the acceleration.\n Press \"Watch Again\" if you need to review the instructions on adjusting the acceleration in the game.";
+                break;
+            case "navigationTutorial":
+                instructText.text = "Press \"Next\" to start practicing how to select cookies.\n Press \"Watch Again\" if you need to review the instructions on selecting cookies in ther game.";
+                break;
+            case "nextTrialPeriod":
+                instructText.text = "Press \"Next\" to start practicing how to select cookies.\n Press \"Watch Again\" if you need to review the instructions on selecting cookies in ther game.";
+                break;
+        }
+    }
+
+    
+    public void NextVideo(string state)
+    {
+        tutorialState = state;
         int nextIndex = (currentVideoIndex + 1) % videoOptions.Count;
+        ToggleUIAndVideoCanvas();
         ChangeVideoClip(nextIndex);
     }
     public void WatchAgain()
     {
-        instructUI.SetActive(false);
-        videoCanvas.SetActive(true);
+        ToggleUIAndVideoCanvas();
         videoPlayer.loopPointReached += OnVideoEnd;
         videoPlayer.time = 0; // Set the time to 0
         videoPlayer.Play();
@@ -76,8 +115,7 @@ public class TutorialController : MonoBehaviour
     void OnVideoEnd(VideoPlayer vp)
      {
             Debug.Log("Switching Screen");
-            instructUI.SetActive(true);
-            videoCanvas.SetActive(false);
+            ToggleUIAndVideoCanvas();
             videoPlayer.loopPointReached -= OnVideoEnd;
      }
 

@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using UnityEngine.InputSystem;
 
 public class TutorialLimaTask : MonoBehaviour
 {
+    PlayerInput playerInput;
 
     public GameObject trialController;
     public TutorialController TutorialController;
@@ -30,7 +34,10 @@ public class TutorialLimaTask : MonoBehaviour
     bool cookies;
     float movementStartTime; //likely will change this to trial start time
     public GameObject HeadsUpDisplay;
-
+    int numCookies;
+    public TMP_Text instructText;    
+    public GameObject HandsOnKeys;
+    public GameObject EffortDisplay;
 
 
 #region  Running the Tutorial
@@ -38,6 +45,7 @@ public class TutorialLimaTask : MonoBehaviour
     //Upon enabling this gameobject the first trial will run.
     public void OnEnable()
     {
+       numCookies=0;
        gameStateController(TutorialController.tutorialState);
     }
 
@@ -51,15 +59,13 @@ public class TutorialLimaTask : MonoBehaviour
     {   
         switch (gameState)
         {
-            case "tutorialIntro":
+            case "cookieSelection":
                 Debug.Log("Running tutorial intro");
-                StartCoroutine(CookieSelection());
+                if(numCookies<=3) StartCoroutine(CookieSelection());
+                else if (numCookies<=4) StartCoroutine(endCookieSelection());
                 break;
-            case "clickingPeriod":
-                EnableClickingPeriod();
-                break;
-            case "effortPeriod":
-                EnableEffortPhase();
+            case "effortIntro":
+                keysSetUp();
                 break;
             case "endingPeriod":
                 // EndTrial();
@@ -77,23 +83,94 @@ public class TutorialLimaTask : MonoBehaviour
     
     private IEnumerator CookieSelection()
     {
+
+        if(numCookies!=0) 
+        {
+            yield return new WaitForSeconds(1.0f);
+            setCookie(Random.Range(0,1),Random.Range(0,6),0f,0);
+            togglePlayer();     
+        }
+
+        HeadsUpDisplay.SetActive(true);
+        instructText.text = "Click on the cookies as they appear!";
         arena.SetActive(true);
         map.SetActive(true);
         togglePlayer();     
         yield return new WaitForSeconds(1.0f);
 
-        setCookie(0,0,0f,0);     
+        setCookie(Random.Range(0,1),Random.Range(0,6),0f,0);
                
-        EnableClickingPeriod();  
+        EnableClickingPeriod(); 
+        numCookies++;
+ 
+    }
+
+      private IEnumerator endCookieSelection()
+    {
+        togglePlayer();  
+        instructText.text = "Great work! Now let's learn about movement in the game!";
+        yield return new WaitForSeconds(5.0f);
+        HeadsUpDisplay.SetActive(false);   
+        SwitchToTutorial("effortIntro");
     }
 
 #endregion 
 
 
+#region Effort Intro
 
+//One coroutine to ensure players are holding the keys
+    private void keysSetUp()
+    {
+        HandsOnKeys.SetActive(true);
+    }
+    void OnEffort()
+    {
+        if(TutorialController.tutorialState == "effortIntro")
+        {
+            if(HandsOnKeys.activeSelf)
+            {
+                if (Keyboard.current.sKey.isPressed && Keyboard.current.dKey.isPressed && Keyboard.current.fKey.isPressed)
+                {
+                    HandsOnKeys.SetActive(false);
+                    EffortDisplay.GetComponent<UIController>().SetEnergy(0.08f);
+                    EffortDisplay.SetActive(true);
+                }
+            }
+            else
+            {
+                if (Keyboard.current.sKey.isPressed && Keyboard.current.dKey.isPressed && Keyboard.current.fKey.isPressed)
+                {
+                    EffortDisplay.GetComponent<UIController>().IncreaseEnergy(0.05f);
+                    float energy = EffortDisplay.GetComponent<UIController>().GetEnergy();
+                    if(energy>=1) StartCoroutine(endEffortIntro());
+                }
+            }
+        }
+    }
+
+     private IEnumerator endEffortIntro()
+    {
+        EffortDisplay.GetComponent<UIController>().energyText.text = "Great work! Now let's learn more about navigating the map";
+        yield return new WaitForSeconds(8.0f);
+        SwitchToTutorial("navigationTutorial");
+    }
+
+//One coroutine for effort
+
+
+#endregion
 
 
 #region  Wrappers and Helpers
+
+    private void SwitchToTutorial(string tutorialState)
+    {
+        TutorialController.ToggleTask();
+        TutorialController.NextVideo(tutorialState);
+    }
+
+
 
  //This period is ended by PlayerManager when player picks up the cookie
     public void EnableClickingPeriod()
@@ -134,7 +211,7 @@ public class TutorialLimaTask : MonoBehaviour
         }
     }
 
-    void togglePlayer()
+    public void togglePlayer()
     {
         if(!player.activeSelf)
         {

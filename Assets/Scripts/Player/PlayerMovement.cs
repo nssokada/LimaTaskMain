@@ -220,7 +220,6 @@ public class PlayerMovement : MonoBehaviour
         float targetUIspeed = speed / maxSpeed;
         currentUIspeed = Mathf.Lerp(currentUIspeed, targetUIspeed, Time.deltaTime * transitionSpeed);
         HeadsUpDisplay.GetComponent<UIController>().SetEnergy(currentUIspeed);
-        Debug.Log("current speed"+currentUIspeed);
         HeadsUpDisplay.GetComponent<UIController>().SetEnergyText(Mathf.Clamp((int)speed, 0, 9));
 
     }

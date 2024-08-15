@@ -37,6 +37,11 @@ public class UIController : MonoBehaviour
         energySlider.value = increase;
     }
     
+    public float GetEnergy()
+    {
+        float energy =  energySlider.value;
+        return energy;
+    }
     public void SetEnergyText(int count)
     {
         energyText.text  = count.ToString();
