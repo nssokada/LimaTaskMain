@@ -30,6 +30,7 @@ public class PlayerManager_Tutorial : PlayerManager
                 carrying = true; 
                 if (task.GetComponent<TutorialLimaTask>().TutorialController.tutorialState == "cookieSelection") task.GetComponent<TutorialLimaTask>().gameStateController("cookieSelection");
                 else if (task.GetComponent<TutorialLimaTask>().TutorialController.tutorialState == "navigationTutorial") task.GetComponent<TutorialLimaTask>().gameStateController("navigationTutorialEffortPeriod");
+                else if (task.GetComponent<TutorialLimaTask>().TutorialController.tutorialState == "cookieTutorial") task.GetComponent<TutorialLimaTask>().gameStateController("cookieTutorialEffortPeriod");
             }
 
             

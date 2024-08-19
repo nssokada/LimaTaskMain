@@ -60,7 +60,14 @@ public class TutorialController : MonoBehaviour
 
     public void SwitchToTask()
     {
-        ToggleTask();
+        if(tutorialState=="mapTutorial")
+        {
+            SceneManager.LoadScene(0); //need to fix this to correct scene.
+        }
+        else
+        {
+            ToggleTask();
+        }
     }
     
     public void ToggleTask()
@@ -90,8 +97,11 @@ public class TutorialController : MonoBehaviour
             case "navigationTutorial":
                 instructText.text = "Press \"Next\" to start practicing how to select cookies.\n Press \"Watch Again\" if you need to review the instructions on selecting cookies in ther game.";
                 break;
-            case "nextTrialPeriod":
-                instructText.text = "Press \"Next\" to start practicing how to select cookies.\n Press \"Watch Again\" if you need to review the instructions on selecting cookies in ther game.";
+            case "cookieTutorial":
+                instructText.text = "Press \"Next\" to start practicing with the different cookies.\n Press \"Watch Again\" if you need to review the instructions on selecting cookies in ther game.";
+                break;
+            case "mapTutorial":
+                instructText.text = "Press \"Next\" to start practicing the game.\n Press \"Watch Again\" if you need to review the instructions on about the game.";
                 break;
         }
     }

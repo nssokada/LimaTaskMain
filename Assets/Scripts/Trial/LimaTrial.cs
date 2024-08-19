@@ -19,12 +19,16 @@ public class LimaTrial
     public int cookie2PosY;
     public float cookie2Weight;
     public int cookie2RewardValue;
+    public int cookie3PosX;
+    public int cookie3PosY;
+    public float cookie3Weight;
+    public int cookie3RewardValue;
 
     //DATA TO RECORD
     
 
 
-    public LimaTrial(float attackingProb,int cookie1PosX,int cookie1PosY,float cookie1Weight,int cookie1RewardValue,int cookie2PosX,int cookie2PosY,float cookie2Weight,int cookie2RewardValue)
+    public LimaTrial(float attackingProb,int cookie1PosX,int cookie1PosY,float cookie1Weight,int cookie1RewardValue,int cookie2PosX,int cookie2PosY,float cookie2Weight,int cookie2RewardValue, int cookie3PosX,int cookie3PosY,float cookie3Weight,int cookie3RewardValue)
     {
         this.attackingProb = attackingProb;
         this.cookie1PosX = cookie1PosX;
@@ -35,5 +39,9 @@ public class LimaTrial
         this.cookie2PosY = cookie2PosY;
         this.cookie2Weight = cookie2Weight;
         this.cookie2RewardValue = cookie2RewardValue;
+        this.cookie3PosX = cookie3PosX;
+        this.cookie3PosY = cookie3PosY;
+        this.cookie3Weight = cookie3Weight;
+        this.cookie3RewardValue = cookie3RewardValue;
     }
 }

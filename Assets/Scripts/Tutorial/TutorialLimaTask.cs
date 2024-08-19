@@ -76,12 +76,20 @@ public class TutorialLimaTask : MonoBehaviour
             case "navigationTutorialEffortPeriod":
                 EnableEffortPhase(0);
                 break;
+            case "cookieTutorial":
+                trialEndable = true;
+                if(numCookies<=3) StartCoroutine(cookieTutorial());
+                else StartCoroutine(endCookieTutorial());
+                break;
+            case "cookieTutorialEffortPeriod":
+                EnableEffortPhase(0);
+                break;
              case "endingPeriod":
                 EndTrial();
                 break;
             case "nextTrialPeriod":
                 if (TutorialController.tutorialState == "navigationTutorial")  gameStateController("navigationTutorial");
-                // OnTrialEnd();
+                else if (TutorialController.tutorialState == "cookieTutorial")  gameStateController("cookieTutorial");
                 break;
         }
     }
@@ -190,7 +198,7 @@ private IEnumerator navigationTutorial()
         togglePlayer();     
         yield return new WaitForSeconds(1.0f);
 
-        setCookie(Random.Range(0,1),Random.Range(0,6),1f,1);
+        setCookie(Random.Range(0,1),Random.Range(0,6),1f,10);
         Debug.Log("set cookie");
 
         EnableClickingPeriod(); 
@@ -206,12 +214,42 @@ private IEnumerator endNavigationTutorial()
         instructText.text = "Now let's learn about the cookies";
         yield return new WaitForSeconds(2.0f);
         EffortDisplay.SetActive(false);
-        SwitchToTutorial("navigationTutorial");
+        SwitchToTutorial("cookieTutorial");
 }
 
 
 #endregion
 
+
+#region cookieTutorial
+
+private IEnumerator cookieTutorial()
+{   
+        HeadsUpDisplay.SetActive(true);
+        instructText.text = "Click on the cookie to begin!";
+        arena.SetActive(true);
+        map.SetActive(true);
+        togglePlayer();     
+        yield return new WaitForSeconds(1.0f);
+
+        if(numCookies<2)setCookie(Random.Range(0,1),Random.Range(0,6),2f,100);
+        else setCookie(Random.Range(0,1),Random.Range(0,6),1f,10);
+        Debug.Log("set cookie");
+
+        EnableClickingPeriod(); 
+        numCookies++;
+}
+private IEnumerator endCookieTutorial()
+{        
+        HeadsUpDisplay.SetActive(true);
+        instructText.text = "Great work!";
+        yield return new WaitForSeconds(1.5f);
+        instructText.text = "Now let's learn about the map";
+        yield return new WaitForSeconds(2.0f);
+        EffortDisplay.SetActive(false);
+        SwitchToTutorial("mapTutorial");
+}
+#endregion
 
 
 #region  Ending a Trial
@@ -420,6 +458,9 @@ private IEnumerator endNavigationTutorial()
 
     }
 
+    
+
+
 
 
     void toggleRewards(LimaTrial trial)
@@ -428,6 +469,7 @@ private IEnumerator endNavigationTutorial()
         {
             trialController.GetComponent<TrialController>().spawnRewards(trial.cookie1PosX,trial.cookie1PosY,trial.cookie1Weight,trial.cookie1RewardValue);
             trialController.GetComponent<TrialController>().spawnRewards(trial.cookie2PosX,trial.cookie2PosY,trial.cookie2Weight,trial.cookie2RewardValue);
+            trialController.GetComponent<TrialController>().spawnRewards(trial.cookie3PosX,trial.cookie3PosY,trial.cookie3Weight,trial.cookie3RewardValue);
             cookies = true;
         }
         else
