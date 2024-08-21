@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3595,7 +3595,7 @@ MonoBehaviour:
   centerPt: {fileID: 947183458}
   speed: 0
   numPress: 0
-  radius: 11
+  radius: 10
   resistance: 0
   rotationSpeed: 0
   minSpeed: 0
@@ -3606,6 +3606,7 @@ MonoBehaviour:
   smoothingFactor: 0.1
   effortPeriod: 0
   clickingPeriod: 0
+  acornPeriod: 0
   transitionSpeed: 5
 --- !u!114 &597418905
 MonoBehaviour:
@@ -6471,6 +6472,10 @@ MonoBehaviour:
     cookie2PosY: 0
     cookie2Weight: 0
     cookie2RewardValue: 0
+    cookie3PosX: 0
+    cookie3PosY: 0
+    cookie3Weight: 0
+    cookie3RewardValue: 0
   numTrials: 0
 --- !u!4 &1113177326
 Transform:
@@ -6927,10 +6932,12 @@ MonoBehaviour:
   - {fileID: 126276148}
   - {fileID: 1706010303}
   cookiePrefab: {fileID: 2665013099508562093, guid: 9eae60d461e238341bb0872d4e49836e, type: 3}
+  acornPrefab: {fileID: 0}
   choose: {fileID: 0}
   move: {fileID: 0}
   probability: {fileID: 775172891}
   player: {fileID: 597418898}
+  centerPt: {fileID: 0}
 --- !u!1 &1203008476
 GameObject:
   m_ObjectHideFlags: 0

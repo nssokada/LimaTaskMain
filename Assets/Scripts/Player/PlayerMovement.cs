@@ -30,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
     //Togglable Bools
     public bool effortPeriod;
     public bool clickingPeriod;
+    public bool acornPeriod;
 
 
     Vector3 targetPosition;
@@ -58,7 +59,7 @@ public class PlayerMovement : MonoBehaviour
         speed = baseSpeed;
         MinPressLatency = PlayerPrefs.GetFloat("PressLatency");
         Debug.Log("Press Latency:"+MinPressLatency);
-        InvokeRepeating("drag", 0.5f, 0.22f);
+        // InvokeRepeating("drag", 0.5f, 0.22f);
     }
     
     void Update()
@@ -67,6 +68,12 @@ public class PlayerMovement : MonoBehaviour
        {
             mouseMove();
             effortUI();
+            drag();
+       }
+       else if(acornPeriod==true)
+       {
+            speed = 4f;
+            mouseMove();
        }
     }
 
@@ -226,7 +233,7 @@ public class PlayerMovement : MonoBehaviour
 
     void drag()
     {
-        speed -= 0.5f;
+        speed -= 0.01f;
         speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
     }
 
@@ -235,13 +242,13 @@ public class PlayerMovement : MonoBehaviour
     {
         if(latency <=MinPressLatency)
         {
-            speed += 0.5f*cookieWeight;
+            speed += 1f*cookieWeight;
             speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
 
         }
         else if (latency <=MinPressLatency+MinPressLatency*0.5)
         {
-            speed += 0.25f*cookieWeight;
+            speed += 0.5f*cookieWeight;
             speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
 
         }
@@ -258,6 +265,12 @@ public class PlayerMovement : MonoBehaviour
             effortPeriod = true;
             HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0f);
         }
+    public void enableAcorns()
+        {
+            acornPeriod = true;
+            HeadsUpDisplay.GetComponent<UIController>().SetEnergy(1f);
+        }
+
 
 #endregion
 

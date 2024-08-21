@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     public bool carrying;
+    public bool acorn_carrying;
+
     public GameObject player;
     public GameObject task;
     public string playerState;

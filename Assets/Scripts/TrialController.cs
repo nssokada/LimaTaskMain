@@ -8,6 +8,7 @@ public class TrialController : MonoBehaviour
     public GameObject[] cookieClose;
     public GameObject[] cookieFar;
     public GameObject cookiePrefab;
+    public GameObject acornPrefab;
     public GameObject choose;
     public GameObject move;
     public GameObject probability;
@@ -16,6 +17,11 @@ public class TrialController : MonoBehaviour
     bool moveInstruct;
     GameObject cookiePos;
     string cookieLayer;
+
+    public Transform centerPt;
+    private float radius = 9;
+    private float minDistanceBetweenAcorns = 2f; // Minimum distance between acorns
+    private List<Vector3> acornPositions = new List<Vector3>();
 
     void update()
     {
@@ -90,9 +96,71 @@ public class TrialController : MonoBehaviour
         newCookie.SetActive(true);
     }
 
+
+     public void spawnAcorns(int numberOfAcorns)
+    {
+        acornPositions.Clear(); // Clear previous positions if re-spawning
+
+        for (int i = 0; i < numberOfAcorns; i++)
+        {
+            Vector3 spawnPosition;
+            Quaternion spawnRotation;
+            bool positionFound = false;
+
+            for (int j = 0; j < 100; j++) // Try 100 times to find a valid position
+            {
+                spawnPosition = GetRandomPointInRadius(centerPt.position, radius);
+
+                // Check if the position is within the radius
+                if (Vector3.Distance(centerPt.position, spawnPosition) <= radius)
+                {
+                    // Check if the position is far enough from existing acorns
+                    bool isValid = true;
+                    foreach (Vector3 pos in acornPositions)
+                    {
+                        if (Vector3.Distance(pos, spawnPosition) < minDistanceBetweenAcorns)
+                        {
+                            isValid = false;
+                            break;
+                        }
+                    }
+
+                    if (isValid)
+                    {
+                        acornPositions.Add(spawnPosition);
+                        
+                        // Generate a random rotation
+                        spawnRotation = UnityEngine.Random.rotation;
+
+                        Instantiate(acornPrefab, spawnPosition, spawnRotation);
+                        positionFound = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!positionFound)
+            {
+                Debug.LogWarning("Could not find a valid position for acorn " + i);
+            }
+        }
+    }
+
+    private Vector3 GetRandomPointInRadius(Vector3 center, float radius)
+    {
+        // Generate a random point in a circular area
+        Vector2 randomPoint = UnityEngine.Random.insideUnitCircle * radius;
+        return new Vector3(center.x + randomPoint.x, center.y+0.5f, center.z + randomPoint.y);
+    }
+
     public void despawnRewards()
     {
         DestroyAllObjectsWithTag("Cookie");
+    }
+
+    public void despawnAcorns()
+    {
+        DestroyAllObjectsWithTag("Acorn");
     }
 
     public void DestroyAllObjectsWithTag(string tag)

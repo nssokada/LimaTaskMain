@@ -8,71 +8,88 @@ public class PlayerManager_Tutorial : PlayerManager
     private void OnTriggerEnter(Collider other) 
     {
         
-        if(!carrying){
             if (other.gameObject.tag == "Cookie")
             {
-                other.transform.parent = player.transform;
+                if(!carrying)
+                { 
+                    other.transform.parent = player.transform;
 
-                if(other.gameObject.GetComponent<Cookie>().weight>1) 
-                {
-                    cookieState = "heavy";
-                    // playerLayer = other.gameObject.GetComponent<Cookie>().layer;
-                    player.GetComponent<PlayerMovement>().cookieWeight = 1f; //speed multiplier higher is faster
-                    HeadsUpDisplay.GetComponent<UIController>().SetHUDReward(other.gameObject.GetComponent<Cookie>().rewardValue);
+                    if(other.gameObject.GetComponent<Cookie>().weight>1) 
+                    {
+                        cookieState = "heavy";
+                        // playerLayer = other.gameObject.GetComponent<Cookie>().layer;
+                        player.GetComponent<PlayerMovement>().cookieWeight = 1f; //speed multiplier higher is faster
+                        HeadsUpDisplay.GetComponent<UIController>().SetHUDReward(other.gameObject.GetComponent<Cookie>().rewardValue);
+                    }
+                    else 
+                    {
+                        cookieState = "light";
+                        // playerLayer = other.gameObject.GetComponent<Cookie>().layer;
+                        player.GetComponent<PlayerMovement>().cookieWeight = 2f; //speed multiplier higher is faster
+                        HeadsUpDisplay.GetComponent<UIController>().SetHUDReward(other.gameObject.GetComponent<Cookie>().rewardValue);
+                    }
+                    carrying = true; 
+                    if (task.GetComponent<TutorialLimaTask>().TutorialController.tutorialState == "cookieSelection") task.GetComponent<TutorialLimaTask>().gameStateController("cookieSelection");
+                    else task.GetComponent<TutorialLimaTask>().gameStateController("effortPeriod");
+
                 }
-                else 
-                {
-                    cookieState = "light";
-                    // playerLayer = other.gameObject.GetComponent<Cookie>().layer;
-                    player.GetComponent<PlayerMovement>().cookieWeight = 2f; //speed multiplier higher is faster
-                    HeadsUpDisplay.GetComponent<UIController>().SetHUDReward(other.gameObject.GetComponent<Cookie>().rewardValue);
-                }
-                carrying = true; 
-                if (task.GetComponent<TutorialLimaTask>().TutorialController.tutorialState == "cookieSelection") task.GetComponent<TutorialLimaTask>().gameStateController("cookieSelection");
-                else if (task.GetComponent<TutorialLimaTask>().TutorialController.tutorialState == "navigationTutorial") task.GetComponent<TutorialLimaTask>().gameStateController("navigationTutorialEffortPeriod");
-                else if (task.GetComponent<TutorialLimaTask>().TutorialController.tutorialState == "cookieTutorial") task.GetComponent<TutorialLimaTask>().gameStateController("cookieTutorialEffortPeriod");
             }
 
-            
-        }
-
-        else if(carrying)
-        {
-            
-            if(task.GetComponent<TutorialLimaTask>().trialEndable)
+       
+        else if(other.gameObject.tag =="Acorn")
             {
-                if (other.gameObject.tag == "Safety")
-                {
-                    foreach(Transform child in player.transform)
+                other.gameObject.GetComponent<Collider>().enabled = false;
+                Debug.Log("Acorn Hit");
+                HeadsUpDisplay.GetComponent<UIController>().SetHUDAcorn(2);
+                foreach (Transform child in other.gameObject.transform)
                     {
-                        if(child.CompareTag("Cookie")) Destroy(child.gameObject);
+                            // Set each child to active
+                            child.gameObject.SetActive(true); // Set to false if you want to deactivate
+                    }
+
+                    other.transform.parent = player.transform;
+                    acorn_carrying = true; 
+            }
+
+        
+        else if(other.gameObject.tag == "Safety")
+        {
+            if( (carrying | acorn_carrying) && task.GetComponent<TutorialLimaTask>().trialEndable)
+            {
+                foreach(Transform child in player.transform)
+                    {
+                        if(child.CompareTag("Cookie")) Destroy(child.gameObject);                        
+                        else if(child.CompareTag("Acorn")) Destroy(child.gameObject);
+
                     }
                     playerState ="escaped";
                     
-                    
-                   
+                
                     task.GetComponent<TutorialLimaTask>().gameStateController("endingPeriod");
                     Debug.Log("earn reward");
-                    carrying = false; 
-                }
-                else if (other.gameObject.tag == "Predator")
-                {
-                     foreach(Transform child in player.transform)
+                    carrying = false;                    
+                    acorn_carrying = false; 
+ 
+            }
+        }
+
+        else if(other.gameObject.tag == "Predator")
+        {
+            if((carrying | acorn_carrying) && task.GetComponent<TutorialLimaTask>().trialEndable)
+            {
+                foreach(Transform child in player.transform)
                     {
                         if(child.CompareTag("Cookie")) Destroy(child.gameObject);
+                        else if(child.CompareTag("Acorn")) Destroy(child.gameObject);
                     }
                     playerState ="captured";
                     task.GetComponent<TutorialLimaTask>().gameStateController("endingPeriod");
-                    carrying = false; 
-                }
-            }
+                    carrying = false;                     
+                    acorn_carrying = false; 
 
-          
+            }
         }
        
     }
-
-
-
 
   }

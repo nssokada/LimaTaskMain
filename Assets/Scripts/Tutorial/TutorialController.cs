@@ -29,7 +29,7 @@ public class TutorialController : MonoBehaviour
             videoPlayer.clip = videoOptions[currentVideoIndex];
             videoPlayer.loopPointReached += OnVideoEnd;
             videoPlayer.Play();
-            tutorialState = "cookieSelection";
+            tutorialState = "acornTutorial";
         }
     }
 
@@ -60,14 +60,7 @@ public class TutorialController : MonoBehaviour
 
     public void SwitchToTask()
     {
-        if(tutorialState=="mapTutorial")
-        {
-            SceneManager.LoadScene(0); //need to fix this to correct scene.
-        }
-        else
-        {
             ToggleTask();
-        }
     }
     
     public void ToggleTask()
@@ -128,6 +121,5 @@ public class TutorialController : MonoBehaviour
             ToggleUIAndVideoCanvas();
             videoPlayer.loopPointReached -= OnVideoEnd;
      }
-
 
 }

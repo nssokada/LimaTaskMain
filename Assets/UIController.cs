@@ -19,6 +19,7 @@ public class UIController : MonoBehaviour
     public TMP_Text energyText;
 
     public TMP_Text rewardTextHUD;
+    public TMP_Text acornTextHUD;
 
 
 
@@ -71,7 +72,17 @@ public class UIController : MonoBehaviour
     {
         rewardTextHUD.text = "+"+rewardValue.ToString();
     }
+    public void SetHUDAcorn(int rewardValue)
+    {
+         // Convert the current HUD text (without the '+') to an integer
+        int currentAcornValue = int.Parse(acornTextHUD.text.TrimStart('+'));
 
+        // Add the reward value to the current acorn value
+        currentAcornValue += rewardValue;
+
+        // Update the HUD text with the new value
+        acornTextHUD.text = "+" + currentAcornValue.ToString();
+    }
 
 
     public void setWind(Vector3 drift, float resistance)

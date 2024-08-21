@@ -26,12 +26,14 @@ public class TutorialLimaTask : MonoBehaviour
    
     public GameObject probabilityDisplay;
 
-    private LimaTrial trial;
+    public LimaTrial trial;
 
     bool trial_timeUp;
     public bool trialEndable;
     Vector3 home;
     bool cookies;
+    bool acorns;
+
     float movementStartTime; //likely will change this to trial start time
     public GameObject HeadsUpDisplay;
     int numCookies;
@@ -73,16 +75,24 @@ public class TutorialLimaTask : MonoBehaviour
                 if(numCookies<=3) StartCoroutine(navigationTutorial());
                 else StartCoroutine(endNavigationTutorial());
                 break;
-            case "navigationTutorialEffortPeriod":
-                EnableEffortPhase(0);
-                break;
             case "cookieTutorial":
                 trialEndable = true;
                 if(numCookies<=3) StartCoroutine(cookieTutorial());
                 else StartCoroutine(endCookieTutorial());
                 break;
-            case "cookieTutorialEffortPeriod":
-                EnableEffortPhase(0);
+            case "mapTutorial":
+                trialEndable = true;
+                if(numCookies<=3) StartCoroutine(mapTutorial(trial));
+                else StartCoroutine(endMapTutorial());
+                break;
+            case "acornTutorial":
+                trialEndable = true;
+                StartCoroutine(acornTutorial());
+                break;
+
+            case "effortPeriod":
+                if (TutorialController.tutorialState == "navigationTutorial" | TutorialController.tutorialState == "cookieTutorial") EnableEffortPhase(0);
+                else if(TutorialController.tutorialState == "mapTutorial") EnableEffortPhase(1);
                 break;
              case "endingPeriod":
                 EndTrial();
@@ -90,6 +100,11 @@ public class TutorialLimaTask : MonoBehaviour
             case "nextTrialPeriod":
                 if (TutorialController.tutorialState == "navigationTutorial")  gameStateController("navigationTutorial");
                 else if (TutorialController.tutorialState == "cookieTutorial")  gameStateController("cookieTutorial");
+                else if(TutorialController.tutorialState == "mapTutorial")
+                {
+                    Debug.Log("running map tutorial again");
+                    gameStateController("mapTutorial");
+                } 
                 break;
         }
     }
@@ -252,6 +267,61 @@ private IEnumerator endCookieTutorial()
 #endregion
 
 
+#region Map Tutorial
+
+private IEnumerator mapTutorial(LimaTrial trial)
+{
+        HeadsUpDisplay.SetActive(true);
+        instructText.text = "Click on a cookie to begin!";
+        arena.SetActive(true);
+        toggleProbability();
+        map.SetActive(true);
+        yield return new WaitForSeconds(1.0f);
+        togglePlayer();     
+        yield return new WaitForSeconds(1.0f);
+
+         //Set Rewards -> Spawns 3 cookies based on trial information
+        toggleRewards(trial);     
+        yield return new WaitForSeconds(1.0f);
+
+        EnableClickingPeriod(); 
+        numCookies++;
+}
+private IEnumerator endMapTutorial()
+{        
+        HeadsUpDisplay.SetActive(true);
+        instructText.text = "Great work!";
+        yield return new WaitForSeconds(1.5f);
+        instructText.text = "Now let's learn about the free movement condition";
+        yield return new WaitForSeconds(2.0f);
+        EffortDisplay.SetActive(false);
+        SwitchToTutorial("mapTutorial");
+}
+#endregion
+
+
+#region Acorn Tutorial
+private IEnumerator acornTutorial()
+{
+        HeadsUpDisplay.SetActive(true);
+        instructText.text = "Move your mouse to find acorns";
+        arena.SetActive(true);
+        toggleProbability();
+        map.SetActive(true);
+        yield return new WaitForSeconds(1.0f);
+        togglePlayer();     
+        yield return new WaitForSeconds(1.0f);
+
+         //Set Rewards -> Spawns 3 cookies based on trial information
+        toggleAcorns();     
+        yield return new WaitForSeconds(1.0f);
+
+        EnableAcornPeriod();
+        numCookies++;
+}
+
+#endregion
+
 #region  Ending a Trial
 
     public void EndTrial()
@@ -259,31 +329,20 @@ private IEnumerator endCookieTutorial()
         trialEndable = false;
         StopCoroutine("freeMovement");
         CancelInvoke("UpdateTimer");
-        StartCoroutine(TrialEndRoutine(trial));
+        if (TutorialController.tutorialState == "mapTutorial")
+        {
+            Debug.Log("Long Routine Called");
+            StartCoroutine(TrialEndRoutine(trial));
+        } 
+        else if(TutorialController.tutorialState == "navigationTutorial" | TutorialController.tutorialState =="cookieTutorial")
+        {
+            Debug.Log("Short Routine Called");
+            StartCoroutine(TrialEndRoutineShort(trial));
+        } 
             
     }
 
-    // public void OnTrialEnd()
-    // {
-    //     //NEED TO PUSH DATA HERE
-    //     int trialNum = PlayerPrefs.GetInt("trialNum");
-    //     trialNum++;
-    //     PlayerPrefs.SetInt("trialNum", trialNum);
-
-    //     if(trialNum < SessionGenerator.GetComponent<SessionGenerator>().numTrials)
-    //     {
-    //         Debug.Log("trialNum"+trialNum);
-    //         Debug.Log("evaluating next");
-    //         startNextTrial();
-    //     }
-    //     else
-    //     {
-    //         Application.Quit();
-    //         Debug.Log("end reached");
-    //     }        
-    // }
-
-    IEnumerator TrialEndRoutine(LimaTrial trial)
+    IEnumerator TrialEndRoutineShort(LimaTrial trial)
     {
         player.GetComponent<PlayerMovement>().effortPeriod = false;
         predator.GetComponent<PredatorControls>().circaStrike = false;
@@ -296,10 +355,30 @@ private IEnumerator endCookieTutorial()
         yield return new WaitForSeconds(2.0f);
         arena.SetActive(false);
         map.SetActive(false);
-        // toggleRewards();
+        // toggleRewards(); //removed since we don't have this here
         // toggleProbability();
         setCookie(Random.Range(0,1),Random.Range(0,6),0f,0);
         toggleEndStateScreen();
+        gameStateController("nextTrialPeriod");
+    }
+
+     IEnumerator TrialEndRoutine(LimaTrial trial)
+    {
+        player.GetComponent<PlayerMovement>().effortPeriod = false;
+        predator.GetComponent<PredatorControls>().circaStrike = false;
+
+        HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0f);
+        HeadsUpDisplay.SetActive(false);
+        toggleEndStateScreen();
+        togglePlayer();
+        togglePredator();
+        yield return new WaitForSeconds(2.0f);
+        arena.SetActive(false);
+        map.SetActive(false);
+        toggleRewards(trial);
+        toggleProbability();
+        toggleEndStateScreen();
+        resetTimer();
         gameStateController("nextTrialPeriod");
     }
 #endregion
@@ -324,7 +403,10 @@ private IEnumerator endCookieTutorial()
         player.GetComponent<PlayerMovement>().clickingPeriod = true;
     }
 
-
+    public void EnableAcornPeriod()
+    {
+         player.GetComponent<PlayerMovement>().enableAcorns();
+    }
      public void EnableEffortPhase(int version)
     {
         if (version == 0)
@@ -345,16 +427,25 @@ private IEnumerator endCookieTutorial()
             togglePredator();
             setPredator(trial);  
             StartCoroutine("freeMovement");
+
         }
       
     }
 
+IEnumerator freeMovement()
+    { 
+        InvokeRepeating("UpdateTimer", 0f, 0.01f);
+        yield return new WaitForSeconds(10.0f);
+        if(trialEndable)    gameStateController("endingPeriod");
+
+    }
    
  void toggleProbability()
     {
         if(!probabilityDisplay.activeSelf)
         {
             Debug.Log("changingMaterial color");
+            trialController.GetComponent<TrialController>().setProbability(trial.attackingProb);
             probabilityDisplay.SetActive(true);
 
         }
@@ -384,7 +475,6 @@ private IEnumerator endCookieTutorial()
            
            if(playerManager.carrying)
            {
-                Debug.Log("does this work?");
                 playerManager.carrying = false;
                   foreach(Transform child in player.transform)
                     {
@@ -414,6 +504,7 @@ private IEnumerator endCookieTutorial()
     {
          player.GetComponent<PlayerMovement>().enableEffort();
     }
+
 
     void toggleEndStateScreen()
     {
@@ -458,10 +549,6 @@ private IEnumerator endCookieTutorial()
 
     }
 
-    
-
-
-
 
     void toggleRewards(LimaTrial trial)
     {
@@ -474,8 +561,27 @@ private IEnumerator endCookieTutorial()
         }
         else
         {
+            Debug.Log("destroying reward");
             trialController.GetComponent<TrialController>().despawnRewards();
             cookies = false;
+        }
+
+    }
+
+
+    void toggleAcorns()
+    {
+        if(!acorns)
+        {
+            Debug.Log("spawning acorns");
+            trialController.GetComponent<TrialController>().spawnAcorns(5);
+            acorns = true;
+        }
+        else
+        {
+            Debug.Log("destroying acorns");
+            trialController.GetComponent<TrialController>().despawnAcorns();
+            acorns = false;
         }
 
     }
