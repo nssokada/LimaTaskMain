@@ -100,11 +100,8 @@ public class TutorialLimaTask : MonoBehaviour
             case "nextTrialPeriod":
                 if (TutorialController.tutorialState == "navigationTutorial")  gameStateController("navigationTutorial");
                 else if (TutorialController.tutorialState == "cookieTutorial")  gameStateController("cookieTutorial");
-                else if(TutorialController.tutorialState == "mapTutorial")
-                {
-                    Debug.Log("running map tutorial again");
-                    gameStateController("mapTutorial");
-                } 
+                else if(TutorialController.tutorialState == "mapTutorial")  gameStateController("mapTutorial");
+                else if (TutorialController.tutorialState == "acornTutorial") gameStateController("acornTutorial");
                 break;
         }
     }
@@ -320,6 +317,17 @@ private IEnumerator acornTutorial()
         numCookies++;
 }
 
+private IEnumerator endacornTutorial()
+{        
+        HeadsUpDisplay.SetActive(true);
+        instructText.text = "Great work!";
+        yield return new WaitForSeconds(1.5f);
+        instructText.text = "Now let's play the game";
+        yield return new WaitForSeconds(2.0f);
+        EffortDisplay.SetActive(false);
+        SwitchToTutorial("endTutorial");
+}
+
 #endregion
 
 #region  Ending a Trial
@@ -339,6 +347,10 @@ private IEnumerator acornTutorial()
             Debug.Log("Short Routine Called");
             StartCoroutine(TrialEndRoutineShort(trial));
         } 
+        else if (TutorialController.tutorialState == "acornTutorial")
+        {
+            StartCoroutine(TrialEndRoutineAcorn(trial));
+        }
             
     }
 
@@ -381,6 +393,26 @@ private IEnumerator acornTutorial()
         resetTimer();
         gameStateController("nextTrialPeriod");
     }
+
+    IEnumerator TrialEndRoutineAcorn(LimaTrial trial)
+    {
+        player.GetComponent<PlayerMovement>().effortPeriod = false;
+        predator.GetComponent<PredatorControls>().circaStrike = false;
+
+        HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0f);
+        HeadsUpDisplay.SetActive(false);
+        toggleEndStateScreen();
+        togglePlayer();
+        togglePredator();
+        yield return new WaitForSeconds(2.0f);
+        arena.SetActive(false);
+        map.SetActive(false);
+        toggleAcorns();
+        toggleProbability();
+        toggleEndStateScreen();
+        resetTimer();
+        gameStateController("nextTrialPeriod");
+    }
 #endregion
 
 
@@ -405,7 +437,10 @@ private IEnumerator acornTutorial()
 
     public void EnableAcornPeriod()
     {
-         player.GetComponent<PlayerMovement>().enableAcorns();
+        player.GetComponent<PlayerMovement>().enableAcorns();
+        setPredator(trial);  
+        StartCoroutine("freeMovement");
+
     }
      public void EnableEffortPhase(int version)
     {
@@ -481,6 +516,14 @@ IEnumerator freeMovement()
                         if(child.CompareTag("Cookie")) Destroy(child.gameObject);
                     }
            }
+           if(playerManager.acorn_carrying) 
+            {
+                playerManager.acorn_carrying = false;
+                  foreach(Transform child in player.transform)
+                    {
+                        if(child.CompareTag("Acorn")) Destroy(child.gameObject);
+                    }
+           }
            player.transform.position = home;
 
            player.SetActive(false);
@@ -548,6 +591,8 @@ IEnumerator freeMovement()
         }
 
     }
+
+ 
 
 
     void toggleRewards(LimaTrial trial)
