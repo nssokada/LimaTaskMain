@@ -25,7 +25,7 @@ public class Cookie: MonoBehaviour
 
     public void setCookieColor()
     {
-         if(weight>1)
+         if(rewardValue>10)
         {
             this.GetComponent<MeshRenderer>().material = chocolate;
         }

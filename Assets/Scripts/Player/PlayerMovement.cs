@@ -52,7 +52,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-    void Start()
+    void OnEnable()
     {
         animator = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
@@ -211,7 +211,6 @@ public class PlayerMovement : MonoBehaviour
             {
                 float currentTime = Time.time;
                 latency = currentTime - lastPressTime;
-                Debug.Log("Latency between spacebar presses: " + latency + " seconds");
                 lastPressTime = currentTime;
                 effort();
             }

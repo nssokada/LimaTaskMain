@@ -749,6 +749,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   carrying: 0
+  acorn_carrying: 0
   player: {fileID: 1385470727}
   task: {fileID: 1181646873}
   playerState: 
@@ -7947,7 +7948,7 @@ VideoPlayer:
   m_AspectRatio: 0
   m_DataSource: 0
   m_TimeUpdateMode: 2
-  m_PlaybackSpeed: 7.62
+  m_PlaybackSpeed: 1
   m_AudioOutputMode: 2
   m_TargetAudioSources: []
   m_DirectAudioVolumes: []
@@ -8172,7 +8173,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: eec5f1c9c191c5046888e27fbe13ad3d, type: 3}
+  m_Texture: {fileID: 2800000, guid: af5c46648652cb54593a678d54250f97, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -9280,6 +9281,7 @@ MonoBehaviour:
   - {fileID: 32900000, guid: a42bf53c830e041af94bfa8c544ef726, type: 3}
   - {fileID: 32900000, guid: 98e9fc1ef98fa4e3cac49f99bff6a22c, type: 3}
   - {fileID: 32900000, guid: dac52ab64c4a542c6a715421fcd6939f, type: 3}
+  - {fileID: 32900000, guid: 6cf97b5ea0111422b838da50fc917bbd, type: 3}
   tutorialState: 
   instructText: {fileID: 1541994227}
 --- !u!1 &1105114279
@@ -9377,7 +9379,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Place your left hand on the 'ASDF' keys
+  m_text: Press the 'ASDF' keys using your left hand
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

@@ -29,7 +29,7 @@ public class TutorialController : MonoBehaviour
             videoPlayer.clip = videoOptions[currentVideoIndex];
             videoPlayer.loopPointReached += OnVideoEnd;
             videoPlayer.Play();
-            tutorialState = "acornTutorial";
+            tutorialState = "cookieSelection";
         }
     }
 
@@ -96,6 +96,9 @@ public class TutorialController : MonoBehaviour
             case "mapTutorial":
                 instructText.text = "Press \"Next\" to start practicing the game.\n Press \"Watch Again\" if you need to review the instructions on about the game.";
                 break;
+            case "acornTutorial":
+                instructText.text = "Press \"Next\" to start practicing the free movement trial.\n Press \"Watch Again\" if you need to review the instructions on about the free movement trial.";
+                break;
         }
     }
 
@@ -103,6 +106,10 @@ public class TutorialController : MonoBehaviour
     public void NextVideo(string state)
     {
         tutorialState = state;
+        if(tutorialState =="endTutorial")
+        {
+            SceneManager.LoadScene(0);
+        } 
         int nextIndex = (currentVideoIndex + 1) % videoOptions.Count;
         ToggleUIAndVideoCanvas();
         ChangeVideoClip(nextIndex);

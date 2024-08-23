@@ -40,6 +40,7 @@ public class TutorialLimaTask : MonoBehaviour
     public TMP_Text instructText;    
     public GameObject HandsOnKeys;
     public GameObject EffortDisplay;
+    private List<float> pressTimes = new List<float>();
 
 
 #region  Running the Tutorial
@@ -87,7 +88,8 @@ public class TutorialLimaTask : MonoBehaviour
                 break;
             case "acornTutorial":
                 trialEndable = true;
-                StartCoroutine(acornTutorial());
+                if(numCookies<=3) StartCoroutine(acornTutorial());
+                else StartCoroutine(endacornTutorial());
                 break;
 
             case "effortPeriod":
@@ -176,6 +178,8 @@ public class TutorialLimaTask : MonoBehaviour
                 {
                     EffortDisplay.GetComponent<UIController>().IncreaseEnergy(0.05f);
                     float energy = EffortDisplay.GetComponent<UIController>().GetEnergy();
+                    float pressTime = Time.time;
+                    pressTimes.Add(pressTime);
                     if(energy>=1) StartCoroutine(endEffortIntro());
                 }
             }
@@ -184,6 +188,14 @@ public class TutorialLimaTask : MonoBehaviour
 
      private IEnumerator endEffortIntro()
     {
+        float total=0f;
+        for (int i = 1; i < pressTimes.Count; i++)
+        {
+                 total += (pressTimes[i] - pressTimes[i - 1]);
+        }
+        float latency =  total / (pressTimes.Count - 1);
+
+        PlayerPrefs.SetFloat("PressLatency", latency);
         EffortDisplay.GetComponent<UIController>().energyText.text = "Great work!";
         yield return new WaitForSeconds(4.0f);
         EffortDisplay.GetComponent<UIController>().energyText.text = "Now let's learn about navigating the game!";
@@ -244,7 +256,8 @@ private IEnumerator cookieTutorial()
         togglePlayer();     
         yield return new WaitForSeconds(1.0f);
 
-        if(numCookies<2)setCookie(Random.Range(0,1),Random.Range(0,6),2f,100);
+        if(numCookies<1)setCookie(Random.Range(0,1),Random.Range(0,6),3f,100);
+        else if(numCookies<2)setCookie(Random.Range(0,1),Random.Range(0,6),1f,100);
         else setCookie(Random.Range(0,1),Random.Range(0,6),1f,10);
         Debug.Log("set cookie");
 
@@ -292,7 +305,7 @@ private IEnumerator endMapTutorial()
         instructText.text = "Now let's learn about the free movement condition";
         yield return new WaitForSeconds(2.0f);
         EffortDisplay.SetActive(false);
-        SwitchToTutorial("mapTutorial");
+        SwitchToTutorial("acornTutorial");
 }
 #endregion
 
