@@ -234,7 +234,7 @@ private IEnumerator navigationTutorial()
 private IEnumerator endNavigationTutorial()
 {        
     
-        HeadsUpDisplay.SetActive(true);
+        HeadsUpDisplay.SetActive(false);
         instructText.text = "Great work!";
         yield return new WaitForSeconds(2.0f);
         instructText.text = "Now let's learn about the cookies";
@@ -268,7 +268,7 @@ private IEnumerator cookieTutorial()
 }
 private IEnumerator endCookieTutorial()
 {        
-        HeadsUpDisplay.SetActive(true);
+        HeadsUpDisplay.SetActive(false);
         instructText.text = "Great work!";
         yield return new WaitForSeconds(1.5f);
         instructText.text = "Now let's learn about the map";
@@ -301,7 +301,7 @@ private IEnumerator mapTutorial(LimaTrial trial)
 }
 private IEnumerator endMapTutorial()
 {        
-        HeadsUpDisplay.SetActive(true);
+        HeadsUpDisplay.SetActive(false);
         instructText.text = "Great work!";
         yield return new WaitForSeconds(1.5f);
         instructText.text = "Now let's learn about the free movement condition";
@@ -334,7 +334,7 @@ private IEnumerator acornTutorial()
 
 private IEnumerator endacornTutorial()
 {        
-        HeadsUpDisplay.SetActive(true);
+        HeadsUpDisplay.SetActive(false);
         instructText.text = "Great work!";
         yield return new WaitForSeconds(1.5f);
         instructText.text = "Now let's play the game";
@@ -439,6 +439,7 @@ private IEnumerator endacornTutorial()
 
     private void SwitchToTutorial(string tutorialState)
     {
+        Debug.Log("switching back to video");
         TutorialController.ToggleTask();
         TutorialController.NextVideo(tutorialState);
     }

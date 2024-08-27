@@ -19,6 +19,7 @@ public class TutorialController : MonoBehaviour
     public string tutorialState;
 
     public TMP_Text instructText;
+    private bool hasVideoEnded = false;
 
 
     // Start is called before the first frame update
@@ -31,20 +32,26 @@ public class TutorialController : MonoBehaviour
         }
     }
 
+    
+
     IEnumerator LoadAndPlayVideo(string videoFileName)
     {
         string videoUrl = GetStreamingAssetsPath(videoFileName);
 
         videoPlayer.url = videoUrl;
         videoPlayer.Prepare();
-
+        videoPlayer.time = 0; // Set the time to 0
+        videoPlayer.targetTexture.Create();
         while (!videoPlayer.isPrepared)
         {
             yield return null;
         }
 
-        videoPlayer.loopPointReached += OnVideoEnd;
         videoPlayer.Play();
+        yield return new WaitForSeconds((float)videoPlayer.length);
+        videoPlayer.Pause();
+        videoPlayer.targetTexture.Release();
+        OnVideoEnd();
     }
 
     string GetStreamingAssetsPath(string fileName)
@@ -89,7 +96,7 @@ public class TutorialController : MonoBehaviour
     public void ToggleUIAndVideoCanvas()
     {
         bool isInstructUIActive = instructUI.activeSelf;
-
+        Debug.Log(isInstructUIActive);
         // Toggle the active states of instructUI and videoCanvas
         instructUI.SetActive(!isInstructUIActive);
         videoCanvas.SetActive(isInstructUIActive);
@@ -126,25 +133,21 @@ public class TutorialController : MonoBehaviour
     {
         tutorialState = state;
         int nextIndex = (currentVideoIndex + 1) % videoOptions.Length;
-        ChangeVideoClip(nextIndex);
         ToggleUIAndVideoCanvas();
-        videoPlayer.loopPointReached += OnVideoEnd;
-        videoPlayer.Play();
+        ChangeVideoClip(nextIndex);
       
     }
     public void WatchAgain()
     {
         ToggleUIAndVideoCanvas();
-        videoPlayer.loopPointReached += OnVideoEnd;
-        videoPlayer.time = 0; // Set the time to 0
-        videoPlayer.Play();
+        StartCoroutine(LoadAndPlayVideo(videoOptions[currentVideoIndex]));
     }
 
-    void OnVideoEnd(VideoPlayer vp)
+    void OnVideoEnd()
      {
             Debug.Log("Switching Screen");
+            // videoPlayer.loopPointReached -= OnVideoEnd;
             ToggleUIAndVideoCanvas();
-            videoPlayer.loopPointReached -= OnVideoEnd;
      }
 
 }
