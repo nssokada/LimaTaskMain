@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Video;
 using TMPro;
 using UnityEngine.SceneManagement;
-using System;
+using System.IO;
 
 public class TutorialController : MonoBehaviour
 {
@@ -13,7 +13,7 @@ public class TutorialController : MonoBehaviour
     public GameObject videoCanvas;
     public GameObject task;
     public VideoPlayer videoPlayer;
-    public List<VideoClip> videoOptions; // List of video clips to choose from
+    public string[] videoOptions; // List of video clips to choose from
     private int currentVideoIndex = 0; // Track the currently selected video
 
     public string tutorialState;
@@ -24,36 +24,51 @@ public class TutorialController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (videoOptions.Count > 0)
+        if (videoOptions.Length > 0)
         {
-            videoPlayer.clip = videoOptions[currentVideoIndex];
-            videoPlayer.loopPointReached += OnVideoEnd;
-            videoPlayer.Play();
+            StartCoroutine(LoadAndPlayVideo(videoOptions[currentVideoIndex]));
             tutorialState = "cookieSelection";
         }
     }
 
-    public void buttonRN()
+    IEnumerator LoadAndPlayVideo(string videoFileName)
     {
-        task.SetActive(true);
-        // startScreen.SetActive(false);
+        string videoUrl = GetStreamingAssetsPath(videoFileName);
+
+        videoPlayer.url = videoUrl;
+        videoPlayer.Prepare();
+
+        while (!videoPlayer.isPrepared)
+        {
+            yield return null;
+        }
+
+        videoPlayer.loopPointReached += OnVideoEnd;
+        videoPlayer.Play();
+    }
+
+    string GetStreamingAssetsPath(string fileName)
+    {
+        string path = System.IO.Path.Combine("https://nssokada.github.io/testVideoRepo/", fileName);
+
+        return path;
     }
 
     // Method to change the video clip
+   // Method to change the video clip
     public void ChangeVideoClip(int index)
     {
-        if (index >= 0 && index < videoOptions.Count)
+        if (index >= 0 && index < videoOptions.Length)
         {
             currentVideoIndex = index;
-            videoPlayer.clip = videoOptions[currentVideoIndex];
-            videoPlayer.loopPointReached += OnVideoEnd;
-            videoPlayer.Play();
+            StartCoroutine(LoadAndPlayVideo(videoOptions[currentVideoIndex]));
         }
         else
         {
             Debug.LogWarning("Invalid video index selected.");
         }
     }
+
 
     // Example of using the method from a UI button
 
@@ -102,17 +117,20 @@ public class TutorialController : MonoBehaviour
         }
     }
 
+    public void SwitchScene()
+    {
+            SceneManager.LoadScene(0);
+    }
     
     public void NextVideo(string state)
     {
         tutorialState = state;
-        if(tutorialState =="endTutorial")
-        {
-            SceneManager.LoadScene(0);
-        } 
-        int nextIndex = (currentVideoIndex + 1) % videoOptions.Count;
-        ToggleUIAndVideoCanvas();
+        int nextIndex = (currentVideoIndex + 1) % videoOptions.Length;
         ChangeVideoClip(nextIndex);
+        ToggleUIAndVideoCanvas();
+        videoPlayer.loopPointReached += OnVideoEnd;
+        videoPlayer.Play();
+      
     }
     public void WatchAgain()
     {
@@ -130,3 +148,6 @@ public class TutorialController : MonoBehaviour
      }
 
 }
+
+
+

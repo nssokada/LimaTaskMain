@@ -97,6 +97,8 @@ public class TutorialLimaTask : MonoBehaviour
                 else if(TutorialController.tutorialState == "mapTutorial") EnableEffortPhase(1);
                 break;
              case "endingPeriod":
+                HeadsUpDisplay.GetComponent<UIController>().SetHUDReward(0);
+                HeadsUpDisplay.GetComponent<UIController>().SetHUDAcorn(0);
                 EndTrial();
                 break;
             case "nextTrialPeriod":
@@ -180,7 +182,7 @@ public class TutorialLimaTask : MonoBehaviour
                     float energy = EffortDisplay.GetComponent<UIController>().GetEnergy();
                     float pressTime = Time.time;
                     pressTimes.Add(pressTime);
-                    if(energy>=1) StartCoroutine(endEffortIntro());
+                    if(energy>=0.9) StartCoroutine(endEffortIntro());
                 }
             }
         }
@@ -338,7 +340,8 @@ private IEnumerator endacornTutorial()
         instructText.text = "Now let's play the game";
         yield return new WaitForSeconds(2.0f);
         EffortDisplay.SetActive(false);
-        SwitchToTutorial("endTutorial");
+        // SwitchToTutorial("endTutorial");
+        TutorialController.SwitchScene();
 }
 
 #endregion
@@ -467,7 +470,7 @@ private IEnumerator endacornTutorial()
         else if (version == 1)
         {
             Debug.Log("Starting freemovement Sequence");   
-
+            instructText.text = "Now bring the cookie back to safety";
             HeadsUpDisplay.SetActive(true);
             toggleEffort();
             // toggleWind();

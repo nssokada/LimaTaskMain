@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1527,7 +1527,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 90.61481}
+  m_AnchoredPosition: {x: 0, y: 43.7}
   m_SizeDelta: {x: 800, y: 59.6576}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &340706784
@@ -1577,8 +1577,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -7946,20 +7946,20 @@ VideoPlayer:
   m_TargetMaterialProperty: <noninit>
   m_RenderMode: 2
   m_AspectRatio: 0
-  m_DataSource: 0
+  m_DataSource: 1
   m_TimeUpdateMode: 2
   m_PlaybackSpeed: 1
   m_AudioOutputMode: 2
   m_TargetAudioSources: []
   m_DirectAudioVolumes: []
-  m_Url: 
+  m_Url: file:///Users/nokada/Documents/CALTECH/LimaTaskMain/Assets/StreamingAssets/Videos/acornsPeriod.mp4
   m_EnabledAudioTracks: 
   m_DirectAudioMutes: 
   m_ControlledAudioTrackCount: 0
   m_PlayOnAwake: 0
   m_SkipOnDrop: 1
-  m_Looping: 0
-  m_WaitForFirstFrame: 1
+  m_Looping: 1
+  m_WaitForFirstFrame: 0
   m_FrameReadyEventEnabled: 0
   m_VideoShaders: []
 --- !u!1 &768360516
@@ -8909,8 +8909,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 12
+  m_fontSizeBase: 12
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -8976,8 +8976,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -49.4, y: 26.6964}
-  m_SizeDelta: {x: 253.4936, y: 50}
+  m_AnchoredPosition: {x: -61.108093, y: 26.696402}
+  m_SizeDelta: {x: 253.4936, y: 26.5838}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &989279258
 PrefabInstance:
@@ -9276,12 +9276,12 @@ MonoBehaviour:
   task: {fileID: 1181646873}
   videoPlayer: {fileID: 765085128}
   videoOptions:
-  - {fileID: 32900000, guid: 46eb6c60613a04a87a98f2d630057f89, type: 3}
-  - {fileID: 32900000, guid: 0a3aaf18e25b74a56970edbd0ddece8b, type: 3}
-  - {fileID: 32900000, guid: a42bf53c830e041af94bfa8c544ef726, type: 3}
-  - {fileID: 32900000, guid: 98e9fc1ef98fa4e3cac49f99bff6a22c, type: 3}
-  - {fileID: 32900000, guid: dac52ab64c4a542c6a715421fcd6939f, type: 3}
-  - {fileID: 32900000, guid: 6cf97b5ea0111422b838da50fc917bbd, type: 3}
+  - introGame.mp4
+  - effortIntro.mp4
+  - navigationIntro.mp4
+  - cookiePractice.mp4
+  - map.mp4
+  - acornsPeriod.mp4
   tutorialState: 
   instructText: {fileID: 1541994227}
 --- !u!1 &1105114279

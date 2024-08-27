@@ -5,6 +5,12 @@ using UnityEngine;
 public class PlayerManager_Tutorial : PlayerManager
 {
 
+    private bool exitSafety;
+
+    private void OnEnable()
+    {
+        exitSafety = false;
+    }
     private void OnTriggerEnter(Collider other) 
     {
         
@@ -54,7 +60,7 @@ public class PlayerManager_Tutorial : PlayerManager
         
         else if(other.gameObject.tag == "Safety")
         {
-            if( (carrying | acorn_carrying) && task.GetComponent<TutorialLimaTask>().trialEndable)
+            if( exitSafety && task.GetComponent<TutorialLimaTask>().trialEndable)
             {
                 foreach(Transform child in player.transform)
                     {
@@ -75,7 +81,7 @@ public class PlayerManager_Tutorial : PlayerManager
 
         else if(other.gameObject.tag == "Predator")
         {
-            if((carrying | acorn_carrying) && task.GetComponent<TutorialLimaTask>().trialEndable)
+            if( exitSafety && task.GetComponent<TutorialLimaTask>().trialEndable)
             {
                 foreach(Transform child in player.transform)
                     {
@@ -90,6 +96,14 @@ public class PlayerManager_Tutorial : PlayerManager
             }
         }
        
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.gameObject.tag == "Safety")
+        {
+            exitSafety = true;
+        }
     }
 
   }
