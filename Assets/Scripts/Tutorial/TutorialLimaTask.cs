@@ -233,13 +233,13 @@ private IEnumerator navigationTutorial()
 
 private IEnumerator endNavigationTutorial()
 {        
-    
-        HeadsUpDisplay.SetActive(false);
+        HeadsUpDisplay.SetActive(true);
         instructText.text = "Great work!";
         yield return new WaitForSeconds(2.0f);
         instructText.text = "Now let's learn about the cookies";
         yield return new WaitForSeconds(2.0f);
         EffortDisplay.SetActive(false);
+        HeadsUpDisplay.SetActive(false);
         SwitchToTutorial("cookieTutorial");
 }
 
@@ -268,12 +268,13 @@ private IEnumerator cookieTutorial()
 }
 private IEnumerator endCookieTutorial()
 {        
-        HeadsUpDisplay.SetActive(false);
+        HeadsUpDisplay.SetActive(true);
         instructText.text = "Great work!";
         yield return new WaitForSeconds(1.5f);
         instructText.text = "Now let's learn about the map";
         yield return new WaitForSeconds(2.0f);
         EffortDisplay.SetActive(false);
+        HeadsUpDisplay.SetActive(false);
         SwitchToTutorial("mapTutorial");
 }
 #endregion
@@ -301,12 +302,13 @@ private IEnumerator mapTutorial(LimaTrial trial)
 }
 private IEnumerator endMapTutorial()
 {        
-        HeadsUpDisplay.SetActive(false);
+        HeadsUpDisplay.SetActive(true);
         instructText.text = "Great work!";
         yield return new WaitForSeconds(1.5f);
         instructText.text = "Now let's learn about the free movement condition";
         yield return new WaitForSeconds(2.0f);
         EffortDisplay.SetActive(false);
+        HeadsUpDisplay.SetActive(false);
         SwitchToTutorial("acornTutorial");
 }
 #endregion
@@ -334,13 +336,13 @@ private IEnumerator acornTutorial()
 
 private IEnumerator endacornTutorial()
 {        
-        HeadsUpDisplay.SetActive(false);
+            HeadsUpDisplay.SetActive(true);
         instructText.text = "Great work!";
         yield return new WaitForSeconds(1.5f);
         instructText.text = "Now let's play the game";
         yield return new WaitForSeconds(2.0f);
         EffortDisplay.SetActive(false);
-        // SwitchToTutorial("endTutorial");
+        HeadsUpDisplay.SetActive(false);
         TutorialController.SwitchScene();
 }
 
