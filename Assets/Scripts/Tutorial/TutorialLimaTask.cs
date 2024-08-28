@@ -156,14 +156,9 @@ public class TutorialLimaTask : MonoBehaviour
 
 #region Effort Intro
 
-//One coroutine to ensure players are holding the keys
-    private void keysSetUp()
-    {
-        HandsOnKeys.SetActive(true);
-    }
-    void OnEffort()
-    {
-        if(TutorialController.tutorialState == "effortIntro")
+void Update()
+{
+    if(TutorialController.tutorialState == "effortIntro")
         {
             if(HandsOnKeys.activeSelf)
             {
@@ -174,7 +169,19 @@ public class TutorialLimaTask : MonoBehaviour
                     EffortDisplay.SetActive(true);
                 }
             }
-            else
+        }
+}
+
+//One coroutine to ensure players are holding the keys
+    private void keysSetUp()
+    {
+        HandsOnKeys.SetActive(true);
+    }
+    void OnEffort()
+    {
+        if(TutorialController.tutorialState == "effortIntro")
+        {
+            if(EffortDisplay.activeSelf)
             {
                 if (Keyboard.current.sKey.isPressed && Keyboard.current.dKey.isPressed && Keyboard.current.fKey.isPressed)
                 {

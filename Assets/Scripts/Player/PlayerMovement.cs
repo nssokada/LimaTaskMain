@@ -109,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator moveObject(Vector3 newPosition)
     {
         float  startTime = Time.time;
-        float speed =0.1f;
+        float speed =1f;
         Quaternion targetRotation = Quaternion.LookRotation(newPosition);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 1f);
         float journeyLength = Vector3.Distance(transform.position, newPosition);
