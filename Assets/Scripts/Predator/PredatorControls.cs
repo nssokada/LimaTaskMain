@@ -45,7 +45,7 @@ public class PredatorControls : MonoBehaviour
 
     public void setAttack(float attackingProb)
     {
-        float attackingTime = Random.Range(2.0f, 9.0f);
+        float attackingTime = Random.Range(1.0f, 3.0f);
         float rand = Random.Range(0.0f, 1.0f);
 
         if (rand<attackingProb)
