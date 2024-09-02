@@ -25,6 +25,29 @@ public class LimaTrial
     public int cookie3RewardValue;
 
     //DATA TO RECORD
+
+    //Continous Data
+
+    //Player Position <World Space> Vector3
+    //Predator Position <World Space> Vector3 --> NaN until spawned
+    //Mouse Position <Screen Space> X,Y?? Maybe world space
+    //Effort Key press  float[]
+    
+    //Static Vars
+    // Choice --> cookie name, value, position<Vector3>, time 
+    // Reward
+    // EndState {<escape, capture, timeout>, time}
+    // TrialStartTime
+    // TrialEndTime
+
+    //Diagnostics
+    //--> starttime
+    //--> endtime
+
+
+    //Where were the acorns?
+    //Maybe we have an override acorn
+
     
 
 
