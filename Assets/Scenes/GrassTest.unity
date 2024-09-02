@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -170,8 +170,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 1
-  theta: 180
 --- !u!135 &14933597
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -290,8 +288,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 3
-  theta: 180
 --- !u!135 &22428528
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -410,8 +406,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 3
-  theta: 180
 --- !u!135 &40047444
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -717,8 +711,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 3
-  theta: 180
 --- !u!135 &94945300
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1074,8 +1066,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 3
-  theta: 180
 --- !u!135 &174876747
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1282,8 +1272,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 5
-  theta: 180
 --- !u!135 &244194829
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1402,8 +1390,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 5
-  theta: 180
 --- !u!135 &276890449
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1522,8 +1508,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 5
-  theta: 180
 --- !u!135 &305482518
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1725,8 +1709,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 5
-  theta: 180
 --- !u!135 &334045956
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2108,8 +2090,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 5
-  theta: 180
 --- !u!135 &403507682
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2277,8 +2257,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 1
-  theta: 180
 --- !u!135 &450947123
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2528,8 +2506,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 5
-  theta: 180
 --- !u!135 &468158444
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2648,8 +2624,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 5
-  theta: 180
 --- !u!135 &513301179
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2768,8 +2742,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 5
-  theta: 180
 --- !u!135 &524902569
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2964,8 +2936,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 3
-  theta: 180
 --- !u!135 &531815724
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3084,8 +3054,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 3
-  theta: 180
 --- !u!135 &546193132
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3313,8 +3281,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 5
-  theta: 180
 --- !u!135 &589137148
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3862,8 +3828,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 3
-  theta: 180
 --- !u!135 &664591762
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -4230,8 +4194,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 5
-  theta: 180
 --- !u!135 &690308802
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -5429,8 +5391,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 3
-  theta: 180
 --- !u!135 &813926644
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -5638,6 +5598,7 @@ MonoBehaviour:
   grass: {fileID: 648412650}
   energyText: {fileID: 781566895}
   rewardTextHUD: {fileID: 595175841}
+  acornTextHUD: {fileID: 0}
 --- !u!114 &839386360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5885,8 +5846,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 1
-  theta: 180
 --- !u!135 &944553056
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -6439,6 +6398,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1113177326}
   - component: {fileID: 1113177325}
+  - component: {fileID: 1113177327}
   m_Layer: 0
   m_Name: SessionGenerator
   m_TagString: Untagged
@@ -6476,6 +6436,24 @@ MonoBehaviour:
     cookie3PosY: 0
     cookie3Weight: 0
     cookie3RewardValue: 0
+    playerPosition: []
+    predatorPosition: []
+    mouseTrackChoicePeriod: []
+    mouseTrackEffortPeriod: []
+    effortRate: []
+    trialStartTime: 0
+    trialEndTime: 0
+    trialEndState:
+      endState: 
+      time: 0
+    trialReward: 0
+    totalReward: 0
+    trialCookie:
+      rewardValue: 0
+      weight: 0
+      xPos: 0
+      yPos: 0
+      time: 0
   numTrials: 0
 --- !u!4 &1113177326
 Transform:
@@ -6492,6 +6470,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1113177327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1113177324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5efc783b960c3482e92101735750f8c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPosition: []
+  predatorPosition: []
+  mouseTrackChoicePeriod: []
+  mouseTrackEffortPeriod: []
 --- !u!1 &1129130901 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9038452669546594994a8929676608a3, type: 3}
@@ -6985,8 +6979,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 5
-  theta: 180
 --- !u!135 &1203008479
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -7105,8 +7097,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 3
-  theta: 180
 --- !u!135 &1216284543
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -7516,8 +7506,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 1
-  theta: 180
 --- !u!135 &1283352764
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -7712,8 +7700,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 3
-  theta: 180
 --- !u!135 &1298530181
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -7832,8 +7818,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 5
-  theta: 180
 --- !u!135 &1310378872
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -8028,8 +8012,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 1
-  theta: 180
 --- !u!135 &1346873453
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -8148,8 +8130,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 5
-  theta: 180
 --- !u!135 &1370545237
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -8351,8 +8331,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 1
-  theta: 180
 --- !u!135 &1493167961
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -14119,9 +14097,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 902dce61081130e4a8b444cd9e5ec3d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  windLayer1: {fileID: 1980655623}
-  windLayer2: {fileID: 371314530}
-  windLayer3: {fileID: 1543718119}
 --- !u!1001 &1793425090
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14234,8 +14209,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 3
-  theta: 180
 --- !u!135 &1801240542
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -15117,8 +15090,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 5
-  theta: 180
 --- !u!135 &2086875996
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -15371,8 +15342,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bf97725eeadb84d94be3a026f3789e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resistance: 3
-  theta: 180
 --- !u!135 &2093199115
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -15599,6 +15568,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   carrying: 0
+  acorn_carrying: 0
   player: {fileID: 597418898}
   task: {fileID: 97862583}
   playerState: 

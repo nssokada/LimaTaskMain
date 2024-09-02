@@ -27,23 +27,23 @@ public class LimaTrial
     //DATA TO RECORD
 
     //Continous Data
-
-    //Player Position <World Space> Vector3
-    //Predator Position <World Space> Vector3 --> NaN until spawned
-    //Mouse Position <Screen Space> X,Y?? Maybe world space
-    //Effort Key press  float[]
+    public List<PositionHandler> playerPosition;
+    public List<PositionHandler> predatorPosition;
+    public List<PositionHandler> mouseTrackChoicePeriod;
+    public List<PositionHandler> mouseTrackEffortPeriod;
+    public List<float> effortRate;
     
     //Static Vars
-    // Choice --> cookie name, value, position<Vector3>, time 
-    // Reward
-    // EndState {<escape, capture, timeout>, time}
-    // TrialStartTime
-    // TrialEndTime
+    public float trialStartTime;
+    public float trialEndTime;
+    public EndState trialEndState;
+    public float trialReward;
+    public float totalReward;
+    public CookieChoice trialCookie;
 
-    //Diagnostics
-    //--> starttime
-    //--> endtime
 
+
+// TODO: Figure out what to do with Acorns
 
     //Where were the acorns?
     //Maybe we have an override acorn

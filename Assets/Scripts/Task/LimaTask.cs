@@ -23,7 +23,7 @@ public class LimaTask : MonoBehaviour
     public GameObject probabilityDisplay;
 
     private LimaTrial trial;
-
+    private TrialDataHandler dataHandler;
 
     bool trial_timeUp;
     public bool trialEndable;
@@ -39,7 +39,10 @@ public class LimaTask : MonoBehaviour
     //Upon enabling this gameobject the first trial will run.
     public void OnEnable()
     {
+       dataHandler = SessionGenerator.GetComponent<TrialDataHandler>();
+       dataHandler.recordMouseStartPosition();
        startNextTrial();
+
     }
 
     public void startNextTrial()
