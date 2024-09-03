@@ -2456,6 +2456,7 @@ MonoBehaviour:
   - {x: -8, y: 0.015, z: -8}
   - {x: -11, y: 0.015, z: 0}
   - {x: -8, y: 0.015, z: 8}
+  dataHandler: {fileID: 1113177327}
   circaStrike: 0
   speed: 5
   foxAnimator: {fileID: 741899043}
@@ -3557,6 +3558,7 @@ MonoBehaviour:
   player: {fileID: 597418898}
   playerManager: {fileID: 2116837191}
   HeadsUpDisplay: {fileID: 839386358}
+  dataHandler: {fileID: 1113177327}
   mainCamera: {fileID: 714583141}
   centerPt: {fileID: 947183458}
   speed: 0
@@ -6443,11 +6445,8 @@ MonoBehaviour:
     effortRate: []
     trialStartTime: 0
     trialEndTime: 0
-    trialEndState:
-      endState: 
-      time: 0
+    trialEndState: 
     trialReward: 0
-    totalReward: 0
     trialCookie:
       rewardValue: 0
       weight: 0
@@ -6486,6 +6485,9 @@ MonoBehaviour:
   predatorPosition: []
   mouseTrackChoicePeriod: []
   mouseTrackEffortPeriod: []
+  effortRate: []
+  player: {fileID: 597418898}
+  predator: {fileID: 463717003}
 --- !u!1 &1129130901 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9038452669546594994a8929676608a3, type: 3}
@@ -15573,6 +15575,13 @@ MonoBehaviour:
   task: {fileID: 97862583}
   playerState: 
   cookieState: 
+  cookieChoice:
+    rewardValue: NaN
+    weight: NaN
+    xPos: NaN
+    yPos: NaN
+    time: NaN
+  earnedReward: 0
   HeadsUpDisplay: {fileID: 839386358}
 --- !u!54 &2116837192
 Rigidbody:

@@ -31,6 +31,8 @@ public class LimaTask : MonoBehaviour
     bool cookies;
     float movementStartTime; //likely will change this to trial start time
     public GameObject HeadsUpDisplay;
+    private float startTime;
+    private float endTime;
 
   
 
@@ -40,18 +42,23 @@ public class LimaTask : MonoBehaviour
     public void OnEnable()
     {
        dataHandler = SessionGenerator.GetComponent<TrialDataHandler>();
-       dataHandler.recordMouseStartPosition();
+       dataHandler.instantiateTrialDataHandlers();
        startNextTrial();
 
     }
 
     public void startNextTrial()
     {
+        //clear any data from last trial
+        dataHandler.ClearAllTrialDataHandlers();
+        endTime = float.NaN;
+
         trialEndable = true;
         int trialNum = PlayerPrefs.GetInt("trialNum");
         trial  = SessionGenerator.GetComponent<SessionGenerator>().trials[trialNum];
+        dataHandler.recordMouseStartPosition(); //first mouse position centered on screen
+        startTime = Time.realtimeSinceStartup;
         gameStateController("spawningPeriod");
-        //NEED TO INVOKE DATA METHODS
     }
 
     public void gameStateController(string gameState)
@@ -62,12 +69,19 @@ public class LimaTask : MonoBehaviour
                 StartCoroutine(LimaSpawnSequence(trial));
                 break;
             case "clickingPeriod":
+                dataHandler.startRecordContinuousMouse("choiceperiod");//enable mouse tracking during clicking period
                 EnableClickingPeriod();
                 break;
             case "effortPeriod":
+                dataHandler.stopRecordContinuousMouse("choiceperiod"); //cancel the clicking period mouse tracking
+                dataHandler.startRecordContinuousMouse("effortperiod"); //enable the effort period mouse tracking
+                dataHandler.StartRecordingPlayerPosition(); //player movement recorded here. Pred movement intiated in predator class
                 EnableEffortPhase();
                 break;
             case "endingPeriod":
+                dataHandler.StopRecordingPlayerPosition();
+                dataHandler.StopRecordingPredatorPosition();
+                dataHandler.stopRecordContinuousMouse("effortperiod"); //cancel the effort period mouse tracking
                 EndTrial();
                 break;
             case "nextTrialPeriod":
@@ -138,13 +152,18 @@ public class LimaTask : MonoBehaviour
         trialEndable = false;
         StopCoroutine("freeMovement");
         CancelInvoke("UpdateTimer");
+        endTime = Time.realtimeSinceStartup;
         StartCoroutine(TrialEndRoutine(trial));
             
     }
 
     public void OnTrialEnd()
     {
+        //Transfer trial data
+        logTrialData(trial);
         //NEED TO PUSH DATA HERE
+        //SessionGenerator.PushTrialData(trial);
+        
         int trialNum = PlayerPrefs.GetInt("trialNum");
         trialNum++;
         PlayerPrefs.SetInt("trialNum", trialNum);
@@ -296,6 +315,19 @@ public class LimaTask : MonoBehaviour
     void setPredator(LimaTrial trial)
     {
         predator.GetComponent<PredatorControls>().setAttack(trial.attackingProb);
+    }
+
+    void logTrialData(LimaTrial trial)
+    {
+        trial.playerPosition =dataHandler.playerPosition;
+        trial.predatorPosition = dataHandler.predatorPosition;
+        trial.mouseTrackChoicePeriod = dataHandler.mouseTrackChoicePeriod;
+        trial.mouseTrackEffortPeriod = dataHandler.mouseTrackEffortPeriod;
+        trial.effortRate = dataHandler.effortRate;
+        trial.trialStartTime = startTime;
+        trial.trialEndTime = endTime;
+        trial.trialReward = playerManager.earnedReward;
+        trial.trialCookie = playerManager.cookieChoice;
     }
 
 #endregion

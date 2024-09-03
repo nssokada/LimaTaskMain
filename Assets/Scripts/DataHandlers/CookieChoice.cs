@@ -22,4 +22,12 @@ public class CookieChoice
         this.yPos = yPos;
         this.time = time;
     }
+    public CookieChoice()
+    {
+        this.rewardValue = float.NaN;
+        this.weight = float.NaN;
+        this.xPos = float.NaN;
+        this.yPos = float.NaN;
+        this.time = float.NaN;
+    }
 }

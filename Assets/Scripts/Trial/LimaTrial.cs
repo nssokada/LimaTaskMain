@@ -36,9 +36,8 @@ public class LimaTrial
     //Static Vars
     public float trialStartTime;
     public float trialEndTime;
-    public EndState trialEndState;
+    public string trialEndState;
     public float trialReward;
-    public float totalReward;
     public CookieChoice trialCookie;
 
 
@@ -66,5 +65,17 @@ public class LimaTrial
         this.cookie3PosY = cookie3PosY;
         this.cookie3Weight = cookie3Weight;
         this.cookie3RewardValue = cookie3RewardValue;
+
+        playerPosition = new List<PositionHandler>();
+        predatorPosition = new List<PositionHandler>();
+        mouseTrackChoicePeriod = new List<PositionHandler>();
+        mouseTrackEffortPeriod = new List<PositionHandler>();
+        effortRate  = new List<float>();
+
+        trialStartTime = float.NaN;
+        trialEndTime = float.NaN;
+        trialEndState = "";
+        trialReward=float.NaN;
+        trialCookie = new CookieChoice();
     }
 }

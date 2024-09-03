@@ -609,7 +609,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201594243}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!43 &211682958
+--- !u!43 &202629295
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2953,7 +2953,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400054, guid: 265ee6fac4cc17345b23403e90e2ba45, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.17
       objectReference: {fileID: 0}
     - target: {fileID: 400054, guid: 265ee6fac4cc17345b23403e90e2ba45, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3252,6 +3252,7 @@ MonoBehaviour:
   player: {fileID: 685226173}
   playerManager: {fileID: 1688071725}
   HeadsUpDisplay: {fileID: 0}
+  dataHandler: {fileID: 0}
   mainCamera: {fileID: 0}
   centerPt: {fileID: 1961824363}
   speed: 0
@@ -10401,6 +10402,9 @@ MonoBehaviour:
   predatorPosition: []
   mouseTrackChoicePeriod: []
   mouseTrackEffortPeriod: []
+  effortRate: []
+  player: {fileID: 0}
+  predator: {fileID: 0}
 --- !u!4 &1405957080
 Transform:
   m_ObjectHideFlags: 0
@@ -10954,7 +10958,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1565514657}
-  m_Mesh: {fileID: 211682958}
+  m_Mesh: {fileID: 202629295}
 --- !u!1 &1582456300
 GameObject:
   m_ObjectHideFlags: 0

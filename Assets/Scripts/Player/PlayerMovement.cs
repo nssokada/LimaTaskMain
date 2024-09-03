@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     public GameObject player;
     public PlayerManager playerManager;
     public GameObject HeadsUpDisplay;
+    public TrialDataHandler dataHandler;
     public Camera mainCamera;
     public GameObject centerPt;
 
@@ -212,6 +213,7 @@ public class PlayerMovement : MonoBehaviour
                 float currentTime = Time.time;
                 latency = currentTime - lastPressTime;
                 lastPressTime = currentTime;
+                dataHandler.recordEffort();
                 effort();
             }
 

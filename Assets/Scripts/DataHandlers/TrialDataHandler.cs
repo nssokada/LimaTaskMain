@@ -8,6 +8,7 @@ public class TrialDataHandler : MonoBehaviour
     public List<PositionHandler> predatorPosition;
     public List<PositionHandler> mouseTrackChoicePeriod;
     public List<PositionHandler> mouseTrackEffortPeriod;
+    public List<float> effortRate;
     public GameObject player;
     public GameObject predator;
 
@@ -16,7 +17,13 @@ public class TrialDataHandler : MonoBehaviour
     {
         
     }
-
+    // void Update()
+    // {
+    //     if (Input.GetMouseButtonDown(0)) 
+    //     {
+    //         recordMouseStartPosition();
+    //     }
+    // }
    // Update is called once per frame
 
     #region Public Access Methods
@@ -28,6 +35,7 @@ public class TrialDataHandler : MonoBehaviour
         predatorPosition = new List<PositionHandler>();
         mouseTrackChoicePeriod = new List<PositionHandler>();
         mouseTrackEffortPeriod = new List<PositionHandler>();
+        effortRate  = new List<float>();
     }
 
     // Method to clear all the lists
@@ -37,7 +45,7 @@ public class TrialDataHandler : MonoBehaviour
         predatorPosition.Clear();
         mouseTrackChoicePeriod.Clear();
         mouseTrackEffortPeriod.Clear();
-
+        effortRate.Clear();
         Debug.Log("All position lists have been cleared.");
     }
 
@@ -124,7 +132,6 @@ public class TrialDataHandler : MonoBehaviour
         // Add the position to the list
         mouseTrackerList.Add(mousePosHandler);
 
-        Debug.Log(mousePosition);
     }
 
     #endregion
@@ -155,7 +162,6 @@ public class TrialDataHandler : MonoBehaviour
     }
 
 
-
     //private methods
     void RecordPlayerPostion()
     {
@@ -174,5 +180,17 @@ public class TrialDataHandler : MonoBehaviour
 
     #endregion
 
+    #region Effort Tracking
+
+    public void recordEffort()
+    {
+        RecordEffortInput();
+    }
+
+    void RecordEffortInput()
+    {
+        effortRate.Add(Time.realtimeSinceStartup);
+    }
+    #endregion
 
 }

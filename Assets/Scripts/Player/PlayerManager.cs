@@ -11,32 +11,48 @@ public class PlayerManager : MonoBehaviour
     public GameObject task;
     public string playerState;
     public string cookieState;
-    // public string playerLayer;
+    public CookieChoice cookieChoice;
+    public float earnedReward;
+    private float rewardPotential;
     public GameObject HeadsUpDisplay;
 
+    void OnEnable()
+    {
+        playerState ="free";
+        cookieState = "";
+        cookieChoice = new CookieChoice();
+        earnedReward = 0;
+        rewardPotential=0;
+    }
     private void OnTriggerEnter(Collider other) 
     {
         
         if(!carrying){
             if (other.gameObject.tag == "Cookie")
             {
+                float weight  = other.gameObject.GetComponent<Cookie>().weight;
+                float rewardValue = other.gameObject.GetComponent<Cookie>().rewardValue;
+                Vector3 cookiePosition = other.gameObject.transform.position;
+
                 other.transform.parent = player.transform;
 
-                if(other.gameObject.GetComponent<Cookie>().weight>1) 
+                if(weight>1) 
                 {
                     cookieState = "heavy";
                     // playerLayer = other.gameObject.GetComponent<Cookie>().layer;
                     player.GetComponent<PlayerMovement>().cookieWeight = 1f; //speed multiplier higher is faster
-                    HeadsUpDisplay.GetComponent<UIController>().SetHUDReward(other.gameObject.GetComponent<Cookie>().rewardValue);
+                    HeadsUpDisplay.GetComponent<UIController>().SetHUDReward((int)rewardValue);
                 }
                 else 
                 {
                     cookieState = "light";
                     // playerLayer = other.gameObject.GetComponent<Cookie>().layer;
                     player.GetComponent<PlayerMovement>().cookieWeight = 2f; //speed multiplier higher is faster
-                    HeadsUpDisplay.GetComponent<UIController>().SetHUDReward(other.gameObject.GetComponent<Cookie>().rewardValue);
+                    HeadsUpDisplay.GetComponent<UIController>().SetHUDReward((int)rewardValue);
                 }
- 
+
+                rewardPotential = rewardValue;
+                cookieChoice = new CookieChoice(rewardValue,weight,cookiePosition.x,cookiePosition.z,Time.realtimeSinceStartup);
                 task.GetComponent<LimaTask>().gameStateController("effortPeriod");
                 carrying = true; 
             }
@@ -57,6 +73,7 @@ public class PlayerManager : MonoBehaviour
                     }
                     playerState ="escaped";
                     task.GetComponent<LimaTask>().gameStateController("endingPeriod");
+                    earnedReward = rewardPotential;
                     Debug.Log("earn reward");
                     carrying = false; 
                 }
@@ -67,6 +84,7 @@ public class PlayerManager : MonoBehaviour
                         if(child.CompareTag("Cookie")) Destroy(child.gameObject);
                     }
                     playerState ="captured";
+                    earnedReward =-25f;
                     task.GetComponent<LimaTask>().gameStateController("endingPeriod");
                     carrying = false; 
                 }
