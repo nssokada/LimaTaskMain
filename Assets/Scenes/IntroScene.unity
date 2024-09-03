@@ -518,8 +518,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 772463885}
-        m_TargetAssemblyTypeName: SceneChanger, Assembly-CSharp
-        m_MethodName: ChangeScene
+        m_TargetAssemblyTypeName: LandingPageButtons, Assembly-CSharp
+        m_MethodName: LoginButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1741,9 +1741,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 772463880}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98c5c89231566c64d999db9de5e43cc4, type: 3}
+  m_Script: {fileID: 11500000, guid: 1555ea1aff99f204f89bdbd3b0cab8a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  participantID: {fileID: 1089111326}
 --- !u!1 &796105022
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,7 +13,7 @@ public class SessionGenerator : MonoBehaviour
 
     CSVReader reader;
     public string conditionFile;
-
+    public string username;
 
     public List<LimaTrial> trials;
     public LimaTrial trial;
@@ -56,6 +56,39 @@ public class SessionGenerator : MonoBehaviour
     //     }
     // }
 
+    public void MainGameButton()
+    {
+        username = PlayerPrefs.GetString("userID");
+
+        //IF THERE IS NOT ALREADY A DATAPATH LET'S CREATE ONE
+        if(!PlayerPrefs.HasKey("DataPath"))
+        {
+            persistentDataPath = CreatePersistentPath(username);
+            PlayerPrefs.SetString("DataPath", persistentDataPath);
+        }
+
+        //Set the datapath
+        persistentDataPath = PlayerPrefs.GetString("DataPath");
+
+        //SET KEYS
+        PlayerPrefs.SetString("CheckPoint", "MainGame");
+        PlayerPrefs.SetString("GameState", "MainGame");
+
+        //IF OLD USER resume game
+        if(PlayerPrefs.HasKey("ConditionFile"))
+        {
+            conditionFile = PlayerPrefs.GetString("ConditionFile");
+            ReLoadExperiment(conditionFile);
+        }
+        //ELSE Start new game
+        else
+        {
+            //Determine Condition File:
+            conditionFile = pullCondition();
+            GenerateExperiment(conditionFile);
+        }
+    }
+
     public void loginButton(string username)
     {
         //Create Persistent Datapath
@@ -84,20 +117,16 @@ public class SessionGenerator : MonoBehaviour
         {
             case "Tutorial":
                 PlayerPrefs.SetString("GameState",transferState);
-                SceneManager.LoadScene("Tutorial");
                 break;
 
             case "CookieGame":
                 PlayerPrefs.SetString("GameState",transferState);
-                SceneManager.LoadScene("MainGame");
                 break;
             case "AcornGame":
                 PlayerPrefs.SetString("GameState",transferState);
-                SceneManager.LoadScene("MainGame");
                 break;
             case "Survey":
                 PlayerPrefs.SetString("GameState",transferState);
-                SceneManager.LoadScene("SurveyScene");
                 break;
             default:
                 Debug.LogError("Unhandled game state: " + transferState);
@@ -105,17 +134,35 @@ public class SessionGenerator : MonoBehaviour
         }
     }
 
-     private  void GenerateExperiment()
+     private  void GenerateExperiment(string conditionFile)
     {
         CSVReader reader = new CSVReader();
         trials  = reader.ReadTrialCSV(conditionFile);   
         numTrials = trials.Count;
         Debug.Log("num trials"+numTrials);
 
+        createExperimentInfo(username, conditionFile);
+        PlayerPrefs.SetString("ConditionFile", conditionFile);
         PlayerPrefs.SetInt("trialNum", 0);
         Task.SetActive(true);
         SessionScreen.SetActive(false);
     }
+
+    private void ReLoadExperiment(string conditionFile)
+    {
+        CSVReader reader = new CSVReader();
+        trials  = reader.ReadTrialCSV(conditionFile);   
+        numTrials = trials.Count;
+        Debug.Log("num trials"+numTrials);
+
+        resetExperimentInfo(username, conditionFile);
+        Task.SetActive(true);
+        SessionScreen.SetActive(false);
+    }
+
+
+
+
 
     private string CreatePersistentPath(string username)
     {
@@ -139,6 +186,16 @@ public class SessionGenerator : MonoBehaviour
         writeToFirebase(username, exp);
     }
 
+    private void resetExperimentInfo(string username, string conditionFile)
+    {
+        experimentInfo exp = new experimentInfo();
+        exp.condition = conditionFile;
+        exp.participantID = username;
+        exp.experimentDate = "" + System.DateTime.Now;
+        exp.datapath = persistentDataPath;
+        writeToFirebase(username+"_reset", exp);
+    }
+
 
     public string pullCondition()
     {
@@ -146,6 +203,7 @@ public class SessionGenerator : MonoBehaviour
         {
             string conditionFile = response.Text.Trim('"'); // Remove the leading and trailing quotation marks
         }).Catch(err => Debug.LogError("Error: " + err.Message));
+
 
         return conditionFile;
     }

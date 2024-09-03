@@ -161,8 +161,7 @@ public class LimaTask : MonoBehaviour
     {
         //Transfer trial data
         logTrialData(trial);
-        //NEED TO PUSH DATA HERE
-        //SessionGenerator.PushTrialData(trial);
+        SessionGenerator.GetComponent<SessionGenerator>().pushTrialData(trial);
         
         int trialNum = PlayerPrefs.GetInt("trialNum");
         trialNum++;
