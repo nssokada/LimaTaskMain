@@ -56,7 +56,6 @@ public class LimaTask : MonoBehaviour
         trialEndable = true;
         int trialNum = PlayerPrefs.GetInt("trialNum");
         trial  = SessionGenerator.GetComponent<SessionGenerator>().trials[trialNum];
-        dataHandler.recordMouseStartPosition(); //first mouse position centered on screen
         startTime = Time.realtimeSinceStartup;
         gameStateController("spawningPeriod");
     }
@@ -69,6 +68,7 @@ public class LimaTask : MonoBehaviour
                 StartCoroutine(LimaSpawnSequence(trial));
                 break;
             case "clickingPeriod":
+                MoveCursorToCenterAndUnlock();
                 dataHandler.startRecordContinuousMouse("choiceperiod");//enable mouse tracking during clicking period
                 EnableClickingPeriod();
                 break;
@@ -106,7 +106,6 @@ public class LimaTask : MonoBehaviour
         toggleRewards(trial);     
         yield return new WaitForSeconds(1.0f);
         //check this out next
-               
         gameStateController("clickingPeriod");
         Debug.Log("End Lima Sequence");   
     }
@@ -159,11 +158,12 @@ public class LimaTask : MonoBehaviour
 
     public void OnTrialEnd()
     {
+        int trialNum = PlayerPrefs.GetInt("trialNum");
         //Transfer trial data
         logTrialData(trial);
-        SessionGenerator.GetComponent<SessionGenerator>().pushTrialData(trial);
+
+        SessionGenerator.GetComponent<SessionGenerator>().pushTrialData(trial, trialNum);
         
-        int trialNum = PlayerPrefs.GetInt("trialNum");
         trialNum++;
         PlayerPrefs.SetInt("trialNum", trialNum);
 
@@ -223,13 +223,13 @@ public class LimaTask : MonoBehaviour
     {
         if(!player.activeSelf)
         {
+            playerManager.playerState = "free";
             home = player.transform.position;
             player.SetActive(true);
         }
 
         else
         {
-           playerManager.playerState = "free";
            player.GetComponent<PlayerMovement>().effortPeriod = false;
            player.GetComponent<PlayerMovement>().clickingPeriod = false;
            if(playerManager.carrying)
@@ -327,6 +327,31 @@ public class LimaTask : MonoBehaviour
         trial.trialEndTime = endTime;
         trial.trialReward = playerManager.earnedReward;
         trial.trialCookie = playerManager.cookieChoice;
+        trial.trialEndState = playerManager.playerState;
+    }
+
+
+        // Call this method to move the cursor to the center of the screen and unlock it
+    public void MoveCursorToCenterAndUnlock()
+    {
+        // Lock the cursor, which moves it to the center of the screen
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        // After one frame, unlock the cursor and make it visible again
+        StartCoroutine(UnlockCursorNextFrame());
+    }
+
+    // Coroutine to unlock the cursor after one frame
+    private IEnumerator UnlockCursorNextFrame()
+    {
+        // Wait until the end of the current frame
+        yield return null;
+
+        // Unlock the cursor and make it visible again
+        dataHandler.recordMouseStartPosition(); //first mouse position centered on screen
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
 #endregion

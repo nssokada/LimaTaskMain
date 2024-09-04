@@ -46,6 +46,7 @@ public class LandingPageButtons : MonoBehaviour
     // Generate a new user and go to the tutorial for this user
     void GenerateNewUser(string username)
     {
+        PlayerPrefs.DeleteAll();
         PlayerPrefs.SetString(UserIdKey, username);
         Debug.Log($"New user generated: {username}");
         SceneManager.LoadScene("Tutorial");

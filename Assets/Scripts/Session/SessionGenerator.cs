@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Proyecto26;
 using UnityEngine.SceneManagement;
+using System;
+using System.Threading.Tasks;
 
 public class SessionGenerator : MonoBehaviour
 {
@@ -24,39 +26,8 @@ public class SessionGenerator : MonoBehaviour
     private string currentState;
 
 
-    // private void OnEnable() {
-    //     // GenerateExperiment();
-    //     if (PlayerPrefs.HasKey("GameState"))
-    //     {
-    //         // The key exists, so we can safely retrieve the string value
-    //          currentState = PlayerPrefs.GetString("GameState");
-    //         Debug.Log("Current State: " + currentState);
-    //     }
-    //     else
-    //     {
-    //          currentState = "Login";
-    //         PlayerPrefs.SetString("GameState", currentState);
-    //     }
 
-
-    //     switch(currentState)
-    //     {
-    //         case "Login":
-    //             Debug.Log("waiting for user");
-    //             break;
-    //         case "Tutorial":
-    //             break;
-    //         case "CookieGame":
-    //             setUpCookieGame();
-    //         case "AcornGame":
-    //             setUpAcornGame();
-    //         default:
-    //             Debug.LogError("Unhandled game state: " + currentState);
-    //             break;
-    //     }
-    // }
-
-    public void MainGameButton()
+    public async void MainGameButton()
     {
         username = PlayerPrefs.GetString("userID");
 
@@ -83,32 +54,33 @@ public class SessionGenerator : MonoBehaviour
         //ELSE Start new game
         else
         {
+            Debug.Log("attempting to grab conditionfile");
             //Determine Condition File:
-            conditionFile = pullCondition();
+            await pullCondition();
             GenerateExperiment(conditionFile);
         }
     }
 
-    public void loginButton(string username)
+    public void TutorialButton()
     {
-        //Create Persistent Datapath
-        CreatePersistentPath(username);
-        PlayerPrefs.SetString("DataPath", persistentDataPath);
-
-        //Determine Condition File:
-        conditionFile = pullCondition();
+        username = PlayerPrefs.GetString("userID");
         
-        //Set Experiment Info
-        createExperimentInfo(username, conditionFile);
-
-        //Set Game State:
-        if(PlayerPrefs.HasKey("ReloadCheckPoint"))
+        //IF THERE IS NOT ALREADY A DATAPATH LET'S CREATE ONE
+        if(!PlayerPrefs.HasKey("DataPath"))
         {
-            string checkPoint = PlayerPrefs.GetString("ReloadCheckPoint");
-            SetGameState(checkPoint);
-        } 
-        else SetGameState("Tutorial");
-       
+            persistentDataPath = CreatePersistentPath(username);
+            PlayerPrefs.SetString("DataPath", persistentDataPath);
+        }
+
+        //Set the datapath
+        persistentDataPath = PlayerPrefs.GetString("DataPath");
+
+        //SET KEYS
+        PlayerPrefs.SetString("CheckPoint", "Tutorial");
+        PlayerPrefs.SetString("GameState", "Tutorial");
+
+
+        GenerateTutorial();
     }
 
     public void SetGameState(string transferState)
@@ -142,7 +114,6 @@ public class SessionGenerator : MonoBehaviour
         Debug.Log("num trials"+numTrials);
 
         createExperimentInfo(username, conditionFile);
-        PlayerPrefs.SetString("ConditionFile", conditionFile);
         PlayerPrefs.SetInt("trialNum", 0);
         Task.SetActive(true);
         SessionScreen.SetActive(false);
@@ -160,6 +131,13 @@ public class SessionGenerator : MonoBehaviour
         SessionScreen.SetActive(false);
     }
 
+    private  void GenerateTutorial()
+    {
+        createExperimentInfo(username+"_Tutorial", conditionFile);
+        SessionScreen.SetActive(false);
+        Task.SetActive(true); //in the tutorial scene this will be the main video player object
+    }
+
 
 
 
@@ -169,21 +147,20 @@ public class SessionGenerator : MonoBehaviour
         return persistentDataPath = dataBasePath+username;
     }
 
-    public void pushTrialData(LimaTrial trial)
+    public void pushTrialData(LimaTrial trial, int trialNum)
     {
-        int trialNum = PlayerPrefs.GetInt("trial_num");
         string trial_num = trialNum.ToString("D2");
         writeToFirebase(trial_num, "trial_data", trial);
     }
 
-    private void createExperimentInfo(string username, string conditionFile)
+    private void createExperimentInfo(string attributeName, string conditionFile)
     {
         experimentInfo exp = new experimentInfo();
         exp.condition = conditionFile;
         exp.participantID = username;
         exp.experimentDate = "" + System.DateTime.Now;
         exp.datapath = persistentDataPath;
-        writeToFirebase(username, exp);
+        writeToFirebase(attributeName, exp);
     }
 
     private void resetExperimentInfo(string username, string conditionFile)
@@ -197,23 +174,30 @@ public class SessionGenerator : MonoBehaviour
     }
 
 
-    public string pullCondition()
+        private async Task pullCondition()
     {
+        var tcs = new TaskCompletionSource<bool>();
+
         RestClient.Get(dataBasePath + "ActiveCondition.json").Then(response =>
         {
-            string conditionFile = response.Text.Trim('"'); // Remove the leading and trailing quotation marks
-        }).Catch(err => Debug.LogError("Error: " + err.Message));
+            conditionFile = response.Text.Trim('"'); // Remove the leading and trailing quotation marks
+            PlayerPrefs.SetString("ConditionFile", conditionFile);
+            tcs.SetResult(true); // Signal that the task is complete
+        }).Catch(err =>
+        {
+            Debug.LogError("Error: " + err.Message);
+            tcs.SetException(err); // Signal that the task failed
+        });
 
-
-        return conditionFile;
+        // Await the task to ensure the method doesn't complete until the asynchronous operation is done
+        await tcs.Task;
     }
-
 
     //Push Trial to DB
     //writeToDB
     private void writeToFirebase(string trial_num, string attributeName, LimaTrial attribute)
     {
-        RestClient.Put(persistentDataPath + "/trial_" + trial_num + "/" + attributeName + ".json", attribute);
+        RestClient.Put(persistentDataPath + "/TrialData/trial_" + trial_num + "/" + attributeName + ".json", attribute);
     }
     //Push ExpInfo to DB
     //writeToDB

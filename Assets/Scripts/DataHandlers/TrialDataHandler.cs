@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class TrialDataHandler : MonoBehaviour
 {
@@ -12,11 +13,7 @@ public class TrialDataHandler : MonoBehaviour
     public GameObject player;
     public GameObject predator;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+
     // void Update()
     // {
     //     if (Input.GetMouseButtonDown(0)) 
@@ -140,42 +137,56 @@ public class TrialDataHandler : MonoBehaviour
     //public methods
 
     //player
-    public void StartRecordingPlayerPosition()
-    {
-        InvokeRepeating("RecordPlayerPosition", 0f, 0.03f);
-    }
+        // Generalized Start/Stop Recording
+        public void StartRecordingPosition(GameObject entity, Action recordAction)
+        {
+            InvokeRepeating(recordAction.Method.Name, 0f, 0.03f);
+        }
 
-    public void StopRecordingPlayerPosition()
-    {
-        CancelInvoke("RecordPlayerPosition");
-    }
+        public void StopRecordingPosition(Action recordAction)
+        {
+            CancelInvoke(recordAction.Method.Name);
+        }
 
-    //predator
-    public void StartRecordingPredatorPosition()
-    {
-        InvokeRepeating("RecordPredatorPosition", 0f, 0.03f);
-    }
+        // Start Recording for Player and Predator
+        public void StartRecordingPlayerPosition()
+        {
+            StartRecordingPosition(player, RecordPlayerPosition);
+        }
 
-    public void StopRecordingPredatorPosition()
-    {
-        CancelInvoke("RecordPredatorPosition");
-    }
+        public void StartRecordingPredatorPosition()
+        {
+            StartRecordingPosition(predator, RecordPredatorPosition);
+        }
 
+        public void StopRecordingPlayerPosition()
+        {
+            StopRecordingPosition(RecordPlayerPosition);
+        }
 
-    //private methods
-    void RecordPlayerPostion()
-    {
-        Vector3 position = player.transform.position;
-        PositionHandler playerPos = new PositionHandler(position.x, position.z,Time.realtimeSinceStartup);
-        playerPosition.Add(playerPos);
-    }
+        public void StopRecordingPredatorPosition()
+        {
+            StopRecordingPosition(RecordPredatorPosition);
+        }
 
-     void RecordPredatorPostion()
-    {
-        Vector3 position = predator.transform.position;
-        PositionHandler predatorPos = new PositionHandler(position.x, position.z,Time.realtimeSinceStartup);
-        predatorPosition.Add(predatorPos);
-    }
+        // Private methods
+        private void RecordPlayerPosition()
+        {
+            RecordPosition(player, playerPosition);
+        }
+
+        private void RecordPredatorPosition()
+        {
+            RecordPosition(predator, predatorPosition);
+        }
+
+        private void RecordPosition(GameObject entity, List<PositionHandler> positionList)
+        {
+            Vector3 position = entity.transform.position;
+            PositionHandler pos = new PositionHandler(position.x, position.z, Time.realtimeSinceStartup);
+            positionList.Add(pos);
+        }
+
 
 
     #endregion

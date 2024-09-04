@@ -14,7 +14,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/EffortCalibrator.unity
     guid: 526c6f04a4c97b34bb2c17a7208c3da0
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/MainGame.unity
     guid: 12cdda01ebed5c642860bff320206f36
   - enabled: 1
