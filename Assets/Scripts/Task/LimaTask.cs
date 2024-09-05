@@ -19,6 +19,7 @@ public class LimaTask : MonoBehaviour
     public GameObject arena;
     public GameObject map;
     public GameObject wind;
+    public GameObject mainCamera;
    
     public GameObject probabilityDisplay;
 
@@ -68,11 +69,13 @@ public class LimaTask : MonoBehaviour
                 StartCoroutine(LimaSpawnSequence(trial));
                 break;
             case "clickingPeriod":
-                MoveCursorToCenterAndUnlock();
+                mainCamera.GetComponent<ChangeCursor>().MoveCursorToCenterAndUnlock();
+                dataHandler.recordMouseStartPosition(); //first mouse position centered on screen
                 dataHandler.startRecordContinuousMouse("choiceperiod");//enable mouse tracking during clicking period
                 EnableClickingPeriod();
                 break;
             case "effortPeriod":
+                mainCamera.GetComponent<ChangeCursor>().setMoveCursor();
                 dataHandler.stopRecordContinuousMouse("choiceperiod"); //cancel the clicking period mouse tracking
                 dataHandler.startRecordContinuousMouse("effortperiod"); //enable the effort period mouse tracking
                 dataHandler.StartRecordingPlayerPosition(); //player movement recorded here. Pred movement intiated in predator class
@@ -331,28 +334,7 @@ public class LimaTask : MonoBehaviour
     }
 
 
-        // Call this method to move the cursor to the center of the screen and unlock it
-    public void MoveCursorToCenterAndUnlock()
-    {
-        // Lock the cursor, which moves it to the center of the screen
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        // After one frame, unlock the cursor and make it visible again
-        StartCoroutine(UnlockCursorNextFrame());
-    }
-
-    // Coroutine to unlock the cursor after one frame
-    private IEnumerator UnlockCursorNextFrame()
-    {
-        // Wait until the end of the current frame
-        yield return null;
-
-        // Unlock the cursor and make it visible again
-        dataHandler.recordMouseStartPosition(); //first mouse position centered on screen
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-    }
+   
 
 #endregion
 
