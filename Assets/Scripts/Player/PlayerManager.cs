@@ -12,24 +12,29 @@ public class PlayerManager : MonoBehaviour
     public string playerState;
     public string cookieState;
     public CookieChoice cookieChoice;
+    public List<PositionHandler> acornsCollected; 
     public float earnedReward;
     private float rewardPotential;
     public GameObject HeadsUpDisplay;
+    private bool exitSafety;
 
     void OnEnable()
     {
         playerState ="free";
         cookieState = "";
         cookieChoice = new CookieChoice();
+        acornsCollected= new List<PositionHandler>();
         earnedReward = 0;
         rewardPotential=0;
+        exitSafety = false;
     }
     private void OnTriggerEnter(Collider other) 
     {
         
-        if(!carrying){
             if (other.gameObject.tag == "Cookie")
             {
+                Debug.Log("cookie hit");
+                other.gameObject.GetComponent<Collider>().enabled = false;
                 float weight  = other.gameObject.GetComponent<Cookie>().weight;
                 float rewardValue = other.gameObject.GetComponent<Cookie>().rewardValue;
                 Vector3 cookiePosition = other.gameObject.transform.position;
@@ -53,178 +58,78 @@ public class PlayerManager : MonoBehaviour
 
                 rewardPotential = rewardValue;
                 cookieChoice = new CookieChoice(rewardValue,weight,cookiePosition.x,cookiePosition.z,Time.realtimeSinceStartup);
-                task.GetComponent<LimaTask>().gameStateController("effortPeriod");
+                task.GetComponent<LimaTask>().HandleGameState(LimaTask.GameState.EffortPeriod);
                 carrying = true; 
             }
 
-            
-        }
-
-        else if(carrying)
+          else if(other.gameObject.tag == "Safety")
         {
-            
-            if(task.GetComponent<LimaTask>().trialEndable)
+            if( exitSafety && task.GetComponent<LimaTask>().trialEndable)
             {
-                if (other.gameObject.tag == "Safety")
-                {
-                    foreach(Transform child in player.transform)
+                foreach(Transform child in player.transform)
                     {
-                        if(child.CompareTag("Cookie")) Destroy(child.gameObject);
+                        if(child.CompareTag("Cookie")) Destroy(child.gameObject);                        
+                        else if(child.CompareTag("Acorn")) Destroy(child.gameObject);
+
                     }
                     playerState ="escaped";
-                    task.GetComponent<LimaTask>().gameStateController("endingPeriod");
                     earnedReward = rewardPotential;
                     Debug.Log("earn reward");
-                    carrying = false; 
-                }
-                else if (other.gameObject.tag == "Predator")
-                {
-                     foreach(Transform child in player.transform)
+                    carrying = false;                    
+                    acorn_carrying = false; 
+                    task.GetComponent<LimaTask>().HandleGameState(LimaTask.GameState.EndingPeriod);
+            }
+        }
+        
+        else if(other.gameObject.tag == "Predator")
+        {
+            if( exitSafety && task.GetComponent<LimaTask>().trialEndable)
+            {
+                foreach(Transform child in player.transform)
                     {
                         if(child.CompareTag("Cookie")) Destroy(child.gameObject);
+                        else if(child.CompareTag("Acorn")) Destroy(child.gameObject);
                     }
                     playerState ="captured";
                     earnedReward =-25f;
-                    task.GetComponent<LimaTask>().gameStateController("endingPeriod");
-                    carrying = false; 
-                }
+                    carrying = false;                     
+                    acorn_carrying = false; 
+                    task.GetComponent<LimaTask>().HandleGameState(LimaTask.GameState.EndingPeriod);
             }
-
-          
         }
 
-    
-       
-       
+        else if(other.gameObject.tag =="Acorn")
+            {
+                other.gameObject.GetComponent<Collider>().enabled = false;
+                logAcornPosition(other.gameObject);
+                Debug.Log("Acorn Hit");
+                HeadsUpDisplay.GetComponent<UIController>().SetHUDAcorn(2);
+                rewardPotential += 2;
+                foreach (Transform child in other.gameObject.transform)
+                    {
+                            // Set each child to active
+                            child.gameObject.SetActive(true); // Set to false if you want to deactivate
+                    }
+
+                other.transform.parent = player.transform;
+                acorn_carrying = true; 
+            }
+    }
+
+
+     private void OnTriggerExit(Collider other)
+    {
+        if(other.gameObject.tag == "Safety")
+        {
+            exitSafety = true;
+        }
+    }
+
+
+    void logAcornPosition(GameObject gameObject)
+    {
+        PositionHandler acornPosition = new PositionHandler(gameObject.transform.position.x,gameObject.transform.position.z,Time.realtimeSinceStartup);
+        acornsCollected.Add(acornPosition);
     }
   }
 
-  
-    // private void OnTriggerExit(Collider other) {
-
-        //   if (other.CompareTag("Wind"))
-        //     {
-        //         Vector3 driftVector = player.GetComponent<PlayerMovement>().driftdrawVector; 
-        //         HeadsUpDisplay.GetComponent<UIController>().setWind(driftVector,other.GetComponent<Wind>().resistance);
-        //         player.GetComponent<PlayerMovement>().resistance = 0f;
-        //         player.GetComponent<PlayerMovement>().theta = 0f;
-        //     }
-
-        // if (other.CompareTag("MediumEffort"))
-        // {
-        //     if(cookieState=="heavy")
-        //     {
-        //         player.GetComponent<PlayerMovement>().stepSize = 0.15f;
-        //         player.GetComponent<PlayerMovement>().pressLimit = 2;
-        //         player.GetComponent<PlayerMovement>().resetEnergy();
-        //     }
-        //     else if(cookieState=="light")
-        //     {
-        //         player.GetComponent<PlayerMovement>().stepSize = 0.5f;
-        //         player.GetComponent<PlayerMovement>().pressLimit = 2;
-        //         player.GetComponent<PlayerMovement>().resetEnergy();
-        //     }
-        // }
-
-        // if (other.CompareTag("LowEffort"))
-        // {
-        //      if(cookieState=="heavy")
-        //     {
-        //         player.GetComponent<PlayerMovement>().stepSize = 0.15f;
-        //         player.GetComponent<PlayerMovement>().pressLimit = 2;
-        //         player.GetComponent<PlayerMovement>().resetEnergy();
-        //     }
-        //     else if(cookieState=="light")
-        //     {
-        //         player.GetComponent<PlayerMovement>().stepSize = 0.5f;
-        //         player.GetComponent<PlayerMovement>().pressLimit = 2;
-        //         player.GetComponent<PlayerMovement>().resetEnergy();
-        //     }
-        // }
-
-        // } 
-  
-
-    // private void OnTriggerStay(Collider other)
-    // {
-    //     // Check if the collider in the trigger area has a specific tag
-    //     if (other.CompareTag("HighEffort"))
-    //     {
-    //         player.GetComponent<PlayerMovement>().stepSize = player.GetComponent<PlayerMovement>().stepSize/4;
-    //     }
-
-    //     if (other.CompareTag("MediumEffort"))
-    //     {
-    //         player.GetComponent<PlayerMovement>().stepSize = player.GetComponent<PlayerMovement>().stepSize/3;
-    //     }
-
-    //     if (other.CompareTag("LowEffort"))
-    //     {
-    //         player.GetComponent<PlayerMovement>().stepSize = player.GetComponent<PlayerMovement>().stepSize/2;
-    //     }
-    // }
-
-// if (other.CompareTag("Wind"))
-//             {
-//                  Vector3 driftVector = player.GetComponent<PlayerMovement>().driftdrawVector; 
-//                 HeadsUpDisplay.GetComponent<UIController>().setWind(driftVector,other.GetComponent<Wind>().resistance);
-//                 player.GetComponent<PlayerMovement>().resistance = other.GetComponent<Wind>().resistance;
-//                 player.GetComponent<PlayerMovement>().theta = other.GetComponent<Wind>().theta;
-//             }
-
-    //   if (other.CompareTag("HighEffort"))
-    //         {
-    //             if(cookieState=="heavy")
-    //             {
-    //                 player.GetComponent<PlayerMovement>().stepSize = 0.1f;
-    //                 player.GetComponent<PlayerMovement>().pressLimit = 8;
-    //                 player.GetComponent<PlayerMovement>().resetEnergy();
-    //             }
-    //             else if(cookieState=="light")
-    //             {
-    //                 player.GetComponent<PlayerMovement>().stepSize = 0.1625f;
-    //                 player.GetComponent<PlayerMovement>().pressLimit = 8;
-    //                 player.GetComponent<PlayerMovement>().resetEnergy();
-    //             }
-
-    //         }
-
-    //         if (other.CompareTag("MediumEffort"))
-    //         {
-    //             if(cookieState=="heavy")
-    //             {
-    //                 player.GetComponent<PlayerMovement>().stepSize = 0.2f;
-    //                 player.GetComponent<PlayerMovement>().pressLimit = 4;
-    //                 player.GetComponent<PlayerMovement>().resetEnergy();
-    //             }
-    //             else if(cookieState=="light")
-    //             {
-    //                 player.GetComponent<PlayerMovement>().stepSize = 0.325f;
-    //                 player.GetComponent<PlayerMovement>().pressLimit = 4;
-    //                 player.GetComponent<PlayerMovement>().resetEnergy();
-    //             }
-    //         }
-
-    //         if (other.CompareTag("LowEffort"))
-    //         {
-    //             if(cookieState=="heavy")
-    //             {
-    //                 player.GetComponent<PlayerMovement>().stepSize = 0.26f;
-    //                 player.GetComponent<PlayerMovement>().pressLimit = 3;
-    //                 player.GetComponent<PlayerMovement>().resetEnergy();
-    //             }
-    //             else if(cookieState=="light")
-    //             {
-    //                 player.GetComponent<PlayerMovement>().stepSize = 0.43f;
-    //                 player.GetComponent<PlayerMovement>().pressLimit = 3;
-    //                 player.GetComponent<PlayerMovement>().resetEnergy();
-    //             }
-    //         }
-
-    //         if (other.CompareTag("Wind"))
-    //         {
-    //             Vector3 driftVector = player.GetComponent<PlayerMovement>().driftdrawVector; 
-    //             HeadsUpDisplay.GetComponent<UIController>().setWind(driftVector,other.GetComponent<Wind>().resistance);
-    //             player.GetComponent<PlayerMovement>().resistance = other.GetComponent<Wind>().resistance;
-    //             player.GetComponent<PlayerMovement>().theta = other.GetComponent<Wind>().theta;
-    //         }

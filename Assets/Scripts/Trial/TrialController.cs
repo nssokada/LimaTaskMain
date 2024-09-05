@@ -21,8 +21,14 @@ public class TrialController : MonoBehaviour
     public Transform centerPt;
     private float radius = 9;
     private float minDistanceBetweenAcorns = 2f; // Minimum distance between acorns
-    private List<Vector3> acornPositions = new List<Vector3>();
+    public List<Vector3> acornPositions = new List<Vector3>();
+    public List<PositionHandler> acornLoggedPositions; 
 
+
+    void Start()
+    {
+        acornLoggedPositions= new List<PositionHandler>();
+    }
     void update()
     {
         if(player.GetComponent<PlayerMovement>().effortPeriod == true && moveInstruct ==false)
@@ -127,7 +133,7 @@ public class TrialController : MonoBehaviour
 
                     if (isValid)
                     {
-                        acornPositions.Add(spawnPosition);
+                        logAcornPosition(spawnPosition);
                         
                         // Generate a random rotation
                         spawnRotation = UnityEngine.Random.rotation;
@@ -146,6 +152,11 @@ public class TrialController : MonoBehaviour
         }
     }
 
+    void logAcornPosition(Vector3 position)
+    {
+        PositionHandler acornPosition = new PositionHandler(position.x,position.z,Time.realtimeSinceStartup);
+        acornLoggedPositions.Add(acornPosition);
+    }
     private Vector3 GetRandomPointInRadius(Vector3 center, float radius)
     {
         // Generate a random point in a circular area

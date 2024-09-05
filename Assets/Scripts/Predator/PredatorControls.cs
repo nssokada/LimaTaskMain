@@ -51,7 +51,7 @@ public class PredatorControls : MonoBehaviour
 
         if (rand<attackingProb)
         {
-            Debug.Log("Attack Set");
+            Debug.Log("Attack Set: "+attackingTime);
             Invoke("strike", attackingTime);
         }
     }

@@ -1,16 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-
 [Serializable]
 public class LimaTrial
 {
-    //PREDATOR
     public float attackingProb;
-
-    //REWARDS
     public int cookie1PosX;
     public int cookie1PosY;
     public float cookie1Weight;
@@ -23,34 +18,26 @@ public class LimaTrial
     public int cookie3PosY;
     public float cookie3Weight;
     public int cookie3RewardValue;
+    public int type;
 
-    //DATA TO RECORD
-
-    //Continous Data
     public List<PositionHandler> playerPosition;
     public List<PositionHandler> predatorPosition;
     public List<PositionHandler> mouseTrackChoicePeriod;
     public List<PositionHandler> mouseTrackEffortPeriod;
     public List<float> effortRate;
-    
-    //Static Vars
+
     public float trialStartTime;
     public float trialEndTime;
     public string trialEndState;
     public float trialReward;
     public CookieChoice trialCookie;
+    public List<PositionHandler> acornsSpawned;
+    public List<PositionHandler> acornsCollected;
 
-
-
-// TODO: Figure out what to do with Acorns
-
-    //Where were the acorns?
-    //Maybe we have an override acorn
-
-    
-
-
-    public LimaTrial(float attackingProb,int cookie1PosX,int cookie1PosY,float cookie1Weight,int cookie1RewardValue,int cookie2PosX,int cookie2PosY,float cookie2Weight,int cookie2RewardValue, int cookie3PosX,int cookie3PosY,float cookie3Weight,int cookie3RewardValue)
+    // Constructor with parameters
+    public LimaTrial(float attackingProb, int cookie1PosX, int cookie1PosY, float cookie1Weight, int cookie1RewardValue,
+                     int cookie2PosX, int cookie2PosY, float cookie2Weight, int cookie2RewardValue,
+                     int cookie3PosX, int cookie3PosY, float cookie3Weight, int cookie3RewardValue, int type)
     {
         this.attackingProb = attackingProb;
         this.cookie1PosX = cookie1PosX;
@@ -65,17 +52,55 @@ public class LimaTrial
         this.cookie3PosY = cookie3PosY;
         this.cookie3Weight = cookie3Weight;
         this.cookie3RewardValue = cookie3RewardValue;
+        this.type = type;
 
+        // Initialize lists
         playerPosition = new List<PositionHandler>();
         predatorPosition = new List<PositionHandler>();
         mouseTrackChoicePeriod = new List<PositionHandler>();
         mouseTrackEffortPeriod = new List<PositionHandler>();
-        effortRate  = new List<float>();
+        effortRate = new List<float>();
 
+        // Initialize other fields
         trialStartTime = float.NaN;
         trialEndTime = float.NaN;
-        trialEndState = "";
-        trialReward=float.NaN;
+        trialEndState = string.Empty; // Initialize to an empty string
+        trialReward = float.NaN;
         trialCookie = new CookieChoice();
+    }
+
+    // Default constructor
+    public LimaTrial()
+    {
+        attackingProb = float.NaN;
+        cookie1PosX = -1;  // Default to -1 to indicate uninitialized
+        cookie1PosY = -1;
+        cookie1Weight = float.NaN;
+        cookie1RewardValue = -1;
+        cookie2PosX = -1;
+        cookie2PosY = -1;
+        cookie2Weight = float.NaN;
+        cookie2RewardValue = -1;
+        cookie3PosX = -1;
+        cookie3PosY = -1;
+        cookie3Weight = float.NaN;
+        cookie3RewardValue = -1;
+        type = -1;
+
+        // Initialize lists
+        playerPosition = new List<PositionHandler>();
+        predatorPosition = new List<PositionHandler>();
+        mouseTrackChoicePeriod = new List<PositionHandler>();
+        mouseTrackEffortPeriod = new List<PositionHandler>();
+        effortRate = new List<float>();
+
+        // Initialize other fields
+        trialStartTime = float.NaN;
+        trialEndTime = float.NaN;
+        trialEndState = string.Empty;
+        trialReward = float.NaN;
+        trialCookie = new CookieChoice();
+        acornsSpawned = new List<PositionHandler>();
+        acornsCollected = new List<PositionHandler>();
     }
 }

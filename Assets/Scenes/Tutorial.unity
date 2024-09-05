@@ -830,6 +830,7 @@ MonoBehaviour:
     cookie3PosY: 0
     cookie3Weight: 0
     cookie3RewardValue: 0
+    type: -1
     playerPosition: []
     predatorPosition: []
     mouseTrackChoicePeriod: []
@@ -8341,6 +8342,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cursorTexture: {fileID: 2800000, guid: 5aefb138535664e4e8a8c83fbb0958a7, type: 3}
+  targetCursorTexture: {fileID: 0}
+  moveCursorTexture: {fileID: 0}
   cursorMode: 0
   hotSpot: {x: 0, y: 0}
 --- !u!1 &773747331
@@ -10025,6 +10028,7 @@ MonoBehaviour:
     cookie3PosY: 2
     cookie3Weight: 1
     cookie3RewardValue: 100
+    type: -1
     playerPosition: []
     predatorPosition: []
     mouseTrackChoicePeriod: []
@@ -11947,7 +11951,7 @@ MonoBehaviour:
   player: {fileID: 1385470727}
   playerManager: {fileID: 137616762}
   HeadsUpDisplay: {fileID: 1342804737}
-  dataHandler: {fileID: 0}
+  dataHandler: {fileID: 167642620}
   mainCamera: {fileID: 768360517}
   centerPt: {fileID: 1544958063}
   speed: 0

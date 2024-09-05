@@ -6,6 +6,7 @@ public class LimaTask : MonoBehaviour
 {
     public GameObject trialController;
     public GameObject SessionGenerator;
+    public LimaTask limaTask;
 
     public GameObject endStateScreen;
     public GameObject escapeStateScreen;
@@ -18,310 +19,390 @@ public class LimaTask : MonoBehaviour
 
     public GameObject arena;
     public GameObject map;
-    public GameObject wind;
-    public GameObject mainCamera;
-   
     public GameObject probabilityDisplay;
+
+    public GameObject HeadsUpDisplay;
+    public GameObject mainCamera;
 
     private LimaTrial trial;
     private TrialDataHandler dataHandler;
-
-    bool trial_timeUp;
     public bool trialEndable;
-    Vector3 home;
-    bool cookies;
-    float movementStartTime; //likely will change this to trial start time
-    public GameObject HeadsUpDisplay;
+    public bool shouldStopCoroutine = false;
+
+    private bool acorns;
+    private Vector3 home;
+    private bool cookiesActive;
+    private bool acornsActive;
+
     private float startTime;
     private float endTime;
+    private Coroutine freeMovementCoroutine; // Reference to store the coroutine
 
-  
 
-#region  Running a Trial
+    #region Enums and State Management
 
-    //Upon enabling this gameobject the first trial will run.
+    public enum GameState
+    {
+        AcornPeriod,
+        SpawningPeriod,
+        ClickingPeriod,
+        EffortPeriod,
+        EndingPeriod,
+        NextTrialPeriod
+    }
+
+    #endregion
+
+    #region Running a Trial
+
+    // Upon enabling this gameobject the first trial will run.
     public void OnEnable()
     {
-       dataHandler = SessionGenerator.GetComponent<TrialDataHandler>();
-       dataHandler.instantiateTrialDataHandlers();
-       startNextTrial();
-
+        dataHandler = SessionGenerator.GetComponent<TrialDataHandler>();
+        dataHandler.instantiateTrialDataHandlers();
+        StartNextTrial();
     }
 
-    public void startNextTrial()
+    public void StartNextTrial()
     {
-        //clear any data from last trial
         dataHandler.ClearAllTrialDataHandlers();
+        trialEndable = true;
         endTime = float.NaN;
 
-        trialEndable = true;
         int trialNum = PlayerPrefs.GetInt("trialNum");
-        trial  = SessionGenerator.GetComponent<SessionGenerator>().trials[trialNum];
+        trial = SessionGenerator.GetComponent<SessionGenerator>().trials[trialNum];
         startTime = Time.realtimeSinceStartup;
-        gameStateController("spawningPeriod");
+
+        GameState gameState = trial.type == 1 ? GameState.AcornPeriod : GameState.SpawningPeriod;
+        HandleGameState(gameState);
     }
 
-    public void gameStateController(string gameState)
-    {   
+    public void HandleGameState(GameState gameState)
+    {
         switch (gameState)
         {
-            case "spawningPeriod":
-                StartCoroutine(LimaSpawnSequence(trial));
+            case GameState.AcornPeriod:
+                StartCoroutine(HandleAcornSpawnSequence(trial));
                 break;
-            case "clickingPeriod":
-                mainCamera.GetComponent<ChangeCursor>().MoveCursorToCenterAndUnlock();
-                dataHandler.recordMouseStartPosition(); //first mouse position centered on screen
-                dataHandler.startRecordContinuousMouse("choiceperiod");//enable mouse tracking during clicking period
-                EnableClickingPeriod();
+            case GameState.SpawningPeriod:
+                StartCoroutine(HandleSpawnSequence(trial));
                 break;
-            case "effortPeriod":
-                mainCamera.GetComponent<ChangeCursor>().setMoveCursor();
-                dataHandler.stopRecordContinuousMouse("choiceperiod"); //cancel the clicking period mouse tracking
-                dataHandler.startRecordContinuousMouse("effortperiod"); //enable the effort period mouse tracking
-                dataHandler.StartRecordingPlayerPosition(); //player movement recorded here. Pred movement intiated in predator class
-                EnableEffortPhase();
+            case GameState.ClickingPeriod:
+                BeginClickingPeriod();
                 break;
-            case "endingPeriod":
-                dataHandler.StopRecordingPlayerPosition();
-                dataHandler.StopRecordingPredatorPosition();
-                dataHandler.stopRecordContinuousMouse("effortperiod"); //cancel the effort period mouse tracking
+            case GameState.EffortPeriod:
+                BeginEffortPeriod();
+                break;
+            case GameState.EndingPeriod:
                 EndTrial();
                 break;
-            case "nextTrialPeriod":
+            case GameState.NextTrialPeriod:
                 OnTrialEnd();
                 break;
         }
     }
 
-    IEnumerator LimaSpawnSequence(LimaTrial trial)
+    IEnumerator HandleSpawnSequence(LimaTrial trial)
     {
-        arena.SetActive(true);
-        
-        //Set Probabilty -> sets probability material shows probability display for 1 second 
-        toggleProbability(trial);
-        map.SetActive(true);
+        PrepareArena(trial);
         yield return new WaitForSeconds(1.0f);
-        //Set Player -> sets player home status, enables player
-        togglePlayer();     
-        yield return new WaitForSeconds(1.0f);
-
-        //Set Rewards -> Spawns 2 cookies based on trial information
-        toggleRewards(trial);     
-        yield return new WaitForSeconds(1.0f);
-        //check this out next
-        gameStateController("clickingPeriod");
-        Debug.Log("End Lima Sequence");   
+        ToggleRewards(trial);
+        BeginClickingPeriod();
     }
 
+    IEnumerator HandleAcornSpawnSequence(LimaTrial trial)
+    {
+        PrepareArena(trial);
+        yield return new WaitForSeconds(1.0f);
+        ToggleAcorns();
+        EnableAcornPeriod();
+    }
 
-    //This period is ended by PlayerManager when player picks up the cookie
+    private void PrepareArena(LimaTrial trial)
+    {
+        arena.SetActive(true);
+        ToggleProbability(trial);
+        map.SetActive(true);
+        TogglePlayer();
+    }
+
+    public void BeginClickingPeriod()
+    {
+        mainCamera.GetComponent<ChangeCursor>().MoveCursorToCenterAndUnlock();
+        dataHandler.recordMouseStartPosition();
+        dataHandler.startRecordContinuousMouse("choiceperiod");
+        EnableClickingPeriod();
+    }
+
+    public void BeginEffortPeriod()
+    {
+        Debug.Log("Starting free movement sequence");
+        mainCamera.GetComponent<ChangeCursor>().setMoveCursor();
+        dataHandler.stopRecordContinuousMouse("choiceperiod");
+        dataHandler.startRecordContinuousMouse("effortperiod");
+        dataHandler.StartRecordingPlayerPosition();
+        EnableEffortPhase();
+    }
+
     public void EnableClickingPeriod()
     {
         player.GetComponent<PlayerMovement>().clickingPeriod = true;
     }
 
-     public void EnableEffortPhase()
+    public void EnableEffortPhase()
     {
-
-        Debug.Log("Starting freemovement Sequence");   
-
         HeadsUpDisplay.SetActive(true);
-        toggleEffort();
-        // toggleWind();
-         //Sets Predator probability and attack 
-        togglePredator();
-        setPredator(trial);  
-        StartCoroutine("freeMovement");
+        ToggleEffort();
+        TogglePredator();
+        SetPredator(trial);
+        
+        // Start free movement and store the reference
+        if (freeMovementCoroutine == null)
+        {
+            shouldStopCoroutine = false;  // Reset the flag before starting the coroutine
+            freeMovementCoroutine = StartCoroutine(FreeMovement());
+        }
     }
 
-    IEnumerator freeMovement()
-    { 
+    IEnumerator FreeMovement()
+    {
+        Debug.Log("Free movement started");
         InvokeRepeating("UpdateTimer", 0f, 0.01f);
-        yield return new WaitForSeconds(10.0f);
-        if(trialEndable)    gameStateController("endingPeriod");
 
+        float elapsedTime = 0f;
+        while (elapsedTime < 10.0f)
+        {
+            if (shouldStopCoroutine) // Check if the coroutine should stop
+            {
+                Debug.Log("Coroutine stopped");
+                yield break;  // Exit the coroutine immediately
+            }
+
+            elapsedTime += Time.deltaTime;
+            yield return null;  // Wait for the next frame
+        }
+
+        // Check if the trial is still endable after movement
+        if (trialEndable && !shouldStopCoroutine)
+        {
+            HandleGameState(GameState.EndingPeriod);
+        }
+
+        freeMovementCoroutine = null;  // Reset reference when finished
     }
 
- 
+    #endregion
 
-
-#endregion
-
-#region  Ending a Trial
+    #region Ending a Trial
 
     public void EndTrial()
     {
+         // Set flag to stop the coroutine at the next check
+        shouldStopCoroutine = true;
+
+        // Ensure that the free movement coroutine is stopped
+        if (freeMovementCoroutine != null)
+        {
+            StopCoroutine(freeMovementCoroutine);
+            freeMovementCoroutine = null;
+        }
+
         trialEndable = false;
-        StopCoroutine("freeMovement");
+
+
+
+
+
+
         CancelInvoke("UpdateTimer");
         endTime = Time.realtimeSinceStartup;
         StartCoroutine(TrialEndRoutine(trial));
-            
     }
 
     public void OnTrialEnd()
     {
         int trialNum = PlayerPrefs.GetInt("trialNum");
-        //Transfer trial data
-        logTrialData(trial);
+        LogTrialData(trial);
 
+        Debug.Log("pushing trial data");
         SessionGenerator.GetComponent<SessionGenerator>().pushTrialData(trial, trialNum);
-        
+
         trialNum++;
         PlayerPrefs.SetInt("trialNum", trialNum);
 
-        if(trialNum < SessionGenerator.GetComponent<SessionGenerator>().numTrials)
+        if (trialNum < SessionGenerator.GetComponent<SessionGenerator>().numTrials)
         {
-            Debug.Log("trialNum"+trialNum);
-            Debug.Log("evaluating next");
-            startNextTrial();
+            Debug.Log($"trialNum {trialNum}");
+            StartNextTrial();
         }
         else
         {
             Application.Quit();
-            Debug.Log("end reached");
-        }        
+            Debug.Log("End reached");
+        }
     }
 
     IEnumerator TrialEndRoutine(LimaTrial trial)
     {
+        ResetTrialSettings();
+        yield return new WaitForSeconds(2.0f);
+        ToggleEndStateScreen();
+        ResetArena(trial);
+        HandleGameState(GameState.NextTrialPeriod);
+    }
+
+    private void ResetTrialSettings()
+    {
         player.GetComponent<PlayerMovement>().effortPeriod = false;
         predator.GetComponent<PredatorControls>().circaStrike = false;
-
         HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0f);
         HeadsUpDisplay.SetActive(false);
-        toggleEndStateScreen();
-        togglePlayer();
-        togglePredator();
-        yield return new WaitForSeconds(2.0f);
+        ToggleEndStateScreen();
+        TogglePlayer();
+        TogglePredator();
+    }
+
+    private void ResetArena(LimaTrial trial)
+    {
         arena.SetActive(false);
         map.SetActive(false);
-        toggleRewards(trial);
-        toggleProbability(trial);
-        toggleEndStateScreen();
-        resetTimer();
-        gameStateController("nextTrialPeriod");
-    }
-#endregion
-
-#region  Wrappers and Helpers
-   
- void toggleProbability(LimaTrial trial)
-    {
-        if(!probabilityDisplay.activeSelf)
+        if (trial.type == 1)
         {
-            Debug.Log("changingMaterial color");
-            trialController.GetComponent<TrialController>().setProbability(trial.attackingProb);
-            probabilityDisplay.SetActive(true);
-
+            ToggleAcorns();
         }
-
         else
         {
-            probabilityDisplay.SetActive(false);
+            ToggleRewards(trial);
+        }
+        ToggleProbability(trial);
+        ResetTimer();
+    }
+
+    #endregion
+
+    #region Wrappers and Helpers
+    public void EnableAcornPeriod()
+    {
+        HeadsUpDisplay.SetActive(true);
+        player.GetComponent<PlayerMovement>().enableAcorns();
+        SetPredator(trial);
+        // Start free movement and store the reference
+        if (freeMovementCoroutine == null)
+        {
+            shouldStopCoroutine = false;  // Reset the flag before starting the coroutine
+            freeMovementCoroutine = StartCoroutine(FreeMovement());
         }
     }
 
-    void togglePlayer()
+    void ToggleProbability(LimaTrial trial)
     {
-        if(!player.activeSelf)
+        bool activeState = probabilityDisplay.activeSelf;
+        trialController.GetComponent<TrialController>().setProbability(trial.attackingProb);
+        probabilityDisplay.SetActive(!activeState);
+    }
+
+    void TogglePlayer()
+    {
+        player.SetActive(!player.activeSelf);
+        if (player.activeSelf)
         {
             playerManager.playerState = "free";
             home = player.transform.position;
-            player.SetActive(true);
         }
-
         else
         {
-           player.GetComponent<PlayerMovement>().effortPeriod = false;
-           player.GetComponent<PlayerMovement>().clickingPeriod = false;
-           if(playerManager.carrying)
-           {
-                playerManager.carrying = false;
-                  foreach(Transform child in player.transform)
-                    {
-                        if(child.CompareTag("Cookie")) Destroy(child.gameObject);
-                    }
-           }
-           player.transform.position = home;
-
-           player.SetActive(false);
+            player.GetComponent<PlayerMovement>().effortPeriod = false;
+            player.GetComponent<PlayerMovement>().clickingPeriod = false;
+            HandleCarrying();
+            player.transform.position = home;
         }
     }
 
-    void togglePredator()
+    private void HandleCarrying()
     {
-        if(!predator.activeSelf)
+        if (playerManager.carrying)
         {
+            playerManager.carrying = false;
+            foreach (Transform child in player.transform)
+            {
+                if (child.CompareTag("Cookie")) Destroy(child.gameObject);
+            }
+        }
+    }
+
+    void TogglePredator()
+    {
+        if (!predator.activeSelf)
+        {
+            Debug.Log("Activating predator");
             predator.SetActive(true);
         }
-
         else
         {
-           predator.SetActive(false);
+            Debug.Log("Deactivating predator");
+            predator.SetActive(false);
         }
     }
 
-    void toggleEffort()
-    {
-         player.GetComponent<PlayerMovement>().enableEffort();
-    }
+    void ToggleEffort() {player.GetComponent<PlayerMovement>().enableEffort();}
 
-    void toggleEndStateScreen()
+    void ToggleEndStateScreen()
     {
-        if(!endStateScreen.activeSelf)
+        bool activeState = endStateScreen.activeSelf;
+        endStateScreen.SetActive(!activeState);
+        if (activeState) return;
+
+        switch (playerManager.playerState)
         {
-            endStateScreen.SetActive(true);
-            Debug.Log(playerManager.playerState);
-            if (playerManager.playerState.Equals("escaped"))
-            {
+            case "escaped":
                 escapeStateScreen.SetActive(true);
-            }
-            else if (playerManager.playerState.Equals("captured"))
-            {
+                break;
+            case "captured":
                 capturedStateScreen.SetActive(true);
-            }
-            else 
-            {
+                break;
+            default:
                 freeStateScreen.SetActive(true);
-            }
-        }
-        else
-        {
-            endStateScreen.SetActive(false);
-            escapeStateScreen.SetActive(false);
-            freeStateScreen.SetActive(false);
-            capturedStateScreen.SetActive(false);
-
+                break;
         }
     }
 
-
-
-    void toggleRewards(LimaTrial trial)
+    void ToggleRewards(LimaTrial trial)
     {
-        if(!cookies)
+        if (!cookiesActive)
         {
-            trialController.GetComponent<TrialController>().spawnRewards(trial.cookie1PosX,trial.cookie1PosY,trial.cookie1Weight,trial.cookie1RewardValue);
-            trialController.GetComponent<TrialController>().spawnRewards(trial.cookie2PosX,trial.cookie2PosY,trial.cookie2Weight,trial.cookie2RewardValue);
-            cookies = true;
+            trialController.GetComponent<TrialController>().spawnRewards(trial.cookie1PosX, trial.cookie1PosY, trial.cookie1Weight, trial.cookie1RewardValue);
+            trialController.GetComponent<TrialController>().spawnRewards(trial.cookie2PosX, trial.cookie2PosY, trial.cookie2Weight, trial.cookie2RewardValue);
+            cookiesActive = true;
         }
         else
         {
             trialController.GetComponent<TrialController>().despawnRewards();
-            cookies = false;
+            cookiesActive = false;
         }
-
     }
 
-    void setPredator(LimaTrial trial)
+    void ToggleAcorns()
     {
-        predator.GetComponent<PredatorControls>().setAttack(trial.attackingProb);
+        if(!acorns)
+        {
+            Debug.Log("spawning acorns");
+            trialController.GetComponent<TrialController>().spawnAcorns(5);
+            acorns = true;
+        }
+        else
+        {
+            Debug.Log("destroying acorns");
+            trialController.GetComponent<TrialController>().despawnAcorns();
+            acorns = false;
+        }
     }
 
-    void logTrialData(LimaTrial trial)
+
+    public void SetPredator(LimaTrial trial) {predator.GetComponent<PredatorControls>().setAttack(trial.attackingProb);}
+
+    void LogTrialData(LimaTrial trial)
     {
-        trial.playerPosition =dataHandler.playerPosition;
+        trial.playerPosition = dataHandler.playerPosition;
         trial.predatorPosition = dataHandler.predatorPosition;
         trial.mouseTrackChoicePeriod = dataHandler.mouseTrackChoicePeriod;
         trial.mouseTrackEffortPeriod = dataHandler.mouseTrackEffortPeriod;
@@ -331,55 +412,33 @@ public class LimaTask : MonoBehaviour
         trial.trialReward = playerManager.earnedReward;
         trial.trialCookie = playerManager.cookieChoice;
         trial.trialEndState = playerManager.playerState;
+        trial.acornsSpawned = trialController.GetComponent<TrialController>().acornLoggedPositions;
+        trial.acornsCollected = playerManager.acornsCollected;
     }
 
 
-   
 
-#endregion
+    #endregion
 
-#region Continous Methods
+    #region Continuous Methods
 
- void UpdateTimer()
+    void UpdateTimer()
     {
-        // Assuming movementStartTimeHeadsUpDisplay is a GameObject with UIController script attached
         UIController uiController = HeadsUpDisplay.GetComponent<UIController>();
-
         if (uiController != null)
         {
-            // Call the DecreaseTime method from UIController
-            uiController.DecreaseTime(0.01f/10f);
+            uiController.DecreaseTime(0.01f / 10f);
         }
     }
 
-
- void resetTimer()
+    void ResetTimer()
     {
-        // Assuming movementStartTimeHeadsUpDisplay is a GameObject with UIController script attached
         UIController uiController = HeadsUpDisplay.GetComponent<UIController>();
-
         if (uiController != null)
         {
-            // Call the DecreaseTime method from UIController
             uiController.SetTime(1f);
         }
     }
-#endregion
 
-#region Old Code
-    // void toggleWind()
-    // {
-    //       if(!wind.activeSelf)
-    //     {
-    //         wind.SetActive(true);
-    //         wind.GetComponent<WindController>().activateWindLayer(playerManager.playerLayer);
-    //     }
-    //     else
-    //     {
-    //        wind.GetComponent<WindController>().deactivateWindLayer();
-    //        wind.SetActive(false);
-    //     }
-    // }
-#endregion
-   
+    #endregion
 }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -255,6 +255,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trialController: {fileID: 1200133838}
   SessionGenerator: {fileID: 1113177324}
+  limaTask: {fileID: 0}
   endStateScreen: {fileID: 1106596664}
   escapeStateScreen: {fileID: 1231703834}
   freeStateScreen: {fileID: 1585638543}
@@ -264,11 +265,11 @@ MonoBehaviour:
   predator: {fileID: 463717003}
   arena: {fileID: 1933993737}
   map: {fileID: 1545067405}
-  wind: {fileID: 0}
-  mainCamera: {fileID: 714583139}
   probabilityDisplay: {fileID: 775172891}
-  trialEndable: 0
   HeadsUpDisplay: {fileID: 839386358}
+  mainCamera: {fileID: 714583139}
+  trialEndable: 0
+  shouldStopCoroutine: 0
 --- !u!1 &126276148 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9038452669546594994a8929676608a3, type: 3}
@@ -3098,7 +3099,7 @@ MonoBehaviour:
   grass: {fileID: 648412650}
   energyText: {fileID: 781566895}
   rewardTextHUD: {fileID: 595175841}
-  acornTextHUD: {fileID: 0}
+  acornTextHUD: {fileID: 595175841}
 --- !u!114 &839386360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3941,34 +3942,37 @@ MonoBehaviour:
   username: 
   trials: []
   trial:
-    attackingProb: 0
-    cookie1PosX: 0
-    cookie1PosY: 0
-    cookie1Weight: 0
-    cookie1RewardValue: 0
-    cookie2PosX: 0
-    cookie2PosY: 0
-    cookie2Weight: 0
-    cookie2RewardValue: 0
-    cookie3PosX: 0
-    cookie3PosY: 0
-    cookie3Weight: 0
-    cookie3RewardValue: 0
+    attackingProb: NaN
+    cookie1PosX: -1
+    cookie1PosY: -1
+    cookie1Weight: NaN
+    cookie1RewardValue: -1
+    cookie2PosX: -1
+    cookie2PosY: -1
+    cookie2Weight: NaN
+    cookie2RewardValue: -1
+    cookie3PosX: -1
+    cookie3PosY: -1
+    cookie3Weight: NaN
+    cookie3RewardValue: -1
+    type: -1
     playerPosition: []
     predatorPosition: []
     mouseTrackChoicePeriod: []
     mouseTrackEffortPeriod: []
     effortRate: []
-    trialStartTime: 0
-    trialEndTime: 0
+    trialStartTime: NaN
+    trialEndTime: NaN
     trialEndState: 
-    trialReward: 0
+    trialReward: NaN
     trialCookie:
-      rewardValue: 0
-      weight: 0
-      xPos: 0
-      yPos: 0
-      time: 0
+      rewardValue: NaN
+      weight: NaN
+      xPos: NaN
+      yPos: NaN
+      time: NaN
+    acornsSpawned: []
+    acornsCollected: []
   numTrials: 0
 --- !u!4 &1113177326
 Transform:
@@ -4444,12 +4448,12 @@ MonoBehaviour:
   - {fileID: 126276148}
   - {fileID: 1706010303}
   cookiePrefab: {fileID: 2665013099508562093, guid: 9eae60d461e238341bb0872d4e49836e, type: 3}
-  acornPrefab: {fileID: 0}
+  acornPrefab: {fileID: 3384823163506555187, guid: b3729c346497e004c89d4e0df9720041, type: 3}
   choose: {fileID: 0}
   move: {fileID: 0}
   probability: {fileID: 775172891}
   player: {fileID: 597418898}
-  centerPt: {fileID: 0}
+  centerPt: {fileID: 947183459}
 --- !u!1 &1212166231
 GameObject:
   m_ObjectHideFlags: 0
@@ -5363,7 +5367,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: eec5f1c9c191c5046888e27fbe13ad3d, type: 3}
+  m_Texture: {fileID: 2800000, guid: af5c46648652cb54593a678d54250f97, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
