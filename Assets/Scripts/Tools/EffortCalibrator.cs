@@ -34,7 +34,7 @@ public class EffortCalibrator : MonoBehaviour
         {
             Debug.Log("Press Latency: " + CalculateAverage(meanLatencies) + " seconds");
             PlayerPrefs.SetFloat("PressLatency", CalculateAverage(meanLatencies));
-            SceneManager.LoadScene("GrassTest");
+            SceneManager.LoadScene("MainGame");
         }
     }
 

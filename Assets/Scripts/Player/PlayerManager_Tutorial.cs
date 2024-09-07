@@ -5,8 +5,6 @@ using UnityEngine;
 public class PlayerManager_Tutorial : PlayerManager
 {
 
-    private bool exitSafety;
-
     private void OnEnable()
     {
         exitSafety = false;
@@ -46,7 +44,7 @@ public class PlayerManager_Tutorial : PlayerManager
             {
                 other.gameObject.GetComponent<Collider>().enabled = false;
                 Debug.Log("Acorn Hit");
-                HeadsUpDisplay.GetComponent<UIController>().SetHUDAcorn(2);
+                HeadsUpDisplay.GetComponent<UIController>().SetHUDReward(2);
                 foreach (Transform child in other.gameObject.transform)
                     {
                             // Set each child to active

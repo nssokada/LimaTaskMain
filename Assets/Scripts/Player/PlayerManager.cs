@@ -16,8 +16,8 @@ public class PlayerManager : MonoBehaviour
     public float earnedReward;
     private float rewardPotential;
     public GameObject HeadsUpDisplay;
-    private bool exitSafety;
-
+    public bool exitSafety;
+    float rewardValue;
     void OnEnable()
     {
         // Reset player states
@@ -48,14 +48,13 @@ public class PlayerManager : MonoBehaviour
         
             if (other.gameObject.tag == "Cookie")
             {
-                Debug.Log("cookie hit");
                 other.gameObject.GetComponent<Collider>().enabled = false;
                 float weight  = other.gameObject.GetComponent<Cookie>().weight;
-                float rewardValue = other.gameObject.GetComponent<Cookie>().rewardValue;
+                rewardValue = other.gameObject.GetComponent<Cookie>().rewardValue;
                 Vector3 cookiePosition = other.gameObject.transform.position;
+                Debug.Log("cookie hit"+rewardValue);
 
                 other.transform.parent = player.transform;
-
                 if(weight>1) 
                 {
                     cookieState = "heavy";
@@ -118,7 +117,7 @@ public class PlayerManager : MonoBehaviour
                 other.gameObject.GetComponent<Collider>().enabled = false;
                 logAcornPosition(other.gameObject);
                 Debug.Log("Acorn Hit");
-                HeadsUpDisplay.GetComponent<UIController>().SetHUDAcorn(2);
+                HeadsUpDisplay.GetComponent<UIController>().SetHUDReward(2);
                 rewardPotential += 2;
                 foreach (Transform child in other.gameObject.transform)
                     {

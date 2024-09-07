@@ -139,7 +139,7 @@ public class TutorialController : MonoBehaviour
         }
         else if(tutorialState=="mapTutorial")
         {
-            SceneManager.LoadScene("MainGame");
+            SceneManager.LoadScene("EffortCalibrator");
         }
     }
     

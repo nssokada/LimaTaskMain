@@ -53,11 +53,19 @@ public class TutorialLimaTask : MonoBehaviour
        Debug.Log(numCookies);
        gameStateController(TutorialController.tutorialState);
     }
-     public void OnDisable()
-    {
-        mainCamera.GetComponent<ChangeCursor>().setDefaultCursor();
-    }
+    
 
+public void OnDisable()
+{
+    if (mainCamera != null)
+    {
+        ChangeCursor changeCursor = mainCamera.GetComponent<ChangeCursor>();
+        if (changeCursor != null)
+        {
+            changeCursor.setDefaultCursor();
+        }
+    }
+}
 
 /// <GameStateController>
 /// This is a game state controller for the Tutorial. It controls the shift in states within the tutorial of the game. 
@@ -70,7 +78,7 @@ public class TutorialLimaTask : MonoBehaviour
         {
             case "cookieSelection":
                 Debug.Log("Running tutorial intro");
-                if(numCookies<=3) StartCoroutine(CookieSelection());
+                if(numCookies<=1) StartCoroutine(CookieSelection());
                 else StartCoroutine(endCookieSelection());
                 break;
             case "effortIntro":
@@ -78,22 +86,22 @@ public class TutorialLimaTask : MonoBehaviour
                 break;
             case "navigationTutorial":
                 trialEndable = true;
-                if(numCookies<=3) StartCoroutine(navigationTutorial());
+                if(numCookies<=0) StartCoroutine(navigationTutorial());
                 else StartCoroutine(endNavigationTutorial());
                 break;
             case "cookieTutorial":
                 trialEndable = true;
-                if(numCookies<=3) StartCoroutine(cookieTutorial());
+                if(numCookies<=2) StartCoroutine(cookieTutorial());
                 else StartCoroutine(endCookieTutorial());
                 break;
             case "mapTutorial":
                 trialEndable = true;
-                if(numCookies<=3) StartCoroutine(mapTutorial(trial));
+                if(numCookies<=2) StartCoroutine(mapTutorial(trial));
                 else StartCoroutine(endMapTutorial());
                 break;
             case "acornTutorial":
                 trialEndable = true;
-                if(numCookies<=3) StartCoroutine(acornTutorial());
+                if(numCookies<=1) StartCoroutine(acornTutorial());
                 else StartCoroutine(endacornTutorial());
                 break;
 
@@ -103,7 +111,6 @@ public class TutorialLimaTask : MonoBehaviour
                 break;
              case "endingPeriod":
                 HeadsUpDisplay.GetComponent<UIController>().SetHUDReward(0);
-                HeadsUpDisplay.GetComponent<UIController>().SetHUDAcorn(0);
                 EndTrial();
                 break;
             case "nextTrialPeriod":
@@ -271,7 +278,10 @@ private IEnumerator cookieTutorial()
         instructText.text = "Click on the cookie to begin!";
         arena.SetActive(true);
         map.SetActive(true);
-        togglePlayer();     
+
+        togglePlayer();
+        mainCamera.GetComponent<ChangeCursor>().MoveCursorToCenterAndUnlock();
+        mainCamera.GetComponent<ChangeCursor>().setTargetCursor();     
         yield return new WaitForSeconds(1.0f);
 
         if(numCookies<1)setCookie(Random.Range(0,1),Random.Range(0,6),3f,100);
