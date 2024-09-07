@@ -23,7 +23,11 @@ public class UIController : MonoBehaviour
 
 
 
-
+    void OnEnable()
+    {
+        SetEnergy(0f);
+        SetHUDReward(0);
+    }
     public void DecreaseEnergy(float energyValue)
     {
         float energy =  energySlider.value;

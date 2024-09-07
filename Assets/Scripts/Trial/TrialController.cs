@@ -25,7 +25,7 @@ public class TrialController : MonoBehaviour
     public List<PositionHandler> acornLoggedPositions; 
 
 
-    void Start()
+    void OnEnable()
     {
         acornLoggedPositions= new List<PositionHandler>();
     }
@@ -106,6 +106,7 @@ public class TrialController : MonoBehaviour
      public void spawnAcorns(int numberOfAcorns)
     {
         acornPositions.Clear(); // Clear previous positions if re-spawning
+        acornLoggedPositions.Clear();
 
         for (int i = 0; i < numberOfAcorns; i++)
         {

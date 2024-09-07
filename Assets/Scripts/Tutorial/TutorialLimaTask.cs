@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 public class TutorialLimaTask : MonoBehaviour
 {
     PlayerInput playerInput;
+    public GameObject mainCamera;
 
     public GameObject trialController;
     public TutorialController TutorialController;
@@ -51,6 +52,10 @@ public class TutorialLimaTask : MonoBehaviour
        numCookies=0;
        Debug.Log(numCookies);
        gameStateController(TutorialController.tutorialState);
+    }
+     public void OnDisable()
+    {
+        mainCamera.GetComponent<ChangeCursor>().setDefaultCursor();
     }
 
 
@@ -129,7 +134,9 @@ public class TutorialLimaTask : MonoBehaviour
         instructText.text = "Click on the cookies as they appear!";
         arena.SetActive(true);
         map.SetActive(true);
-        togglePlayer();     
+        togglePlayer(); 
+        mainCamera.GetComponent<ChangeCursor>().MoveCursorToCenterAndUnlock();
+        mainCamera.GetComponent<ChangeCursor>().setTargetCursor();
         yield return new WaitForSeconds(1.0f);
 
         setCookie(Random.Range(0,1),Random.Range(0,6),0f,0);
@@ -229,6 +236,8 @@ private IEnumerator navigationTutorial()
         arena.SetActive(true);
         map.SetActive(true);
         togglePlayer();     
+        mainCamera.GetComponent<ChangeCursor>().MoveCursorToCenterAndUnlock();
+        mainCamera.GetComponent<ChangeCursor>().setTargetCursor();
         yield return new WaitForSeconds(1.0f);
 
         setCookie(Random.Range(0,1),Random.Range(0,6),1f,10);
@@ -297,7 +306,9 @@ private IEnumerator mapTutorial(LimaTrial trial)
         toggleProbability();
         map.SetActive(true);
         yield return new WaitForSeconds(1.0f);
-        togglePlayer();     
+        togglePlayer();
+        mainCamera.GetComponent<ChangeCursor>().MoveCursorToCenterAndUnlock();
+        mainCamera.GetComponent<ChangeCursor>().setTargetCursor();
         yield return new WaitForSeconds(1.0f);
 
          //Set Rewards -> Spawns 3 cookies based on trial information
@@ -312,11 +323,11 @@ private IEnumerator endMapTutorial()
         HeadsUpDisplay.SetActive(true);
         instructText.text = "Great work!";
         yield return new WaitForSeconds(1.5f);
-        instructText.text = "Now let's learn about the free movement condition";
+        instructText.text = "Now let's play the game!";
         yield return new WaitForSeconds(2.0f);
         EffortDisplay.SetActive(false);
         HeadsUpDisplay.SetActive(false);
-        SwitchToTutorial("acornTutorial");
+        TutorialController.SwitchScene();
 }
 #endregion
 
@@ -329,7 +340,9 @@ private IEnumerator acornTutorial()
         arena.SetActive(true);
         toggleProbability();
         map.SetActive(true);
+        mainCamera.GetComponent<ChangeCursor>().MoveCursorToCenterAndUnlock();
         yield return new WaitForSeconds(1.0f);
+        mainCamera.GetComponent<ChangeCursor>().setMoveCursor();
         togglePlayer();     
         yield return new WaitForSeconds(1.0f);
 
@@ -343,7 +356,7 @@ private IEnumerator acornTutorial()
 
 private IEnumerator endacornTutorial()
 {        
-            HeadsUpDisplay.SetActive(true);
+        HeadsUpDisplay.SetActive(true);
         instructText.text = "Great work!";
         yield return new WaitForSeconds(1.5f);
         instructText.text = "Now let's play the game";
@@ -472,6 +485,7 @@ private IEnumerator endacornTutorial()
     {
         if (version == 0)
         {
+            mainCamera.GetComponent<ChangeCursor>().setMoveCursor();
             Debug.Log("Starting freemovement Sequence");   
             instructText.text = "Now bring the cookie back to safety";
             HeadsUpDisplay.SetActive(true);
@@ -479,6 +493,7 @@ private IEnumerator endacornTutorial()
         }
         else if (version == 1)
         {
+            mainCamera.GetComponent<ChangeCursor>().setMoveCursor();
             Debug.Log("Starting freemovement Sequence");   
             instructText.text = "Now bring the cookie back to safety";
             HeadsUpDisplay.SetActive(true);

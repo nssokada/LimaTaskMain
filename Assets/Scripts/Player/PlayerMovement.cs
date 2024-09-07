@@ -58,10 +58,22 @@ public class PlayerMovement : MonoBehaviour
         animator = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
         speed = baseSpeed;
-        MinPressLatency = PlayerPrefs.GetFloat("PressLatency");
-        Debug.Log("Press Latency:"+MinPressLatency);
-        // InvokeRepeating("drag", 0.5f, 0.22f);
+        
+        // Fetch and log press latency from PlayerPrefs
+        MinPressLatency = PlayerPrefs.GetFloat("PressLatency", 0.1f); // Add default value to avoid null issues
+        Debug.Log($"Initialized with Press Latency: {MinPressLatency}");
     }
+
+
+    void OnDisable()
+    {
+        effortPeriod = false;
+        acornPeriod = false;
+        clickingPeriod = false;
+        // Reset energy display when the player is disabled
+        HeadsUpDisplay?.GetComponent<UIController>()?.SetEnergy(0f);
+    }
+
     
     void Update()
     {
@@ -83,64 +95,53 @@ public class PlayerMovement : MonoBehaviour
 #region Clicking To Select Reward
     void OnMouseClick()
     {
-        if(clickingPeriod ==true)
+        if (!clickingPeriod) return;
+
+        Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            Debug.Log("click");
-            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-            RaycastHit hit;
- 
-            if (Physics.Raycast(ray, out hit))
+            if (hit.transform.CompareTag("Cookie"))
             {
-                if(hit.transform.tag  =="Cookie")
-                {
-                    Debug.Log("Reward hit");
-                    clickingPeriod =false;
-                    StartCoroutine(moveObject(hit.transform.position));
-                }
-            } 
-            else 
-            {
-                Debug.Log("Nothing hit");
+                Debug.Log("Reward hit");
+                clickingPeriod = false;
+                StartCoroutine(MoveObject(hit.transform.position));
             }
         }
-       
+        else
+        {
+            Debug.Log("No object hit.");
+        }
     }
+
 
     
-    IEnumerator moveObject(Vector3 newPosition)
+        IEnumerator MoveObject(Vector3 newPosition)
     {
-        float  startTime = Time.time;
-        float speed =0.9f;
-        Quaternion targetRotation = Quaternion.LookRotation(newPosition);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 1f);
+        float startTime = Time.time;
+        float speed = 0.9f;
+        Quaternion targetRotation = Quaternion.LookRotation(newPosition - transform.position);
         float journeyLength = Vector3.Distance(transform.position, newPosition);
-        while (true)
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 1f);
+
+        while (!playerManager.carrying)
         {
             animator.SetBool("IsRunning", true);
-            // Distance moved equals elapsed time times speed..
+
+            // Calculate the progress and move the player
             float distCovered = (Time.time - startTime) * speed;
-
-            // Fraction of journey completed equals current distance divided by total distance.
             float fractionOfJourney = distCovered / journeyLength;
-
-            // Set our position as a fraction of the distance between the markers.
             transform.position = Vector3.Lerp(transform.position, newPosition, fractionOfJourney);
-           
 
-            // If the object has arrived, stop the coroutine
-            if (playerManager.carrying)
-            {
-                Debug.Log("arrived");
-                animator.SetBool("IsRunning", false);
-                yield break;
-            }
-
-            // Otherwise, continue next frame
             yield return null;
         }
+
+        // Stop running animation when done
+        animator.SetBool("IsRunning", false);
+        Debug.Log("Arrived at the target position.");
     }
 
-#endregion
+    #endregion
 
     
 #region Player Movement
@@ -150,8 +151,9 @@ public class PlayerMovement : MonoBehaviour
         {
             Vector2 mouseScreenPosition = Mouse.current.position.ReadValue();
             targetPosition = GetWorldPosition(mouseScreenPosition);
+
             float distanceFromCenter = Vector3.Distance(centerPt.transform.position, targetPosition);
-             if (distanceFromCenter <= radius)
+            if (distanceFromCenter <= radius)
             {
                 setMovementDirection();
             }
@@ -161,17 +163,11 @@ public class PlayerMovement : MonoBehaviour
     void setMovementDirection()
     {
         Vector3 direction = (targetPosition - transform.position).normalized;
-        direction.y = 0; // Zero out the Y component to avoid vertical movement
+        direction.y = 0; // Prevent vertical movement
+
         float distance = Vector3.Distance(transform.position, targetPosition);
 
-
-    //         // Calculate the distance from the center of the circle
-
-    //         // Check if the new position is within the specified radius
-    //        
-
-
-        if (distance > 0.1f) // Avoid jittering when very close to the target
+        if (distance > 0.1f) // Avoid jittering when too close to the target
         {
             transform.position += direction * speed * Time.deltaTime;
             Quaternion targetRotation = Quaternion.LookRotation(direction);
@@ -184,22 +180,20 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-
     Vector3 GetWorldPosition(Vector2 screenPosition)
     {
         Ray ray = mainCamera.ScreenPointToRay(new Vector3(screenPosition.x, screenPosition.y, 0));
-        Plane groundPlane = new Plane(Vector3.up, Vector3.zero); // Assuming the player moves on the XZ plane
-        float rayDistance;
-
-        if (groundPlane.Raycast(ray, out rayDistance))
+        Plane groundPlane = new Plane(Vector3.up, Vector3.zero); // Player moves on XZ plane
+        if (groundPlane.Raycast(ray, out float rayDistance))
         {
             Vector3 worldPosition = ray.GetPoint(rayDistance);
-            worldPosition.y = 0; // Explicitly set Y to 0
+            worldPosition.y = 0; // Ensure Y is set to zero
             return worldPosition;
         }
 
         return Vector3.zero;
     }
+
 #endregion
 
 #region Effort Control
@@ -234,30 +228,25 @@ public class PlayerMovement : MonoBehaviour
 
     void drag()
     {
-        speed -= 0.01f;
-        speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
+        speed = Mathf.Clamp(speed - 0.01f, minSpeed, maxSpeed);
     }
 
 
     void effort()
     {
-        if(latency <=MinPressLatency)
+        if (latency <= MinPressLatency)
         {
-            speed += 1f*cookieWeight;
-            speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
-
+            speed += 1f * cookieWeight;
         }
-        else if (latency <=MinPressLatency+MinPressLatency*0.5)
+        else if (latency <= MinPressLatency * 1.5f)
         {
-            speed += 0.5f*cookieWeight;
-            speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
-
+            speed += 0.5f * cookieWeight;
         }
-        else if(latency <= MinPressLatency+MinPressLatency*0.75)
+        else if (latency <= MinPressLatency * 1.75f)
         {
-            speed += 0.1f*cookieWeight;
-            speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
+            speed += 0.1f * cookieWeight;
         }
+        speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
     }
 
 

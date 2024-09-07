@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LimaTask : MonoBehaviour
 {
@@ -67,7 +68,7 @@ public class LimaTask : MonoBehaviour
     {
         dataHandler.ClearAllTrialDataHandlers();
         trialEndable = true;
-        endTime = float.NaN;
+        endTime = -1.0f;
 
         int trialNum = PlayerPrefs.GetInt("trialNum");
         trial = SessionGenerator.GetComponent<SessionGenerator>().trials[trialNum];
@@ -105,6 +106,10 @@ public class LimaTask : MonoBehaviour
     IEnumerator HandleSpawnSequence(LimaTrial trial)
     {
         PrepareArena(trial);
+        //Let's set the mouse here
+        mainCamera.GetComponent<ChangeCursor>().MoveCursorToCenterAndUnlock();
+        mainCamera.GetComponent<ChangeCursor>().setTargetCursor();
+        dataHandler.recordMouseStartPosition();
         yield return new WaitForSeconds(1.0f);
         ToggleRewards(trial);
         BeginClickingPeriod();
@@ -113,7 +118,9 @@ public class LimaTask : MonoBehaviour
     IEnumerator HandleAcornSpawnSequence(LimaTrial trial)
     {
         PrepareArena(trial);
+        mainCamera.GetComponent<ChangeCursor>().MoveCursorToCenterAndUnlock();
         yield return new WaitForSeconds(1.0f);
+        mainCamera.GetComponent<ChangeCursor>().setMoveCursor();
         ToggleAcorns();
         EnableAcornPeriod();
     }
@@ -128,8 +135,6 @@ public class LimaTask : MonoBehaviour
 
     public void BeginClickingPeriod()
     {
-        mainCamera.GetComponent<ChangeCursor>().MoveCursorToCenterAndUnlock();
-        dataHandler.recordMouseStartPosition();
         dataHandler.startRecordContinuousMouse("choiceperiod");
         EnableClickingPeriod();
     }
@@ -210,10 +215,6 @@ public class LimaTask : MonoBehaviour
         trialEndable = false;
 
 
-
-
-
-
         CancelInvoke("UpdateTimer");
         endTime = Time.realtimeSinceStartup;
         StartCoroutine(TrialEndRoutine(trial));
@@ -231,14 +232,19 @@ public class LimaTask : MonoBehaviour
         PlayerPrefs.SetInt("trialNum", trialNum);
 
         if (trialNum < SessionGenerator.GetComponent<SessionGenerator>().numTrials)
-        {
-            Debug.Log($"trialNum {trialNum}");
-            StartNextTrial();
-        }
-        else
-        {
-            Application.Quit();
-            Debug.Log("End reached");
+        { 
+            if(SessionGenerator.GetComponent<SessionGenerator>().trials[trialNum].transitionState==1)
+            {
+                SceneManager.LoadScene("AcornTutorial");
+            }
+            else if(SessionGenerator.GetComponent<SessionGenerator>().trials[trialNum].transitionState==2)
+            { 
+                SceneManager.LoadScene("IntroScene"); //place holder for the questionnaire scene.
+            }
+            else
+            {
+                StartNextTrial();
+            }
         }
     }
 
@@ -246,7 +252,7 @@ public class LimaTask : MonoBehaviour
     {
         ResetTrialSettings();
         yield return new WaitForSeconds(2.0f);
-        ToggleEndStateScreen();
+        ToggleEndStateScreen(playerManager.playerState);
         ResetArena(trial);
         HandleGameState(GameState.NextTrialPeriod);
     }
@@ -257,7 +263,7 @@ public class LimaTask : MonoBehaviour
         predator.GetComponent<PredatorControls>().circaStrike = false;
         HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0f);
         HeadsUpDisplay.SetActive(false);
-        ToggleEndStateScreen();
+        ToggleEndStateScreen(playerManager.playerState);
         TogglePlayer();
         TogglePredator();
     }
@@ -284,6 +290,7 @@ public class LimaTask : MonoBehaviour
     public void EnableAcornPeriod()
     {
         HeadsUpDisplay.SetActive(true);
+        dataHandler.StartRecordingPlayerPosition();
         player.GetComponent<PlayerMovement>().enableAcorns();
         SetPredator(trial);
         // Start free movement and store the reference
@@ -346,13 +353,19 @@ public class LimaTask : MonoBehaviour
 
     void ToggleEffort() {player.GetComponent<PlayerMovement>().enableEffort();}
 
-    void ToggleEndStateScreen()
+    void ToggleEndStateScreen(string state)
     {
-        bool activeState = endStateScreen.activeSelf;
-        endStateScreen.SetActive(!activeState);
-        if (activeState) return;
+        bool isCurrentlyActive = endStateScreen.activeSelf;
+        endStateScreen.SetActive(!isCurrentlyActive);
 
-        switch (playerManager.playerState)
+        // If the screen was already active, we exit early.
+        if (isCurrentlyActive) return;
+
+        // First, ensure all state screens are deactivated before showing the correct one
+        DeactivateAllStateScreens();
+
+        // Activate the appropriate state screen based on the provided state
+        switch (state)
         {
             case "escaped":
                 escapeStateScreen.SetActive(true);
@@ -360,10 +373,21 @@ public class LimaTask : MonoBehaviour
             case "captured":
                 capturedStateScreen.SetActive(true);
                 break;
-            default:
+            case "free":
                 freeStateScreen.SetActive(true);
                 break;
+            default:
+                Debug.LogWarning($"Unknown state: {state}");
+                break;
         }
+    }
+
+    void DeactivateAllStateScreens()
+    {
+        // Ensure all state screens are deactivated to avoid overlapping
+        escapeStateScreen.SetActive(false);
+        capturedStateScreen.SetActive(false);
+        freeStateScreen.SetActive(false);
     }
 
     void ToggleRewards(LimaTrial trial)

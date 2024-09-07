@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -754,12 +754,7 @@ MonoBehaviour:
   task: {fileID: 1181646873}
   playerState: 
   cookieState: 
-  cookieChoice:
-    rewardValue: NaN
-    weight: NaN
-    xPos: NaN
-    yPos: NaN
-    time: NaN
+  acornsCollected: []
   earnedReward: 0
   HeadsUpDisplay: {fileID: 1342804737}
 --- !u!1 &167642619
@@ -831,6 +826,7 @@ MonoBehaviour:
     cookie3Weight: 0
     cookie3RewardValue: 0
     type: -1
+    transitionState: 0
     playerPosition: []
     predatorPosition: []
     mouseTrackChoicePeriod: []
@@ -840,12 +836,8 @@ MonoBehaviour:
     trialEndTime: 0
     trialEndState: 
     trialReward: 0
-    trialCookie:
-      rewardValue: 0
-      weight: 0
-      xPos: 0
-      yPos: 0
-      time: 0
+    acornsSpawned: []
+    acornsCollected: []
   numTrials: 0
 --- !u!4 &167642622
 Transform:
@@ -1415,6 +1407,8 @@ MonoBehaviour:
   probability: {fileID: 837499427}
   player: {fileID: 1385470727}
   centerPt: {fileID: 1544958067}
+  acornPositions: []
+  acornLoggedPositions: []
 --- !u!1 &261096580
 GameObject:
   m_ObjectHideFlags: 0
@@ -8341,9 +8335,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdff3784bd6c81843a1cad1a4b5bcc0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cursorTexture: {fileID: 2800000, guid: 5aefb138535664e4e8a8c83fbb0958a7, type: 3}
-  targetCursorTexture: {fileID: 0}
-  moveCursorTexture: {fileID: 0}
+  cursorTexture: {fileID: 2800000, guid: d17fcfe9476544c94b1fd3ae104e52f2, type: 3}
+  targetCursorTexture: {fileID: 2800000, guid: 8b02b0ba1536240a29b0f5843eca9a81, type: 3}
+  moveCursorTexture: {fileID: 2800000, guid: 842efc63e89444a938306bf6eb736b08, type: 3}
   cursorMode: 0
   hotSpot: {x: 0, y: 0}
 --- !u!1 &773747331
@@ -9474,7 +9468,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1083764947
 Transform:
   m_ObjectHideFlags: 0
@@ -10002,6 +9996,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba059ea116868945a21e2a8dc32778f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainCamera: {fileID: 768360516}
   trialController: {fileID: 245133993}
   TutorialController: {fileID: 1083764948}
   endStateScreen: {fileID: 2019337021}
@@ -10029,6 +10024,7 @@ MonoBehaviour:
     cookie3Weight: 1
     cookie3RewardValue: 100
     type: -1
+    transitionState: 0
     playerPosition: []
     predatorPosition: []
     mouseTrackChoicePeriod: []
@@ -10038,12 +10034,8 @@ MonoBehaviour:
     trialEndTime: 0
     trialEndState: 
     trialReward: 0
-    trialCookie:
-      rewardValue: NaN
-      weight: NaN
-      xPos: NaN
-      yPos: NaN
-      time: NaN
+    acornsSpawned: []
+    acornsCollected: []
   trialEndable: 0
   HeadsUpDisplay: {fileID: 1342804737}
   instructText: {fileID: 340706784}
@@ -10401,7 +10393,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Press "Begin" to learn about the game
+  m_text: Press "Begin" to learn about the next game
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -11487,6 +11479,7 @@ MonoBehaviour:
   - {x: -11, y: 0.015, z: 0}
   - {x: -8, y: 0.015, z: 8}
   dataHandler: {fileID: 0}
+  tutorialMode: 1
   circaStrike: 0
   speed: 5
   foxAnimator: {fileID: 1871131266}

@@ -19,6 +19,7 @@ public class LimaTrial
     public float cookie3Weight;
     public int cookie3RewardValue;
     public int type;
+    public int transitionState;
 
     public List<PositionHandler> playerPosition;
     public List<PositionHandler> predatorPosition;
@@ -67,6 +68,8 @@ public class LimaTrial
         trialEndState = string.Empty; // Initialize to an empty string
         trialReward = float.NaN;
         trialCookie = new CookieChoice();
+        acornsSpawned = new List<PositionHandler>();
+        acornsCollected = new List<PositionHandler>();
     }
 
     // Default constructor

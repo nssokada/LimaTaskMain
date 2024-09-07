@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 
 public class SessionGenerator : MonoBehaviour
 {
-    
     public GameObject Task;
     public GameObject SessionScreen;
-
 
     CSVReader reader;
     public string conditionFile;
@@ -25,8 +23,6 @@ public class SessionGenerator : MonoBehaviour
     public static string persistentDataPath; //datapath that will be used throughout the game. A concatenation of the username and DB path
     private string currentState;
 
-
-
     public async void MainGameButton()
     {
         username = PlayerPrefs.GetString("userID");
@@ -36,10 +32,12 @@ public class SessionGenerator : MonoBehaviour
         {
             persistentDataPath = CreatePersistentPath(username);
             PlayerPrefs.SetString("DataPath", persistentDataPath);
+            Debug.Log("DataPath created: " + persistentDataPath);
         }
 
         //Set the datapath
         persistentDataPath = PlayerPrefs.GetString("DataPath");
+        Debug.Log("Persistent DataPath set: " + persistentDataPath);
 
         //SET KEYS
         PlayerPrefs.SetString("CheckPoint", "MainGame");
@@ -49,48 +47,77 @@ public class SessionGenerator : MonoBehaviour
         if(PlayerPrefs.HasKey("ConditionFile"))
         {
             conditionFile = PlayerPrefs.GetString("ConditionFile");
+            Debug.Log("Resuming game with condition file: " + conditionFile);
             ReLoadExperiment(conditionFile);
         }
         //ELSE Start new game
         else
         {
-            Debug.Log("attempting to grab conditionfile");
+            Debug.Log("Attempting to grab condition file...");
             //Determine Condition File:
             await pullCondition();
             GenerateExperiment(conditionFile);
         }
     }
 
-    public void TutorialButton()
+    public void AcornButton()
     {
-        username = PlayerPrefs.GetString("userID");
-        
+         username = PlayerPrefs.GetString("userID");
+
         //IF THERE IS NOT ALREADY A DATAPATH LET'S CREATE ONE
         if(!PlayerPrefs.HasKey("DataPath"))
         {
             persistentDataPath = CreatePersistentPath(username);
             PlayerPrefs.SetString("DataPath", persistentDataPath);
+            Debug.Log("DataPath created: " + persistentDataPath);
         }
 
         //Set the datapath
         persistentDataPath = PlayerPrefs.GetString("DataPath");
+        Debug.Log("Persistent DataPath set: " + persistentDataPath);
+
+        //SET KEYS
+        PlayerPrefs.SetString("CheckPoint", "AcornGame");
+        PlayerPrefs.SetString("GameState", "AcornGame");
+        
+        
+        Debug.Log("Starting tutorial...");
+        GenerateAcornTutorial();
+     
+    }
+
+    public void TutorialButton()
+    {
+        username = PlayerPrefs.GetString("userID");
+
+        //IF THERE IS NOT ALREADY A DATAPATH LET'S CREATE ONE
+        if(!PlayerPrefs.HasKey("DataPath"))
+        {
+            persistentDataPath = CreatePersistentPath(username);
+            PlayerPrefs.SetString("DataPath", persistentDataPath);
+            Debug.Log("DataPath created: " + persistentDataPath);
+        }
+
+        //Set the datapath
+        persistentDataPath = PlayerPrefs.GetString("DataPath");
+        Debug.Log("Persistent DataPath set: " + persistentDataPath);
 
         //SET KEYS
         PlayerPrefs.SetString("CheckPoint", "Tutorial");
         PlayerPrefs.SetString("GameState", "Tutorial");
 
-
+        Debug.Log("Starting tutorial...");
         GenerateTutorial();
     }
 
     public void SetGameState(string transferState)
     {
+        Debug.Log("Setting game state to: " + transferState);
         switch (transferState)
         {
             case "Tutorial":
                 PlayerPrefs.SetString("GameState",transferState);
                 break;
-
             case "CookieGame":
                 PlayerPrefs.SetString("GameState",transferState);
                 break;
@@ -106,12 +133,13 @@ public class SessionGenerator : MonoBehaviour
         }
     }
 
-     private  void GenerateExperiment(string conditionFile)
+    private void GenerateExperiment(string conditionFile)
     {
         CSVReader reader = new CSVReader();
         trials  = reader.ReadTrialCSV(conditionFile);   
         numTrials = trials.Count;
-        Debug.Log("num trials"+numTrials);
+        Debug.Log("Generated experiment with condition file: " + conditionFile);
+        Debug.Log("Number of trials: " + numTrials);
 
         createExperimentInfo(username, conditionFile);
         PlayerPrefs.SetInt("trialNum", 0);
@@ -124,33 +152,62 @@ public class SessionGenerator : MonoBehaviour
         CSVReader reader = new CSVReader();
         trials  = reader.ReadTrialCSV(conditionFile);   
         numTrials = trials.Count;
-        Debug.Log("num trials"+numTrials);
+        Debug.Log("Reloaded experiment with condition file: " + conditionFile);
+        Debug.Log("Number of trials: " + numTrials);
 
         resetExperimentInfo(username, conditionFile);
         Task.SetActive(true);
         SessionScreen.SetActive(false);
     }
 
-    private  void GenerateTutorial()
+    private void GenerateTutorial()
     {
+        Debug.Log("Generating tutorial...");
         createExperimentInfo(username+"_Tutorial", conditionFile);
         SessionScreen.SetActive(false);
-        Task.SetActive(true); //in the tutorial scene this will be the main video player object
+        Task.GetComponent<TutorialController>().StartMainTutorial(); 
     }
 
-
-
-
+       private void GenerateAcornTutorial()
+    {
+        Debug.Log("Generating tutorial...");
+        createExperimentInfo(username+"_AcornTutorial", conditionFile);
+        SessionScreen.SetActive(false);
+        Task.GetComponent<TutorialController>().StartAcornTutorial(); 
+    }
 
     private string CreatePersistentPath(string username)
     {
-        return persistentDataPath = dataBasePath+username;
+        string path = dataBasePath + username;
+        Debug.Log("Created persistent path: " + path);
+        return path;
     }
 
-    public void pushTrialData(LimaTrial trial, int trialNum)
+   public void pushTrialData(LimaTrial trial, int trialNum)
     {
         string trial_num = trialNum.ToString("D2");
-        writeToFirebase(trial_num, "trial_data", trial);
+
+        // Serialize the trial data to check if it is valid JSON
+        try
+        {
+            string jsonData = JsonUtility.ToJson(trial);
+
+            if (string.IsNullOrEmpty(jsonData))
+            {
+                Debug.LogError($"Serialization failed for trial {trial_num}. Data is null or invalid.");
+                return; // Stop the process if serialization fails
+            }
+
+            Debug.Log($"Serialized trial {trial_num} data: {jsonData}");
+
+            // Now proceed with pushing data to Firebase
+            Debug.Log($"Pushing trial {trial_num} data to Firebase.");
+            writeToFirebase(trial_num, "trial_data", trial);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error serializing trial {trial_num} data: {e.Message}");
+        }
     }
 
     private void createExperimentInfo(string attributeName, string conditionFile)
@@ -160,6 +217,7 @@ public class SessionGenerator : MonoBehaviour
         exp.participantID = username;
         exp.experimentDate = "" + System.DateTime.Now;
         exp.datapath = persistentDataPath;
+        Debug.Log("Creating experiment info for: " + attributeName);
         writeToFirebase(attributeName, exp);
     }
 
@@ -170,22 +228,24 @@ public class SessionGenerator : MonoBehaviour
         exp.participantID = username;
         exp.experimentDate = "" + System.DateTime.Now;
         exp.datapath = persistentDataPath;
-        writeToFirebase(username+"_reset", exp);
+        Debug.Log("Resetting experiment info for: " + username);
+        writeToFirebase(username + "_reset", exp);
     }
 
-
-        private async Task pullCondition()
+    private async Task pullCondition()
     {
         var tcs = new TaskCompletionSource<bool>();
+        Debug.Log("Pulling condition from Firebase...");
 
         RestClient.Get(dataBasePath + "ActiveCondition.json").Then(response =>
         {
             conditionFile = response.Text.Trim('"'); // Remove the leading and trailing quotation marks
             PlayerPrefs.SetString("ConditionFile", conditionFile);
+            Debug.Log("Condition file received: " + conditionFile);
             tcs.SetResult(true); // Signal that the task is complete
         }).Catch(err =>
         {
-            Debug.LogError("Error: " + err.Message);
+            Debug.LogError("Error pulling condition: " + err.Message);
             tcs.SetException(err); // Signal that the task failed
         });
 
@@ -193,21 +253,33 @@ public class SessionGenerator : MonoBehaviour
         await tcs.Task;
     }
 
-    //Push Trial to DB
-    //writeToDB
+    // Write trial data to Firebase
     private void writeToFirebase(string trial_num, string attributeName, LimaTrial attribute)
     {
-        RestClient.Put(persistentDataPath + "/TrialData/trial_" + trial_num + "/" + attributeName + ".json", attribute);
+        string path = persistentDataPath + "/TrialData/trial_" + trial_num + "/" + attributeName + ".json";
+        Debug.Log($"Writing trial {trial_num} data to Firebase at {path}");
+
+        RestClient.Put(path, attribute).Then(response => 
+        {
+            Debug.Log($"Successfully wrote trial {trial_num} data to Firebase.");
+        }).Catch(err => 
+        {
+            Debug.LogError($"Failed to write trial {trial_num} data to Firebase. Error: {err.Message}");
+        });
     }
-    //Push ExpInfo to DB
-    //writeToDB
-     private void writeToFirebase(string attributeName, experimentInfo attribute)
+
+    // Write experiment info to Firebase
+    private void writeToFirebase(string attributeName, experimentInfo attribute)
     {
-        RestClient.Put(persistentDataPath + "/" + attributeName + ".json", attribute);
+        string path = persistentDataPath + "/" + attributeName + ".json";
+        Debug.Log($"Writing experiment info for {attributeName} to Firebase at {path}");
+
+        RestClient.Put(path, attribute).Then(response => 
+        {
+            Debug.Log($"Successfully wrote experiment info for {attributeName} to Firebase.");
+        }).Catch(err => 
+        {
+            Debug.LogError($"Failed to write experiment info for {attributeName} to Firebase. Error: {err.Message}");
+        });
     }
-
-    //Completing questionnaires?
-
-    //readFromDB
-
 }

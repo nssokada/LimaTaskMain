@@ -9,7 +9,7 @@ public class PredatorControls : MonoBehaviour
     public GameObject fox;
     public Vector3[] spawningPositionsPredator;
     public TrialDataHandler dataHandler;
-
+    public bool tutorialMode;
     public bool circaStrike;
     public float speed;
     public Animator foxAnimator;
@@ -38,7 +38,7 @@ public class PredatorControls : MonoBehaviour
     {
         // Set the predator's spawning position to the closest spawning position from the player
         predator.transform.position = findClosestSpawningPosition(player.transform.position);
-        dataHandler.StartRecordingPredatorPosition();
+        if(!tutorialMode) dataHandler.StartRecordingPredatorPosition();
         circaStrike=true;
         foxAnimator.speed = 1f;
 
@@ -60,7 +60,7 @@ public class PredatorControls : MonoBehaviour
     {
         fox.SetActive(false);
         CancelInvoke("strike");
-        dataHandler.StopRecordingPredatorPosition();
+        if(!tutorialMode) dataHandler.StopRecordingPredatorPosition();
         circaStrike=false; 
         predator.transform.position = spawningPositionsPredator[0];
     }

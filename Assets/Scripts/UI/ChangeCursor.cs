@@ -31,6 +31,11 @@ public class ChangeCursor : MonoBehaviour
         Cursor.SetCursor(moveCursorTexture, hotSpot, cursorMode);
     }
 
+    public void setDefaultCursor()
+    {
+        Cursor.SetCursor(cursorTexture, hotSpot, cursorMode);
+    }
+
          // Call this method to move the cursor to the center of the screen and unlock it
     public void MoveCursorToCenterAndUnlock()
     {
@@ -50,7 +55,6 @@ public class ChangeCursor : MonoBehaviour
 
         // Unlock the cursor and make it visible again
         Cursor.lockState = CursorLockMode.None;
-        setTargetCursor();
         Cursor.visible = true;
     }
 

@@ -20,13 +20,28 @@ public class PlayerManager : MonoBehaviour
 
     void OnEnable()
     {
-        playerState ="free";
-        cookieState = "";
+        // Reset player states
+        playerState = string.Empty;
+        cookieState = string.Empty;
         cookieChoice = new CookieChoice();
-        acornsCollected= new List<PositionHandler>();
+        acornsCollected = new List<PositionHandler>();
         earnedReward = 0;
-        rewardPotential=0;
+        rewardPotential = 0;
         exitSafety = false;
+
+        // Clear cookies and acorns attached to the player
+        ClearPlayerItems();
+    }
+
+    void ClearPlayerItems()
+    {
+        foreach (Transform child in player.transform)
+        {
+            if (child.CompareTag("Cookie") || child.CompareTag("Acorn"))
+            {
+                Destroy(child.gameObject); // Remove both cookies and acorns
+            }
+        }
     }
     private void OnTriggerEnter(Collider other) 
     {

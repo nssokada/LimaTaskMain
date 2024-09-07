@@ -23,12 +23,21 @@ public class TutorialController : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
+    public void StartMainTutorial()
     {
         if (videoOptions.Length > 0)
         {
             StartCoroutine(LoadAndPlayVideo(videoOptions[currentVideoIndex]));
             tutorialState = "cookieSelection";
+        }
+    }
+
+       public void StartAcornTutorial()
+    {
+        if (videoOptions.Length > 0)
+        {
+            StartCoroutine(LoadAndPlayVideo(videoOptions[5]));
+            tutorialState = "acornTutorial";
         }
     }
 
@@ -77,8 +86,6 @@ public class TutorialController : MonoBehaviour
     }
 
 
-    // Example of using the method from a UI button
-
 
     public void SwitchToTask()
     {
@@ -126,7 +133,14 @@ public class TutorialController : MonoBehaviour
 
     public void SwitchScene()
     {
-            SceneManager.LoadScene(0);
+        if(tutorialState=="acornTutorial")
+        {
+            SceneManager.LoadScene("AcornGame");
+        }
+        else if(tutorialState=="mapTutorial")
+        {
+            SceneManager.LoadScene("MainGame");
+        }
     }
     
     public void NextVideo(string state)
@@ -145,7 +159,6 @@ public class TutorialController : MonoBehaviour
 
     void OnVideoEnd()
      {
-            Debug.Log("Switching Screen");
             // videoPlayer.loopPointReached -= OnVideoEnd;
             ToggleUIAndVideoCanvas();
      }
