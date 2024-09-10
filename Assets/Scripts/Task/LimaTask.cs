@@ -396,6 +396,7 @@ public class LimaTask : MonoBehaviour
         {
             trialController.GetComponent<TrialController>().spawnRewards(trial.cookie1PosX, trial.cookie1PosY, trial.cookie1Weight, trial.cookie1RewardValue);
             trialController.GetComponent<TrialController>().spawnRewards(trial.cookie2PosX, trial.cookie2PosY, trial.cookie2Weight, trial.cookie2RewardValue);
+            trialController.GetComponent<TrialController>().spawnRewards(trial.cookie3PosX, trial.cookie3PosY, trial.cookie3Weight, trial.cookie3RewardValue);
             cookiesActive = true;
         }
         else

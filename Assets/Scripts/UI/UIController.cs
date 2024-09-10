@@ -10,7 +10,6 @@ public class UIController : MonoBehaviour
     public float energyDecreaseRate = 0.1f;
 
     public Slider timeSlider;
-    public GameObject windSignal;
 
     public Material high;
     public Material medium;
@@ -19,7 +18,6 @@ public class UIController : MonoBehaviour
     public TMP_Text energyText;
 
     public TMP_Text rewardTextHUD;
-    // public TMP_Text acornTextHUD;
 
 
 
@@ -81,49 +79,7 @@ public class UIController : MonoBehaviour
         Debug.Log("Setting HUD reward");
         rewardTextHUD.text = "+"+rewardValue.ToString();
     }
-    // public void SetHUDAcorn(int rewardValue)
-    // {
-    //      // Convert the current HUD text (without the '+') to an integer
-    //     int currentAcornValue = int.Parse(acornTextHUD.text.TrimStart('+'));
-
-    //     // Add the reward value to the current acorn value
-    //     currentAcornValue += rewardValue;
-
-    //     // Update the HUD text with the new value
-    //     acornTextHUD.text = "+" + currentAcornValue.ToString();
-    // }
 
 
-    public void setWind(Vector3 drift, float resistance)
-    {
-        // change sprite color
-        if (resistance == 5)
-        {
-            windSignal.GetComponent<MeshRenderer>().material = high;
-            grass.material.SetFloat("_WindMovement", 0.8f);
-
-        }
-        else if (resistance == 3)
-        {
-            windSignal.GetComponent<MeshRenderer>().material = medium;
-            grass.material.SetFloat("_WindMovement", 0.45f);
-
-        }
-        else
-        {
-            windSignal.GetComponent<MeshRenderer>().material = low;
-            grass.material.SetFloat("_WindMovement", 0.1f);
-        }
-
-        Quaternion targetRotation = Quaternion.LookRotation(drift.normalized, Vector3.up);
-
-        // Reset x rotation to zero
-        Vector3 euler = targetRotation.eulerAngles;
-        euler.x = 0;
-        targetRotation = Quaternion.Euler(euler);
-
-        // Apply rotation
-        windSignal.transform.rotation = targetRotation;
-    }
 }
 
