@@ -15,7 +15,7 @@ public class LandingPageButtons : MonoBehaviour
 
     public void LoginButton()
     {
-            PlayerPrefs.SetString(GameStateKey, "Login");
+        PlayerPrefs.SetString(GameStateKey, "Login");
         string username = participantID.text?.Trim();
 
         if (string.IsNullOrEmpty(username))
@@ -41,6 +41,8 @@ public class LandingPageButtons : MonoBehaviour
         {
             GenerateNewUser(username);
         }
+        PlayerPrefs.Save();
+
     }
 
     // Generate a new user and go to the tutorial for this user

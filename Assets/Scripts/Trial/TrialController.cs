@@ -85,12 +85,16 @@ public class TrialController : MonoBehaviour
     public void spawnRewards(int x, int y, float weight, int rewardValue)
     {
         if(x>0)
-        {
+        {            
+            Debug.Log("Attempting far"+y);  // Use Length for arrays or Count for lists
+            Debug.Log(cookieFar.Length);  // Use Length for arrays or Count for lists
              cookiePos = cookieFar[y];
             //  cookieLayer = "far";
         }
         else
         {
+            Debug.Log(cookieClose.Length);  // Use Length for arrays or Count for lists
+            Debug.Log("Attempting close"+y);  // Use Length for arrays or Count for lists
              cookiePos = cookieClose[y];
             //  cookieLayer = "close";
         }

@@ -43,25 +43,37 @@ public class TutorialController : MonoBehaviour
 
     
 
-    IEnumerator LoadAndPlayVideo(string videoFileName)
+   IEnumerator LoadAndPlayVideo(string videoFileName)
+{
+    string videoUrl = GetStreamingAssetsPath(videoFileName);
+
+    videoPlayer.url = videoUrl;
+    videoPlayer.Prepare();
+    videoPlayer.targetTexture.Create();
+
+    // Wait until the video player has fully prepared the video
+    while (!videoPlayer.isPrepared)
     {
-        string videoUrl = GetStreamingAssetsPath(videoFileName);
-
-        videoPlayer.url = videoUrl;
-        videoPlayer.Prepare();
-        videoPlayer.time = 0; // Set the time to 0
-        videoPlayer.targetTexture.Create();
-        while (!videoPlayer.isPrepared)
-        {
-            yield return null;
-        }
-
-        videoPlayer.Play();
-        yield return new WaitForSeconds((float)videoPlayer.length);
-        videoPlayer.Pause();
-        videoPlayer.targetTexture.Release();
-        OnVideoEnd();
+        yield return null; // Wait for the next frame
     }
+
+    // Optionally, you could check if buffering is required
+    while (videoPlayer.frameCount == 0) // If the frame count hasn't been set yet, the video isn't fully loaded
+    {
+        yield return null; // Wait for the next frame
+    }
+
+    videoPlayer.time = 0; // Set the time to 0
+    videoPlayer.Play();
+    
+    // Optionally wait for the video to finish playing
+    while (videoPlayer.isPlaying)
+    {
+        yield return null; // Wait for the video to finish
+    }
+    videoPlayer.targetTexture.Release();
+    OnVideoEnd();
+}
 
     string GetStreamingAssetsPath(string fileName)
     {

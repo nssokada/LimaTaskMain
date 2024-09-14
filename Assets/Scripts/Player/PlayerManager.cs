@@ -55,18 +55,18 @@ public class PlayerManager : MonoBehaviour
                 Debug.Log("cookie hit"+rewardValue);
 
                 other.transform.parent = player.transform;
-                if(weight>1) 
+                if(weight>=3) 
                 {
                     cookieState = "heavy";
                     // playerLayer = other.gameObject.GetComponent<Cookie>().layer;
-                    player.GetComponent<PlayerMovement>().cookieWeight = 1f; //speed multiplier higher is faster
+                    player.GetComponent<PlayerMovement>().cookieWeight = weight; //speed multiplier higher is faster
                     HeadsUpDisplay.GetComponent<UIController>().SetHUDReward((int)rewardValue);
                 }
                 else 
                 {
                     cookieState = "light";
                     // playerLayer = other.gameObject.GetComponent<Cookie>().layer;
-                    player.GetComponent<PlayerMovement>().cookieWeight = 2f; //speed multiplier higher is faster
+                    player.GetComponent<PlayerMovement>().cookieWeight = weight; //speed multiplier higher is faster
                     HeadsUpDisplay.GetComponent<UIController>().SetHUDReward((int)rewardValue);
                 }
 

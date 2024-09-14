@@ -13,6 +13,7 @@ public class LimaTask : MonoBehaviour
     public GameObject escapeStateScreen;
     public GameObject freeStateScreen;
     public GameObject capturedStateScreen;
+    public GameObject  startUI;
 
     public GameObject player;
     public PlayerManager playerManager;
@@ -38,7 +39,7 @@ public class LimaTask : MonoBehaviour
     private float startTime;
     private float endTime;
     private Coroutine freeMovementCoroutine; // Reference to store the coroutine
-
+    private GameState gameState;
 
     #region Enums and State Management
 
@@ -61,11 +62,11 @@ public class LimaTask : MonoBehaviour
     {
         dataHandler = SessionGenerator.GetComponent<TrialDataHandler>();
         dataHandler.instantiateTrialDataHandlers();
-        StartNextTrial();
     }
 
     public void StartNextTrial()
     {
+        startUI.SetActive(false);
         dataHandler.ClearAllTrialDataHandlers();
         trialEndable = true;
         endTime = -1.0f;
@@ -73,8 +74,19 @@ public class LimaTask : MonoBehaviour
         int trialNum = PlayerPrefs.GetInt("trialNum");
         trial = SessionGenerator.GetComponent<SessionGenerator>().trials[trialNum];
         startTime = Time.realtimeSinceStartup;
+        dataHandler.recordMouseStartPosition();
+        
+        if(trial.type == 4)
+        {
+             gameState=GameState.AcornPeriod;
+            mainCamera.GetComponent<ChangeCursor>().setMoveCursor();
+        }
+        else
+        {
+             gameState=GameState.SpawningPeriod;
+            mainCamera.GetComponent<ChangeCursor>().setTargetCursor();
+        }
 
-        GameState gameState = trial.type == 1 ? GameState.AcornPeriod : GameState.SpawningPeriod;
         HandleGameState(gameState);
     }
 
@@ -107,9 +119,7 @@ public class LimaTask : MonoBehaviour
     {
         PrepareArena(trial);
         //Let's set the mouse here
-        mainCamera.GetComponent<ChangeCursor>().MoveCursorToCenterAndUnlock();
-        mainCamera.GetComponent<ChangeCursor>().setTargetCursor();
-        dataHandler.recordMouseStartPosition();
+        // mainCamera.GetComponent<ChangeCursor>().MoveCursorToCenterAndUnlock();
         yield return new WaitForSeconds(1.0f);
         ToggleRewards(trial);
         BeginClickingPeriod();
@@ -118,7 +128,7 @@ public class LimaTask : MonoBehaviour
     IEnumerator HandleAcornSpawnSequence(LimaTrial trial)
     {
         PrepareArena(trial);
-        mainCamera.GetComponent<ChangeCursor>().MoveCursorToCenterAndUnlock();
+        // mainCamera.GetComponent<ChangeCursor>().MoveCursorToCenterAndUnlock();
         yield return new WaitForSeconds(1.0f);
         mainCamera.GetComponent<ChangeCursor>().setMoveCursor();
         ToggleAcorns();
@@ -220,33 +230,48 @@ public class LimaTask : MonoBehaviour
         StartCoroutine(TrialEndRoutine(trial));
     }
 
-    public void OnTrialEnd()
+        public void OnTrialEnd()
     {
+        // Retrieve and update trial number
         int trialNum = PlayerPrefs.GetInt("trialNum");
         LogTrialData(trial);
 
-        Debug.Log("pushing trial data");
-        SessionGenerator.GetComponent<SessionGenerator>().pushTrialData(trial, trialNum);
+        Debug.Log("Pushing trial data");
+        SessionGenerator sessionGen = SessionGenerator.GetComponent<SessionGenerator>();
+        sessionGen.pushTrialData(trial, trialNum);
 
+        // Get the current transition state for this trial
+        int currentTransition = sessionGen.trials[trialNum].transitionState;
+
+        // Increment and save the updated trial number
         trialNum++;
         PlayerPrefs.SetInt("trialNum", trialNum);
+        PlayerPrefs.Save();
 
-        if (trialNum < SessionGenerator.GetComponent<SessionGenerator>().numTrials)
+
+        // Check if there are more trials left
+        if (trialNum <= sessionGen.numTrials)
         { 
-            if(SessionGenerator.GetComponent<SessionGenerator>().trials[trialNum].transitionState==1)
+            int nextTrialType = sessionGen.trials[trialNum].type;
+
+            // Handle transitions based on the current transition state
+            if (currentTransition == 1)
             {
-                SceneManager.LoadScene("AcornTutorial");
+                PlayerPrefs.SetInt("nextType", nextTrialType);
+                SceneManager.LoadScene("EndGame");
             }
-            else if(SessionGenerator.GetComponent<SessionGenerator>().trials[trialNum].transitionState==2)
+            else if (currentTransition == 2)
             { 
-                SceneManager.LoadScene("IntroScene"); //place holder for the questionnaire scene.
+                PlayerPrefs.SetInt("nextType", nextTrialType);
+                SceneManager.LoadScene("SurveyScene"); // Placeholder for the questionnaire scene
             }
             else
             {
-                StartNextTrial();
+                startUI.SetActive(true);
             }
         }
     }
+
 
     IEnumerator TrialEndRoutine(LimaTrial trial)
     {
@@ -270,9 +295,8 @@ public class LimaTask : MonoBehaviour
 
     private void ResetArena(LimaTrial trial)
     {
-        arena.SetActive(false);
-        map.SetActive(false);
-        if (trial.type == 1)
+
+        if (trial.type == 4)
         {
             ToggleAcorns();
         }
@@ -351,7 +375,11 @@ public class LimaTask : MonoBehaviour
         }
     }
 
-    void ToggleEffort() {player.GetComponent<PlayerMovement>().enableEffort();}
+    void ToggleEffort() 
+    {
+        float latency = PlayerPrefs.GetFloat("PressLatency"); 
+        player.GetComponent<PlayerMovement>().enableEffort(latency);
+    }
 
     void ToggleEndStateScreen(string state)
     {

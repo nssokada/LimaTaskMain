@@ -16,9 +16,21 @@ public class EffortCalibrator : MonoBehaviour
     int repeatNum;
     private List<float> pressTimes = new List<float>();
     private List<float> meanLatencies = new List<float>();
+    int nextTrialType;
 
 
     // Start is called before the first frame update
+    void Start()
+    {
+        PlayerPrefs.SetString("GameState","Calibrator");
+        PlayerPrefs.Save();
+
+        if (PlayerPrefs.HasKey("nextType"))
+        {
+            nextTrialType = PlayerPrefs.GetInt("nextType");
+        }
+    }
+
     public void beginButton()
     {
         if(repeatNum<3)
@@ -33,8 +45,18 @@ public class EffortCalibrator : MonoBehaviour
         else
         {
             Debug.Log("Press Latency: " + CalculateAverage(meanLatencies) + " seconds");
-            PlayerPrefs.SetFloat("PressLatency", CalculateAverage(meanLatencies));
-            SceneManager.LoadScene("MainGame");
+            float pressLatency = CalculateAverage(meanLatencies);
+            PlayerPrefs.SetFloat("PressLatency", pressLatency);
+            PlayerPrefs.Save();
+
+                if (nextTrialType==4)
+                {
+                    SceneManager.LoadScene("AcornTutorial");
+                }
+                else
+                {
+                    SceneManager.LoadScene("MainGame");
+                }
         }
     }
 

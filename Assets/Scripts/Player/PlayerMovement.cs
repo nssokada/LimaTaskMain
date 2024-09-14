@@ -32,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
     public bool effortPeriod;
     public bool clickingPeriod;
     public bool acornPeriod;
+    public float MinPressLatency;
 
 
     Vector3 targetPosition;
@@ -47,7 +48,6 @@ public class PlayerMovement : MonoBehaviour
     float lastPressTime;
     float latency;
     float currentSpeed;
-    private float MinPressLatency;
     
 
 
@@ -60,7 +60,7 @@ public class PlayerMovement : MonoBehaviour
         speed = baseSpeed;
         
         // Fetch and log press latency from PlayerPrefs
-        MinPressLatency = PlayerPrefs.GetFloat("PressLatency", 0.1f); // Add default value to avoid null issues
+        MinPressLatency = PlayerPrefs.GetFloat("PressLatency"); // Add default value to avoid null issues
         Debug.Log($"Initialized with Press Latency: {MinPressLatency}");
     }
 
@@ -228,31 +228,53 @@ public class PlayerMovement : MonoBehaviour
 
     void drag()
     {
-        speed = Mathf.Clamp(speed - 0.01f, minSpeed, maxSpeed);
+        if (cookieWeight >= 3)
+        {
+            speed = Mathf.Clamp(speed - 0.01f, minSpeed, maxSpeed);
+        }
+        else
+        {
+            speed = Mathf.Clamp(speed - 0.001f, minSpeed, maxSpeed);
+        }
     }
 
 
-    void effort()
+   void effort()
+{
+    Debug.Log("cookieWeight"+cookieWeight);
+    // Condition for cookies with weight >= 3 (harder)
+    if (cookieWeight >= 3)
     {
-        if (latency <= MinPressLatency)
+        // Player must press at least 75% of MinPressLatency for a speed bonus
+        if (latency <= MinPressLatency * 1.25f)
         {
-            speed += 1f * cookieWeight;
+            speed += 1f;
         }
-        else if (latency <= MinPressLatency * 1.5f)
+        else if (latency <= MinPressLatency* 1.5f)
         {
-            speed += 0.5f * cookieWeight;
+            speed += 0.5f;
         }
         else if (latency <= MinPressLatency * 1.75f)
         {
-            speed += 0.1f * cookieWeight;
+            speed += 0.1f;
         }
-        speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
+    }
+    // Condition for cookies with weight < 3 (easier)
+    else
+    {
+        speed += 1f;
     }
 
+    // Clamp speed to be within the defined bounds
+    speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
+}
 
-    public void enableEffort()
+
+
+    public void enableEffort(float latency)
         {
             effortPeriod = true;
+            MinPressLatency = latency;
             HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0f);
         }
     public void enableAcorns()

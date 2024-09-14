@@ -13,7 +13,7 @@ public class ChangeCursor : MonoBehaviour
     void Start()
     {
         // Set the default cursor texture
-        Cursor.SetCursor(cursorTexture, hotSpot, cursorMode);
+        Cursor.SetCursor(cursorTexture, CalculateHotSpot(cursorTexture), cursorMode);
     }
 
     void OnDisable()
@@ -24,17 +24,17 @@ public class ChangeCursor : MonoBehaviour
 
     public void setTargetCursor()
     {
-        Cursor.SetCursor(targetCursorTexture, hotSpot, cursorMode);
+        Cursor.SetCursor(targetCursorTexture, CalculateHotSpot(targetCursorTexture), cursorMode);
     }
 
     public void setMoveCursor()
     {
-        Cursor.SetCursor(moveCursorTexture, hotSpot, cursorMode);
+        Cursor.SetCursor(moveCursorTexture, CalculateHotSpot(moveCursorTexture), cursorMode);
     }
 
     public void setDefaultCursor()
     {
-        Cursor.SetCursor(cursorTexture, hotSpot, cursorMode);
+        Cursor.SetCursor(cursorTexture, CalculateHotSpot(cursorTexture), cursorMode);
     }
 
     // Call this method to lock the cursor at the center of the screen
@@ -42,17 +42,15 @@ public class ChangeCursor : MonoBehaviour
     {
         #if UNITY_WEBGL
         // For WebGL builds, lock the cursor to capture mouse delta movements, but cursor remains visible
-        Cursor.lockState = CursorLockMode.Locked; // This will capture mouse delta in WebGL
-        Cursor.visible = true;  // You can choose to make the cursor visible or invisible as needed
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = true;
         #else
         // For non-WebGL builds, lock the cursor to the center and hide it
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
-        // After one frame, unlock the cursor and make it visible again
         #endif
-        StartCoroutine(UnlockCursorNextFrame());
 
+        StartCoroutine(UnlockCursorNextFrame());
     }
 
     // Coroutine to unlock the cursor after one frame (for non-WebGL)
@@ -65,20 +63,10 @@ public class ChangeCursor : MonoBehaviour
         Cursor.visible = true;
     }
 
-    // void Update()
-    // {
-    //     // Only in WebGL do we care about mouse delta while locked
-    //     if (Cursor.lockState == CursorLockMode.Locked)
-    //     {
-    //         // Get the mouse delta movement (simulated from center)
-    //         float mouseX = Input.GetAxis("Mouse X");
-    //         float mouseY = Input.GetAxis("Mouse Y");
-
-    //         // Process the mouseX and mouseY as if the cursor is moving from the center of the screen
-    //         // Implement any movement or camera rotation logic here
-    //         Debug.Log("Mouse Delta X: " + mouseX + ", Mouse Delta Y: " + mouseY);
-    //     }
-
-
-    // }
+    // Calculate the hotspot relative to the texture size
+    private Vector2 CalculateHotSpot(Texture2D texture)
+    {
+        // Calculate the hotspot as the center of the texture
+        return new Vector2(texture.width / 2, texture.height / 2);
+    }
 }

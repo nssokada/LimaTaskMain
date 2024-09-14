@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 public class TutorialLimaTask : MonoBehaviour
 {
     PlayerInput playerInput;
-    public GameObject mainCamera;
+    public  GameObject mainCamera;
 
     public GameObject trialController;
     public TutorialController TutorialController;
@@ -42,7 +42,7 @@ public class TutorialLimaTask : MonoBehaviour
     public GameObject HandsOnKeys;
     public GameObject EffortDisplay;
     private List<float> pressTimes = new List<float>();
-
+    public ChangeCursor changeCursor;
 
 #region  Running the Tutorial
 
@@ -59,7 +59,6 @@ public void OnDisable()
 {
     if (mainCamera != null)
     {
-        ChangeCursor changeCursor = mainCamera.GetComponent<ChangeCursor>();
         if (changeCursor != null)
         {
             changeCursor.setDefaultCursor();
@@ -79,7 +78,11 @@ public void OnDisable()
             case "cookieSelection":
                 Debug.Log("Running tutorial intro");
                 if(numCookies<=1) StartCoroutine(CookieSelection());
-                else StartCoroutine(endCookieSelection());
+                else 
+                {
+                    StartCoroutine(endCookieSelection());
+                    changeCursor.setDefaultCursor();
+                }
                 break;
             case "effortIntro":
                 keysSetUp();
@@ -87,22 +90,38 @@ public void OnDisable()
             case "navigationTutorial":
                 trialEndable = true;
                 if(numCookies<=0) StartCoroutine(navigationTutorial());
-                else StartCoroutine(endNavigationTutorial());
+                else
+                {
+                    StartCoroutine(endNavigationTutorial());
+                    changeCursor.setDefaultCursor();
+                }
                 break;
             case "cookieTutorial":
                 trialEndable = true;
                 if(numCookies<=2) StartCoroutine(cookieTutorial());
-                else StartCoroutine(endCookieTutorial());
+                else
+                {
+                    StartCoroutine(endCookieTutorial());
+                    changeCursor.setDefaultCursor();
+                } 
                 break;
             case "mapTutorial":
                 trialEndable = true;
                 if(numCookies<=2) StartCoroutine(mapTutorial(trial));
-                else StartCoroutine(endMapTutorial());
+                else 
+                {
+                    StartCoroutine(endMapTutorial());
+                    changeCursor.setDefaultCursor();
+                }
                 break;
             case "acornTutorial":
                 trialEndable = true;
                 if(numCookies<=1) StartCoroutine(acornTutorial());
-                else StartCoroutine(endacornTutorial());
+                else
+                {
+                        StartCoroutine(endacornTutorial());
+                        changeCursor.setDefaultCursor();
+                } 
                 break;
 
             case "effortPeriod":
@@ -285,7 +304,7 @@ private IEnumerator cookieTutorial()
         yield return new WaitForSeconds(1.0f);
 
         if(numCookies<1)setCookie(Random.Range(0,1),Random.Range(0,6),3f,100);
-        else if(numCookies<2)setCookie(Random.Range(0,1),Random.Range(0,6),1f,100);
+        else if(numCookies<2)setCookie(Random.Range(0,1),Random.Range(0,6),2f,100);
         else setCookie(Random.Range(0,1),Random.Range(0,6),1f,10);
         Debug.Log("set cookie");
 
@@ -596,7 +615,7 @@ IEnumerator freeMovement()
 
     void toggleEffort()
     {
-         player.GetComponent<PlayerMovement>().enableEffort();
+         player.GetComponent<PlayerMovement>().enableEffort(0.5f);
     }
 
 

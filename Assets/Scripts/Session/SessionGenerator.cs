@@ -10,10 +10,11 @@ public class SessionGenerator : MonoBehaviour
 {
     public GameObject Task;
     public GameObject SessionScreen;
-
+    public GameObject startUI;
     CSVReader reader;
     public string conditionFile;
     public string username;
+    public float playerPressLatency;
 
     public List<LimaTrial> trials;
     public LimaTrial trial;
@@ -58,6 +59,24 @@ public class SessionGenerator : MonoBehaviour
             await pullCondition();
             GenerateExperiment(conditionFile);
         }
+    }
+
+
+    public void RecordPressLatency(float playerPressLatency)
+    {
+
+        pushLatencyToFirebase(playerPressLatency);
+    }
+
+   
+
+    public async Task<float> GetPressLatencyFromDB()
+    {
+        // Call the PullPressLatency method to retrieve the latency from Firebase
+        float latency = await PullPressLatency();
+        
+        // Return the pulled latency
+        return latency;
     }
 
     public void AcornButton()
@@ -144,6 +163,7 @@ public class SessionGenerator : MonoBehaviour
         createExperimentInfo(username, conditionFile);
         PlayerPrefs.SetInt("trialNum", 0);
         Task.SetActive(true);
+        startUI.SetActive(true);
         SessionScreen.SetActive(false);
     }
 
@@ -157,6 +177,7 @@ public class SessionGenerator : MonoBehaviour
 
         resetExperimentInfo(username, conditionFile);
         Task.SetActive(true);
+        startUI.SetActive(true);
         SessionScreen.SetActive(false);
     }
 
@@ -217,6 +238,7 @@ public class SessionGenerator : MonoBehaviour
         exp.participantID = username;
         exp.experimentDate = "" + System.DateTime.Now;
         exp.datapath = persistentDataPath;
+        exp.effortPressLatency = PlayerPrefs.GetFloat("PressLatency",-1f);
         Debug.Log("Creating experiment info for: " + attributeName);
         writeToFirebase(attributeName, exp);
     }
@@ -228,6 +250,7 @@ public class SessionGenerator : MonoBehaviour
         exp.participantID = username;
         exp.experimentDate = "" + System.DateTime.Now;
         exp.datapath = persistentDataPath;
+        exp.effortPressLatency = PlayerPrefs.GetFloat("PressLatency",-1f);
         Debug.Log("Resetting experiment info for: " + username);
         writeToFirebase(username + "_reset", exp);
     }
@@ -282,4 +305,41 @@ public class SessionGenerator : MonoBehaviour
             Debug.LogError($"Failed to write experiment info for {attributeName} to Firebase. Error: {err.Message}");
         });
     }
+
+        private void pushLatencyToFirebase(float latency)
+    {
+        string path = persistentDataPath + "/PlayerData/pressLatency.json";
+        Debug.Log($"Writing press latency data to Firebase at {path}");
+
+        RestClient.Put(path, latency).Then(response => 
+        {
+            Debug.Log("Successfully wrote press latency data to Firebase.");
+        }).Catch(err => 
+        {
+            Debug.LogError("Failed to write press latency data to Firebase. Error: " + err.Message);
+        });
+    }
+
+            private async Task<float> PullPressLatency()
+        {
+            var tcs = new TaskCompletionSource<float>();
+            string path = persistentDataPath + "/PlayerData/pressLatency.json";
+
+            RestClient.Get(path).Then(response =>
+            {
+                float latency = float.Parse(response.Text);
+                playerPressLatency = latency;
+                Debug.Log("Pulled player press latency: " + latency);
+                tcs.SetResult(latency);
+            }).Catch(err =>
+            {
+                Debug.LogError("Error pulling press latency: " + err.Message);
+                tcs.SetException(err);
+            });
+
+
+            return await tcs.Task;
+        }
+
+
 }
