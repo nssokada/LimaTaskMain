@@ -5,11 +5,14 @@ using UnityEngine.UI;
 using TMPro; // Include the TextMeshPro namespace
 
 [System.Serializable]
-public class QuestionResponse
+public class QuestionResponseList
 {
-    public float onsetTime;
-    public float responseTime;
-    public int response;
+    public List<QuestionResponse> questionResponses;
+
+    public QuestionResponseList(List<QuestionResponse> responses)
+    {
+        questionResponses = responses;
+    }
 }
 
 public class QuestionnaireManager : MonoBehaviour
@@ -18,14 +21,24 @@ public class QuestionnaireManager : MonoBehaviour
     public Button[] optionButtons;
     public Question[] questions;
     public string surveyName;
+    public string surveyInstruct;
     public SessionGenerator sessionGenerator;
+    public GameObject beginButton;
 
     private int currentQuestionIndex = 0;
     private List<QuestionResponse> questionResponses = new List<QuestionResponse>(); // List to store question responses
 
-    void Start()
+
+    void OnEnable()
     {
-        DisplayQuestion();
+        questionText.text = surveyInstruct;
+        beginButton.SetActive(true);
+    }
+
+    public void beginButtonPress()
+    {
+         beginButton.SetActive(false);
+         DisplayQuestion();
     }
 
     void DisplayQuestion()
@@ -67,18 +80,22 @@ public class QuestionnaireManager : MonoBehaviour
 
     void OnOptionSelected(int index)
     {
-        // Record the response time and selected response for the current question
-        QuestionResponse currentResponse = questionResponses[currentQuestionIndex];
-        currentResponse.responseTime = Time.realtimeSinceStartup;
-        currentResponse.response = index;
+        if (currentQuestionIndex < questionResponses.Count)
+        {
+            QuestionResponse currentResponse = questionResponses[currentQuestionIndex];
+            currentResponse.responseTime = Time.realtimeSinceStartup;
+            currentResponse.response = index;
+        }
 
         currentQuestionIndex++;
+        Debug.Log("I'm not cognitively fully activern");
         DisplayQuestion();
     }
 
     void EndQuestionnaire()
     {
-        sessionGenerator.pushSurveyData(questionResponses, surveyName);
+        QuestionResponseList qr = new QuestionResponseList(questionResponses);
+        sessionGenerator.pushSurveyData(qr, surveyName);
         // Handle the end of the questionnaire
         Debug.Log("Questionnaire completed.");
         // You can process the responses here

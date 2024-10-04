@@ -256,12 +256,12 @@ public class SessionGenerator : MonoBehaviour
         }
     }
 
-    public void pushSurveyData(List<QuestionResponse> surveyResponse, string surveyName)
+    public void pushSurveyData(QuestionResponseList surveyResponse, string surveyName)
     {
          // Serialize the trial data to check if it is valid JSON
         try
         {
-            string jsonData = JsonUtility.ToJson(trial);
+            string jsonData = JsonUtility.ToJson(surveyResponse);
 
             if (string.IsNullOrEmpty(jsonData))
             {
@@ -360,7 +360,7 @@ public class SessionGenerator : MonoBehaviour
     }
 
     // Write survey info to Firebase
-    private void writeToFirebase(string attributeName, List<QuestionResponse> attribute)
+    private void writeToFirebase(string attributeName, QuestionResponseList attribute)
     {
         string path = persistentDataPath + "/" + attributeName + ".json";
         Debug.Log($"Writing experiment info for {attributeName} to Firebase at {path}");

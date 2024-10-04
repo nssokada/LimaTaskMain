@@ -263,6 +263,7 @@ public class LimaTask : MonoBehaviour
             { 
                 int nextTrialType = sessionGen.trials[trialNum].type;
                 PlayerPrefs.SetInt("nextType", nextTrialType);
+                PlayerPrefs.SetInt("transitionState", currentTransition);
                 SceneManager.LoadScene("SurveyScene"); // Placeholder for the questionnaire scene
             }
             else
