@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
 public class PlayerMovement : MonoBehaviour
 {
 
@@ -23,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
     public float rotationSpeed;
     public float minSpeed = 0f;
     public float baseSpeed;
-    public float maxSpeed;
+    public float maxSpeed = 4f;
     public float cookieWeight;
     public float thresholdLow = 0.1f; // Example threshold for low latency
     public float smoothingFactor = 0.1f;
@@ -71,12 +70,17 @@ public class PlayerMovement : MonoBehaviour
         acornPeriod = false;
         clickingPeriod = false;
         // Reset energy display when the player is disabled
-        HeadsUpDisplay?.GetComponent<UIController>()?.SetEnergy(0f);
+        if(HeadsUpDisplay!=null) HeadsUpDisplay.GetComponent<UIController>()?.SetEnergy(0f);
     }
 
     
     void Update()
     {
+       
+       if(clickingPeriod==true)
+       {
+            mouseMove();
+       }
        if(effortPeriod==true)
        {
             mouseMove();
@@ -93,28 +97,26 @@ public class PlayerMovement : MonoBehaviour
 
 
 #region Clicking To Select Reward
-    void OnMouseClick()
-    {
-        if (!clickingPeriod) return;
+    // void OnMouseClick()
+    // {
+    //     if (!clickingPeriod) return;
 
-        Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        if (Physics.Raycast(ray, out RaycastHit hit))
-        {
-            if (hit.transform.CompareTag("Cookie"))
-            {
-                Debug.Log("Reward hit");
-                clickingPeriod = false;
-                StartCoroutine(MoveObject(hit.transform.position));
-            }
-        }
-        else
-        {
-            Debug.Log("No object hit.");
-        }
-    }
+    //     Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+    //     if (Physics.Raycast(ray, out RaycastHit hit))
+    //     {
+    //         if (hit.transform.CompareTag("Cookie"))
+    //         {
+    //             Debug.Log("Reward hit");
+    //             clickingPeriod = false;
+    //             StartCoroutine(MoveObject(hit.transform.position));
+    //         }
+    //     }
+    //     else
+    //     {
+    //         Debug.Log("No object hit.");
+    //     }
+    // }
 
-
-    
         IEnumerator MoveObject(Vector3 newPosition)
     {
         float startTime = Time.time;
@@ -197,7 +199,9 @@ public class PlayerMovement : MonoBehaviour
 #endregion
 
 #region Effort Control
-    
+    public float accelerationFactor = 12f; // Base acceleration factor
+    public float maxSpeedIncrease = 4f; // Maximum speed increase achievable
+
     void OnEffort()
     {
          if(effortPeriod==true)
@@ -208,7 +212,7 @@ public class PlayerMovement : MonoBehaviour
                 latency = currentTime - lastPressTime;
                 lastPressTime = currentTime;
                 dataHandler.recordEffort();
-                effort();
+                effort(latency);
             }
 
         }
@@ -228,46 +232,48 @@ public class PlayerMovement : MonoBehaviour
 
     void drag()
     {
+        float decreaseRate = (cookieWeight >= 3) ? 1.2f : 0f; // Units per second
+        speed = Mathf.Clamp(speed - decreaseRate * Time.deltaTime, minSpeed, maxSpeed);
+    }
+
+
+    void spin()
+    {
+        float randomSpin = Random.Range(-5f, 5f); // Adjust the range for desired spin intensity
+        transform.Rotate(0, 0, randomSpin);
+    }
+
+
+    void effort(float latency)
+    {
+        Debug.Log("cookieWeight: " + cookieWeight);
+
+        float latencyThreshold = MinPressLatency;
+
         if (cookieWeight >= 3)
         {
-            speed = Mathf.Clamp(speed - 0.01f, minSpeed, maxSpeed);
+            // Heavy cookie logic: Speed modulated by effort
+            if (latency <= latencyThreshold)
+            {
+                
+                // Calculate speed increase
+                float speedIncrease = 4f;
+
+                // Increase speed over time
+                speed += speedIncrease * Time.deltaTime * accelerationFactor;
+            }
         }
         else
         {
-            speed = Mathf.Clamp(speed - 0.001f, minSpeed, maxSpeed);
+            speed = 2f;
+            return;
         }
+
+        // Clamp speed within defined bounds
+        speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
     }
 
 
-   void effort()
-{
-    Debug.Log("cookieWeight"+cookieWeight);
-    // Condition for cookies with weight >= 3 (harder)
-    if (cookieWeight >= 3)
-    {
-        // Player must press at least 75% of MinPressLatency for a speed bonus
-        if (latency <= MinPressLatency * 1.25f)
-        {
-            speed += 1f;
-        }
-        else if (latency <= MinPressLatency* 1.5f)
-        {
-            speed += 0.5f;
-        }
-        else if (latency <= MinPressLatency * 1.75f)
-        {
-            speed += 0.1f;
-        }
-    }
-    // Condition for cookies with weight < 3 (easier)
-    else
-    {
-        speed += 1f;
-    }
-
-    // Clamp speed to be within the defined bounds
-    speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
-}
 
 
 
@@ -285,6 +291,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 #endregion
+
 
 
 #region Old Code

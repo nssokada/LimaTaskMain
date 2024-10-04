@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System;
 
 public class LandingPageButtons : MonoBehaviour
 {
@@ -13,37 +14,56 @@ public class LandingPageButtons : MonoBehaviour
 
     public TMP_InputField participantID;
 
-    public void LoginButton()
+public void LoginButton()
+{
+    PlayerPrefs.SetString(GameStateKey, "Login");
+    string username = participantID.text?.Trim();
+
+    if (string.IsNullOrEmpty(username))
     {
-        PlayerPrefs.SetString(GameStateKey, "Login");
-        string username = participantID.text?.Trim();
+        Debug.LogWarning("Login failed: Username is empty.");
+        return;
+    }    
 
-        if (string.IsNullOrEmpty(username))
+    string existingUsername = PlayerPrefs.GetString(UserIdKey, null);
+
+    if (!string.IsNullOrEmpty(existingUsername))
+    {
+        if (existingUsername.Equals(username))
         {
-            Debug.LogWarning("Login failed: Username is empty.");
-            return;
+            LoadFromOldUser();
         }
-
-        string existingUsername = PlayerPrefs.GetString(UserIdKey, null);
-
-        if (!string.IsNullOrEmpty(existingUsername))
+        else if(username.IndexOf("skipTutorial", StringComparison.OrdinalIgnoreCase) >= 0)
         {
-            if (existingUsername.Equals(username))
-            {
-                LoadFromOldUser();
-            }
-            else
-            {
-                GenerateNewUser(username);
-            }
+            SkipTutorial(username);
         }
         else
         {
             GenerateNewUser(username);
         }
-        PlayerPrefs.Save();
-
     }
+    else if(username.IndexOf("skipTutorial", StringComparison.OrdinalIgnoreCase) >= 0)
+    {
+        SkipTutorial(username);
+    }
+    else
+    {
+        GenerateNewUser(username);
+    }
+
+    PlayerPrefs.Save();
+}
+
+private void SkipTutorial(string username)
+{
+    Debug.Log("Tutorial skipped.");
+    PlayerPrefs.DeleteAll();
+    PlayerPrefs.SetString(UserIdKey, username);
+    Debug.Log($"New user generated: {username}");
+    SceneManager.LoadScene("EffortCalibrator");
+    // Implement logic to skip the tutorial and go to the main game
+}
+
 
     // Generate a new user and go to the tutorial for this user
     void GenerateNewUser(string username)

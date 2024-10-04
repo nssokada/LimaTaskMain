@@ -64,7 +64,6 @@ public class SessionGenerator : MonoBehaviour
 
     public void RecordPressLatency(float playerPressLatency)
     {
-
         pushLatencyToFirebase(playerPressLatency);
     }
 
@@ -128,6 +127,32 @@ public class SessionGenerator : MonoBehaviour
         Debug.Log("Starting tutorial...");
         GenerateTutorial();
     }
+
+
+    public void SurveyButton()
+    {
+        username = PlayerPrefs.GetString("userID");
+
+        //IF THERE IS NOT ALREADY A DATAPATH LET'S CREATE ONE
+        if(!PlayerPrefs.HasKey("DataPath"))
+        {
+            persistentDataPath = CreatePersistentPath(username);
+            PlayerPrefs.SetString("DataPath", persistentDataPath);
+            Debug.Log("DataPath created: " + persistentDataPath);
+        }
+
+        //Set the datapath
+        persistentDataPath = PlayerPrefs.GetString("DataPath");
+        Debug.Log("Persistent DataPath set: " + persistentDataPath);
+
+        //SET KEYS
+        PlayerPrefs.SetString("CheckPoint", "Survey");
+        PlayerPrefs.SetString("GameState", "Survey");
+
+        Debug.Log("Starting Questionnaires...");
+    }
+
+
 
     public void SetGameState(string transferState)
     {
@@ -231,6 +256,34 @@ public class SessionGenerator : MonoBehaviour
         }
     }
 
+    public void pushSurveyData(List<QuestionResponse> surveyResponse, string surveyName)
+    {
+         // Serialize the trial data to check if it is valid JSON
+        try
+        {
+            string jsonData = JsonUtility.ToJson(trial);
+
+            if (string.IsNullOrEmpty(jsonData))
+            {
+                Debug.LogError($"Serialization failed for {surveyName}. Data is null or invalid.");
+                return; // Stop the process if serialization fails
+            }
+
+            Debug.Log($"Serialized {surveyName} data: {jsonData}");
+
+            // Now proceed with pushing data to Firebase
+            Debug.Log($"Pushing {surveyName} data to Firebase.");
+            writeToFirebase(surveyName, surveyResponse);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error serializing {surveyName} data: {e.Message}");
+        }
+
+    }
+
+
+
     private void createExperimentInfo(string attributeName, string conditionFile)
     {
         experimentInfo exp = new experimentInfo();
@@ -305,6 +358,22 @@ public class SessionGenerator : MonoBehaviour
             Debug.LogError($"Failed to write experiment info for {attributeName} to Firebase. Error: {err.Message}");
         });
     }
+
+    // Write survey info to Firebase
+    private void writeToFirebase(string attributeName, List<QuestionResponse> attribute)
+    {
+        string path = persistentDataPath + "/" + attributeName + ".json";
+        Debug.Log($"Writing experiment info for {attributeName} to Firebase at {path}");
+
+        RestClient.Put(path, attribute).Then(response => 
+        {
+            Debug.Log($"Successfully wrote experiment info for {attributeName} to Firebase.");
+        }).Catch(err => 
+        {
+            Debug.LogError($"Failed to write experiment info for {attributeName} to Firebase. Error: {err.Message}");
+        });
+    }
+
 
         private void pushLatencyToFirebase(float latency)
     {

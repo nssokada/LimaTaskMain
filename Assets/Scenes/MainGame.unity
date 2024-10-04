@@ -1429,8 +1429,8 @@ MonoBehaviour:
   resistance: 0
   rotationSpeed: 0
   minSpeed: 0
-  baseSpeed: 1
-  maxSpeed: 5
+  baseSpeed: 4
+  maxSpeed: 2
   cookieWeight: 0
   thresholdLow: 0.1
   smoothingFactor: 0.1
@@ -1438,6 +1438,8 @@ MonoBehaviour:
   clickingPeriod: 0
   acornPeriod: 0
   MinPressLatency: 0
+  accelerationFactor: 12
+  maxSpeedIncrease: 5
   transitionSpeed: 5
 --- !u!114 &597418905
 MonoBehaviour:
@@ -2411,7 +2413,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cursorTexture: {fileID: 2800000, guid: d17fcfe9476544c94b1fd3ae104e52f2, type: 3}
-  targetCursorTexture: {fileID: 2800000, guid: 8b02b0ba1536240a29b0f5843eca9a81, type: 3}
+  targetCursorTexture: {fileID: 2800000, guid: 842efc63e89444a938306bf6eb736b08, type: 3}
   moveCursorTexture: {fileID: 2800000, guid: 842efc63e89444a938306bf6eb736b08, type: 3}
   cursorMode: 0
   hotSpot: {x: 0, y: 0}

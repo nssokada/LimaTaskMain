@@ -93,7 +93,7 @@ public void OnDisable()
                 else
                 {
                     StartCoroutine(endNavigationTutorial());
-                    changeCursor.setDefaultCursor();
+                    changeCursor?.setDefaultCursor();
                 }
                 break;
             case "cookieTutorial":
@@ -102,7 +102,7 @@ public void OnDisable()
                 else
                 {
                     StartCoroutine(endCookieTutorial());
-                    changeCursor.setDefaultCursor();
+                    changeCursor?.setDefaultCursor();
                 } 
                 break;
             case "mapTutorial":
@@ -111,7 +111,7 @@ public void OnDisable()
                 else 
                 {
                     StartCoroutine(endMapTutorial());
-                    changeCursor.setDefaultCursor();
+                    changeCursor?.setDefaultCursor();
                 }
                 break;
             case "acornTutorial":
@@ -120,7 +120,7 @@ public void OnDisable()
                 else
                 {
                         StartCoroutine(endacornTutorial());
-                        changeCursor.setDefaultCursor();
+                        changeCursor?.setDefaultCursor();
                 } 
                 break;
 

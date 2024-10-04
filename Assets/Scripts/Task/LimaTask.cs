@@ -170,11 +170,12 @@ public class LimaTask : MonoBehaviour
         ToggleEffort();
         TogglePredator();
         SetPredator(trial);
-        
+
         // Start free movement and store the reference
         if (freeMovementCoroutine == null)
         {
             shouldStopCoroutine = false;  // Reset the flag before starting the coroutine
+            ToggleRewards(trial);
             freeMovementCoroutine = StartCoroutine(FreeMovement());
         }
     }
@@ -252,16 +253,15 @@ public class LimaTask : MonoBehaviour
         // Check if there are more trials left
         if (trialNum <= sessionGen.numTrials)
         { 
-            int nextTrialType = sessionGen.trials[trialNum].type;
 
             // Handle transitions based on the current transition state
             if (currentTransition == 1)
             {
-                PlayerPrefs.SetInt("nextType", nextTrialType);
                 SceneManager.LoadScene("EndGame");
             }
             else if (currentTransition == 2)
             { 
+                int nextTrialType = sessionGen.trials[trialNum].type;
                 PlayerPrefs.SetInt("nextType", nextTrialType);
                 SceneManager.LoadScene("SurveyScene"); // Placeholder for the questionnaire scene
             }
@@ -300,10 +300,7 @@ public class LimaTask : MonoBehaviour
         {
             ToggleAcorns();
         }
-        else
-        {
-            ToggleRewards(trial);
-        }
+       
         ToggleProbability(trial);
         ResetTimer();
     }

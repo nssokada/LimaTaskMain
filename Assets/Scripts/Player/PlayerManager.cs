@@ -23,7 +23,6 @@ public class PlayerManager : MonoBehaviour
         // Reset player states
         playerState = string.Empty;
         cookieState = string.Empty;
-        cookieChoice = new CookieChoice();
         acornsCollected = new List<PositionHandler>();
         earnedReward = 0;
         rewardPotential = 0;
@@ -55,18 +54,22 @@ public class PlayerManager : MonoBehaviour
                 Debug.Log("cookie hit"+rewardValue);
 
                 other.transform.parent = player.transform;
+
                 if(weight>=3) 
                 {
                     cookieState = "heavy";
                     // playerLayer = other.gameObject.GetComponent<Cookie>().layer;
-                    player.GetComponent<PlayerMovement>().cookieWeight = weight; //speed multiplier higher is faster
+                    player.GetComponent<PlayerMovement>().cookieWeight = weight;
+                    player.GetComponent<PlayerMovement>().speed = 0f;  //speed multiplier higher is faster
+                    Debug.Log("speed:"+player.GetComponent<PlayerMovement>().speed);
                     HeadsUpDisplay.GetComponent<UIController>().SetHUDReward((int)rewardValue);
                 }
                 else 
                 {
                     cookieState = "light";
                     // playerLayer = other.gameObject.GetComponent<Cookie>().layer;
-                    player.GetComponent<PlayerMovement>().cookieWeight = weight; //speed multiplier higher is faster
+                    player.GetComponent<PlayerMovement>().cookieWeight = weight;
+                    player.GetComponent<PlayerMovement>().speed = 2f; //speed multiplier higher is faster
                     HeadsUpDisplay.GetComponent<UIController>().SetHUDReward((int)rewardValue);
                 }
 
@@ -78,13 +81,12 @@ public class PlayerManager : MonoBehaviour
 
           else if(other.gameObject.tag == "Safety")
         {
-            if( exitSafety && task.GetComponent<LimaTask>().trialEndable)
+            if( exitSafety && task.GetComponent<LimaTask>().trialEndable && (carrying | acorn_carrying))
             {
                 foreach(Transform child in player.transform)
                     {
                         if(child.CompareTag("Cookie")) Destroy(child.gameObject);                        
                         else if(child.CompareTag("Acorn")) Destroy(child.gameObject);
-
                     }
                     playerState ="escaped";
                     earnedReward = rewardPotential;

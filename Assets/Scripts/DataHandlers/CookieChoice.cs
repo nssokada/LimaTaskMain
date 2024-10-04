@@ -7,11 +7,12 @@ using System.IO;
 [Serializable]
 public class CookieChoice
 {
-    public float? rewardValue;  // Nullable float
-    public float? weight;       // Nullable float
-    public float? xPos;         // Nullable float
-    public float? yPos;         // Nullable float
-    public float? time;         // Nullable float
+    public float rewardValue; 
+    public float weight;     
+    public float xPos;       
+    public float yPos;       
+    public float time;
+            
     // Constructor
     public CookieChoice(float rewardValue, float weight, float xPos, float yPos, float time)
     {
@@ -24,10 +25,10 @@ public class CookieChoice
     public CookieChoice()
     {
         // Initialize with null values
-        this.rewardValue = null;
-        this.weight = null;
-        this.xPos = null;
-        this.yPos = null;
-        this.time = null;
+        this.rewardValue = 0f;
+        this.weight = 0f;
+        this.xPos = 0f;
+        this.yPos = 0f;
+        this.time = 0f;
     }
 }

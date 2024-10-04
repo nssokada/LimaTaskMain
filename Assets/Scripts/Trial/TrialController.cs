@@ -169,10 +169,19 @@ public class TrialController : MonoBehaviour
         return new Vector3(center.x + randomPoint.x, center.y+0.5f, center.z + randomPoint.y);
     }
 
-    public void despawnRewards()
+        public void despawnRewards()
     {
-        DestroyAllObjectsWithTag("Cookie");
+        GameObject[] cookies = GameObject.FindGameObjectsWithTag("Cookie");
+
+        foreach (GameObject cookie in cookies)
+        {
+            if (cookie.transform.parent == null) // Check if the cookie does not have a parent
+            {
+                Destroy(cookie);
+            }
+        }
     }
+
 
     public void despawnAcorns()
     {
