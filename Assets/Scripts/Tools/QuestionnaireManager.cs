@@ -24,6 +24,8 @@ public class QuestionnaireManager : MonoBehaviour
     public string surveyInstruct;
     public SessionGenerator sessionGenerator;
     public GameObject beginButton;
+    public GameObject introUI;
+    public GameObject surveyUI;
 
     private int currentQuestionIndex = 0;
     private List<QuestionResponse> questionResponses = new List<QuestionResponse>(); // List to store question responses
@@ -98,6 +100,8 @@ public class QuestionnaireManager : MonoBehaviour
         sessionGenerator.pushSurveyData(qr, surveyName);
         // Handle the end of the questionnaire
         Debug.Log("Questionnaire completed.");
-        // You can process the responses here
+        surveyUI.SetActive(false);
+        introUI.SetActive(true);
+
     }
 }

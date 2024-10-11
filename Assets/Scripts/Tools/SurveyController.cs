@@ -29,12 +29,23 @@ public class SurveyController : MonoBehaviour
     }
 
 
-    public void actionButton()
+    public void ActionButton()
     {
-        introUI.SetActive(false);
-        currentSurveys[surveyIndex].SetActive(true);
-        surveyIndex++ ;
+        Debug.Log("Length:"+currentSurveys.Length);
+        if (surveyIndex < currentSurveys.Length)
+        {
+            introUI.SetActive(false);
+            currentSurveys[surveyIndex].SetActive(true);
+            surveyIndex++;
+        }
+        else
+        {
+            switchBackToGame();
+        }
     }
+
+
+
 
 
     public void switchBackToGame()
