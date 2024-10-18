@@ -36,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
     private float MinPressLatency;
     private float MinPressCount;
     public float stepSize;
-
+    public float lightSpeed;
     Vector3 targetPosition;
 
     //Private Objects
@@ -71,6 +71,12 @@ public class PlayerMovement : MonoBehaviour
     void SetStepSize()
     {
         stepSize = 8.25f /(MinPressCount*0.9f);
+        lightSpeed =  stepSize/MinPressLatency;
+    }
+
+    public void SetLightSpeed()
+    {
+        speed = lightSpeed;
     }
 
 
@@ -95,7 +101,6 @@ public class PlayerMovement : MonoBehaviour
        {
             mouseMove();
             effortUI();
-            drag();
        }
        else if(acornPeriod==true)
        {

@@ -11,9 +11,27 @@ public class PredatorControls : MonoBehaviour
     public TrialDataHandler dataHandler;
     public bool tutorialMode;
     public bool circaStrike;
-    public float speed;
+    private float speed;
     public Animator foxAnimator;
 
+    private void OnEnable() 
+    {
+    
+        speed = CalculatePredatorSpeed();
+    }
+
+    float CalculatePredatorSpeed()
+    {
+        // Fetch and log press latency from PlayerPrefs
+        float MinPressLatency = PlayerPrefs.GetFloat("PressLatency"); // Add default value to avoid null issues
+        float MinPressCount = PlayerPrefs.GetFloat("PressCount");
+        float stepSize =8.25f /(MinPressCount);
+        float playerSpeed = stepSize/MinPressLatency;
+
+        //Predator Speed is 4 times faster than Player Speed
+        return playerSpeed*4f;
+
+    }
 
     void Update()
     {
@@ -46,7 +64,7 @@ public class PredatorControls : MonoBehaviour
 
     public void setAttack(float attackingProb)
     {
-        float attackingTime = Random.Range(1.0f, 3.0f);
+        float attackingTime = Random.Range(0.5f, 2f);
         float rand = Random.Range(0.0f, 1.0f);
 
         if (rand<attackingProb)
