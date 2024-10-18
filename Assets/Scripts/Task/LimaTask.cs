@@ -104,6 +104,7 @@ public class LimaTask : MonoBehaviour
                 BeginClickingPeriod();
                 break;
             case GameState.EffortPeriod:
+                dataHandler.stopRecordContinuousMouse("choiceperiod");
                 BeginEffortPeriod();
                 break;
             case GameState.EndingPeriod:
@@ -153,7 +154,6 @@ public class LimaTask : MonoBehaviour
     {
         Debug.Log("Starting free movement sequence");
         mainCamera.GetComponent<ChangeCursor>().setMoveCursor();
-        dataHandler.stopRecordContinuousMouse("choiceperiod");
         dataHandler.startRecordContinuousMouse("effortperiod");
         dataHandler.StartRecordingPlayerPosition();
         EnableEffortPhase();

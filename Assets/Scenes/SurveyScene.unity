@@ -11469,7 +11469,7 @@ MonoBehaviour:
   - {fileID: 1212869458}
   - {fileID: 1373657117}
   - {fileID: 246352018}
-  introText: {fileID: 0}
+  introText: {fileID: 418293667}
 --- !u!1 &1583557902
 GameObject:
   m_ObjectHideFlags: 0
