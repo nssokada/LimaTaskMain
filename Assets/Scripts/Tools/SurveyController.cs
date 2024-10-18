@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro; // Include the TextMeshPro namespace
 
 public class SurveyController : MonoBehaviour
 {
@@ -14,8 +16,18 @@ public class SurveyController : MonoBehaviour
     int transitionState;
     public GameObject[] surveys;
     private GameObject[] currentSurveys;
+    public TMP_Text introText; // Use TMP_Text instead of Text
 
 
+
+    void OnEnable()
+    {
+        if(surveyIndex>=currentSurveys.Length)
+        {
+            introText.text = "Thank you for your responses! We will now return to the game";
+        }
+
+    }
 
 
     void Start()

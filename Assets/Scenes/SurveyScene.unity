@@ -1189,14 +1189,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
+  m_Color: {r: 0.21176471, g: 0.32941177, b: 0.3529412, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6ef93a38fb06d3541a92252b1640a5d7, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2240,13 +2240,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Please read each statement and select the response that indicates how
-    much the statement
-
-    applied to you over the past week. There are no right
-    or wrong answers. Do not spend too much time
-
-    on any statement.'
+  m_text: "Please read each statement and select the response that indicates how
+    much the statement applied to you over the past week. \n\nThere are no right
+    or wrong answers. Do not spend too much time on any statement."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4524,7 +4520,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
+  m_Color: {r: 0.21176471, g: 0.32941177, b: 0.3529412, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4600,7 +4596,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
+  m_Color: {r: 0.21176471, g: 0.32941177, b: 0.3529412, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4798,7 +4794,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
+  m_Color: {r: 0.21176471, g: 0.32941177, b: 0.3529412, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4840,7 +4836,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &760667821
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5250,7 +5246,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &821292957
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5734,12 +5730,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: You will next see a list of statements which can be used to describe how
+  m_text: "You will next see a list of statements which can be used to describe how
     people feel. Below each statement are four numbers which indicate the degree
     with which each statement is self-descriptive of mood at this moment (e.g., 1
-    =not at all, 4 = very much so). Please read each statement carefully and select
-    the number which best indicates how you feel right now, at this very moment,
-    even if this is not how you usually feel.
+    =not at all, 4 = very much so). \n\nPlease read each statement carefully and
+    select the number which best indicates how you feel right now, at this very moment,
+    even if this is not how you usually feel."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6100,7 +6096,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
+  m_Color: {r: 0.21176471, g: 0.32941177, b: 0.3529412, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6163,11 +6159,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'The following items ask about anxiety and fear.  These symptoms may include
+  m_text: "The following items ask about anxiety and fear.  These symptoms may include
     panic attacks, situational anxieties, worries, flashbacks hypervigilence of startle. 
-    Include all of your anxiety symptoms when answering these questions.  For each
-    item, select  the response that best describes your experience over the past
-    week.  '
+    Include all of your anxiety symptoms when answering these questions.  \n\nFor
+    each item, select  the response that best describes your experience over the
+    past week.  "
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7353,7 +7349,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1161714916
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7463,7 +7459,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
+  m_Color: {r: 0.21176471, g: 0.32941177, b: 0.3529412, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8329,11 +8325,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Next you will see a list of statements that describe the effects of fatigue.
-    Please read each statement carefully, the select the one response that best indicates
-    how often fatigue has affected you in this way during the past 4 weeks. Please
-    answer every question. If you are not sure which answer to select choose the
-    one answer that comes closest to describing you.
+  m_text: "Next you will see a list of statements that describe the effects of fatigue.
+    \n\nPlease read each statement carefully, the select the one response that best
+    indicates how often fatigue has affected you in this way during the past 4 weeks.
+    Please answer every question. If you are not sure which answer to select choose
+    the one answer that comes closest to describing you."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8716,7 +8712,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1282636045
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11473,6 +11469,7 @@ MonoBehaviour:
   - {fileID: 1212869458}
   - {fileID: 1373657117}
   - {fileID: 246352018}
+  introText: {fileID: 0}
 --- !u!1 &1583557902
 GameObject:
   m_ObjectHideFlags: 0
@@ -11646,7 +11643,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
+  m_Color: {r: 0.21176472, g: 0.32941177, b: 0.3529412, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -12459,7 +12456,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1822360767
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13588,7 +13585,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1985164216
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13954,10 +13951,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Read each statement and select the appropriate response to indicate how
+  m_text: "Read each statement and select the appropriate response to indicate how
     you feel right now, that is, at this very moment. There are no right or wrong
-    answers. Do not spend too much time on any one statement but give the answer
-    which seems to describe your present feelings best.
+    answers. \n\nDo not spend too much time on any one statement but give the answer
+    which seems to describe your present feelings best."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -14463,7 +14460,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2036056098
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14682,8 +14679,15 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Over the last two weeks how often have you been bothered by any of the
-    following problems?
+  m_text: 'You will next see a series of statements, please respond to the question:
+
+
+    Over
+    the last two weeks how often have you been bothered by any of the following problems?
+
+
+    Press
+    "Begin" to begin answering the questions.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
