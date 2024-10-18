@@ -5438,6 +5438,8 @@ MonoBehaviour:
   rewardValue: 0
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
+  chocochip: {fileID: 0}
+  strawbezzy: {fileID: 0}
 --- !u!136 &112381578
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -5958,6 +5960,8 @@ MonoBehaviour:
   rewardValue: 0
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
+  chocochip: {fileID: 0}
+  strawbezzy: {fileID: 0}
 --- !u!136 &285214860
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -6501,6 +6505,8 @@ MonoBehaviour:
   rewardValue: 0
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
+  chocochip: {fileID: 0}
+  strawbezzy: {fileID: 0}
 --- !u!136 &418074225
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -6823,6 +6829,8 @@ MonoBehaviour:
   rewardValue: 0
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
+  chocochip: {fileID: 0}
+  strawbezzy: {fileID: 0}
 --- !u!136 &485163244
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -7057,6 +7065,8 @@ MonoBehaviour:
   rewardValue: 0
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
+  chocochip: {fileID: 0}
+  strawbezzy: {fileID: 0}
 --- !u!136 &512909925
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -7189,6 +7199,8 @@ MonoBehaviour:
   rewardValue: 0
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
+  chocochip: {fileID: 0}
+  strawbezzy: {fileID: 0}
 --- !u!136 &519948819
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -7794,6 +7806,12 @@ MonoBehaviour:
     trialEndTime: 0
     trialEndState: 
     trialReward: 0
+    trialCookie:
+      rewardValue: 0
+      weight: 0
+      xPos: 0
+      yPos: 0
+      time: 0
     acornsSpawned: []
     acornsCollected: []
   trialEndable: 0
@@ -7801,6 +7819,7 @@ MonoBehaviour:
   instructText: {fileID: 2102510031}
   HandsOnKeys: {fileID: 2028361203}
   EffortDisplay: {fileID: 1095842121}
+  changeCursor: {fileID: 0}
 --- !u!1001 &748614499
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7910,6 +7929,8 @@ MonoBehaviour:
   rewardValue: 0
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
+  chocochip: {fileID: 0}
+  strawbezzy: {fileID: 0}
 --- !u!136 &748614503
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -8046,6 +8067,8 @@ MonoBehaviour:
   rewardValue: 0
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
+  chocochip: {fileID: 0}
+  strawbezzy: {fileID: 0}
 --- !u!136 &813211084
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -9913,6 +9936,8 @@ MonoBehaviour:
   rewardValue: 0
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
+  chocochip: {fileID: 0}
+  strawbezzy: {fileID: 0}
 --- !u!136 &1254978201
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -10236,6 +10261,8 @@ MonoBehaviour:
   rewardValue: 0
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
+  chocochip: {fileID: 0}
+  strawbezzy: {fileID: 0}
 --- !u!136 &1294983727
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -10725,7 +10752,7 @@ MonoBehaviour:
   centerPt: {fileID: 825859805}
   speed: 0
   numPress: 0
-  radius: 10
+  radius: 9
   resistance: 0
   rotationSpeed: 0
   minSpeed: 0
@@ -10737,6 +10764,9 @@ MonoBehaviour:
   effortPeriod: 0
   clickingPeriod: 0
   acornPeriod: 0
+  MinPressLatency: 0
+  accelerationFactor: 12
+  maxSpeedIncrease: 4
   transitionSpeed: 5
 --- !u!114 &1299385437
 MonoBehaviour:
@@ -11016,6 +11046,12 @@ MonoBehaviour:
   task: {fileID: 716798117}
   playerState: 
   cookieState: 
+  cookieChoice:
+    rewardValue: 0
+    weight: 0
+    xPos: 0
+    yPos: 0
+    time: 0
   acornsCollected: []
   earnedReward: 0
   HeadsUpDisplay: {fileID: 880174928}
@@ -11192,6 +11228,8 @@ MonoBehaviour:
   rewardValue: 0
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
+  chocochip: {fileID: 0}
+  strawbezzy: {fileID: 0}
 --- !u!136 &1348518002
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -11835,6 +11873,8 @@ MonoBehaviour:
   rewardValue: 0
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
+  chocochip: {fileID: 0}
+  strawbezzy: {fileID: 0}
 --- !u!136 &1520124856
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -12043,6 +12083,8 @@ MonoBehaviour:
   rewardValue: 0
   chocolate: {fileID: 0}
   plain: {fileID: 0}
+  chocochip: {fileID: 0}
+  strawbezzy: {fileID: 0}
 --- !u!114 &1556664316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12059,6 +12101,8 @@ MonoBehaviour:
   rewardValue: 0
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
+  chocochip: {fileID: 0}
+  strawbezzy: {fileID: 0}
 --- !u!136 &1556664317
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -12191,6 +12235,8 @@ MonoBehaviour:
   rewardValue: 0
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
+  chocochip: {fileID: 0}
+  strawbezzy: {fileID: 0}
 --- !u!136 &1575755996
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -12989,6 +13035,8 @@ MonoBehaviour:
   rewardValue: 0
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
+  chocochip: {fileID: 0}
+  strawbezzy: {fileID: 0}
 --- !u!136 &1716343523
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -13361,6 +13409,8 @@ MonoBehaviour:
   rewardValue: 0
   chocolate: {fileID: 2100000, guid: 48287c879d86c4149b9b830337528a4f, type: 2}
   plain: {fileID: 2100000, guid: ffa38d33aeedf1241b10f1ca9db82a84, type: 2}
+  chocochip: {fileID: 0}
+  strawbezzy: {fileID: 0}
 --- !u!136 &1748386513
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -13570,8 +13620,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Task: {fileID: 857532100}
   SessionScreen: {fileID: 1137371489}
+  startUI: {fileID: 0}
   conditionFile: 
   username: 
+  playerPressLatency: 0
   trials: []
   trial:
     attackingProb: 0
@@ -13598,6 +13650,12 @@ MonoBehaviour:
     trialEndTime: 0
     trialEndState: 
     trialReward: 0
+    trialCookie:
+      rewardValue: 0
+      weight: 0
+      xPos: 0
+      yPos: 0
+      time: 0
     acornsSpawned: []
     acornsCollected: []
   numTrials: 0

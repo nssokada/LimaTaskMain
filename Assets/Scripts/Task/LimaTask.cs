@@ -259,7 +259,7 @@ public class LimaTask : MonoBehaviour
             {
                 SceneManager.LoadScene("EndGame");
             }
-            else if (currentTransition == 2)
+            else if (currentTransition == 2 || currentTransition == 3 || currentTransition == 4)
             { 
                 int nextTrialType = sessionGen.trials[trialNum].type;
                 PlayerPrefs.SetInt("nextType", nextTrialType);

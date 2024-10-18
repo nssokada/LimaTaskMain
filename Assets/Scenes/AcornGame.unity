@@ -827,6 +827,12 @@ MonoBehaviour:
   task: {fileID: 215954221}
   playerState: 
   cookieState: 
+  cookieChoice:
+    rewardValue: 0
+    weight: 0
+    xPos: 0
+    yPos: 0
+    time: 0
   acornsCollected: []
   earnedReward: 0
   HeadsUpDisplay: {fileID: 2073180229}
@@ -6476,7 +6482,7 @@ MonoBehaviour:
   centerPt: {fileID: 689342847}
   speed: 0
   numPress: 0
-  radius: 10
+  radius: 9
   resistance: 0
   rotationSpeed: 0
   minSpeed: 0
@@ -6488,6 +6494,9 @@ MonoBehaviour:
   effortPeriod: 0
   clickingPeriod: 0
   acornPeriod: 0
+  MinPressLatency: 0
+  accelerationFactor: 12
+  maxSpeedIncrease: 4
   transitionSpeed: 5
 --- !u!114 &411916844
 MonoBehaviour:
@@ -10502,6 +10511,7 @@ MonoBehaviour:
   startUI: {fileID: 297150659}
   conditionFile: 
   username: 
+  playerPressLatency: 0
   trials: []
   trial:
     attackingProb: NaN
@@ -10528,6 +10538,12 @@ MonoBehaviour:
     trialEndTime: NaN
     trialEndState: 
     trialReward: NaN
+    trialCookie:
+      rewardValue: 0
+      weight: 0
+      xPos: 0
+      yPos: 0
+      time: 0
     acornsSpawned: []
     acornsCollected: []
   numTrials: 0

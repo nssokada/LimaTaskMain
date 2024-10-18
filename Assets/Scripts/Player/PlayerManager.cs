@@ -69,7 +69,7 @@ public class PlayerManager : MonoBehaviour
                     cookieState = "light";
                     // playerLayer = other.gameObject.GetComponent<Cookie>().layer;
                     player.GetComponent<PlayerMovement>().cookieWeight = weight;
-                    player.GetComponent<PlayerMovement>().speed = 2f; //speed multiplier higher is faster
+                    player.GetComponent<PlayerMovement>().speed = 1.25f; //speed multiplier higher is faster
                     HeadsUpDisplay.GetComponent<UIController>().SetHUDReward((int)rewardValue);
                 }
 

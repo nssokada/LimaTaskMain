@@ -16,6 +16,8 @@ public class EffortCalibrator : MonoBehaviour
     int repeatNum;
     private List<float> pressTimes = new List<float>();
     private List<float> meanLatencies = new List<float>();
+    private List<int> meanPressCount = new List<int>();
+
     int nextTrialType;
 
 
@@ -47,7 +49,11 @@ public class EffortCalibrator : MonoBehaviour
             Debug.Log("Press Latency: " + CalculateAverage(meanLatencies) + " seconds");
             float pressLatency = CalculateAverage(meanLatencies);
             PlayerPrefs.SetFloat("PressLatency", pressLatency);
+
+            float MinPressCount = GetMeanPressCount(meanPressCount);
+            PlayerPrefs.SetFloat("PressCount", MinPressCount);
             PlayerPrefs.Save();
+
 
                 if (nextTrialType==4)
                 {
@@ -80,6 +86,7 @@ public class EffortCalibrator : MonoBehaviour
         yield return new WaitForSeconds(5.0f);
         Debug.Log("Current Average Latency: " + CalculateAverage(pressTimes, true) + " seconds");
         meanLatencies.Add(CalculateAverage(pressTimes, true));
+        meanPressCount.Add(counter);
         yield return new WaitForSeconds(1.0f);
         resetCalibrator();
     }
@@ -133,6 +140,27 @@ public class EffortCalibrator : MonoBehaviour
             }
             return total / latencies.Count;
         }
+    }
+
+        private float GetMeanPressCount(List<int> meanPressCount)
+    {
+        if (meanPressCount == null || meanPressCount.Count == 0)
+        {
+            // Return 0 if the list is null or empty to avoid division by zero
+            return 0f;
+        }
+
+        // Calculate the sum of all press counts
+        int sum = 0;
+        foreach (int pressCount in meanPressCount)
+        {
+            sum += pressCount;
+        }
+
+        // Calculate the mean by dividing the sum by the count of elements in the list
+        float mean = (float)sum / meanPressCount.Count;
+
+        return mean;
     }
 
 

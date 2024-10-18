@@ -33,7 +33,7 @@ public class QuestionnaireManager : MonoBehaviour
 
     void OnEnable()
     {
-        questionText.text = surveyInstruct;
+        // questionText.text = surveyInstruct;
         beginButton.SetActive(true);
     }
 

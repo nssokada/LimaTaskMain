@@ -56,15 +56,19 @@ public class SurveyController : MonoBehaviour
 
     private void setCurrentSurveys(int transitionState)
     {
-        if (transitionState == 0)
+        if (transitionState == 2)
         {
             // Set currentSurveys to elements 0, 1, and 2 from the surveys array
             currentSurveys = new GameObject[3] { surveys[0], surveys[1], surveys[2] };
         }
-        else
+        else if(transitionState == 3)
         {
             // Set currentSurveys to elements 3, 4, and 5 from the surveys array
             currentSurveys = new GameObject[3] { surveys[3], surveys[4], surveys[5] };
+        }
+        else
+        {
+             currentSurveys = new GameObject[1]{ surveys[6]};
         }
     }
 }
