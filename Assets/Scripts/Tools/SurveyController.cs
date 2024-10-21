@@ -22,11 +22,13 @@ public class SurveyController : MonoBehaviour
 
     void OnEnable()
     {
-        if(surveyIndex>=currentSurveys.Length)
+        if (currentSurveys != null && currentSurveys.Length > 0)
         {
-            introText.text = "Thank you for your responses! We will now return to the game";
+            if (surveyIndex >= currentSurveys.Length)
+            {
+                introText.text = "Thank you for your responses! We will now return to the game.";
+            }
         }
-
     }
 
 

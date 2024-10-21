@@ -41,7 +41,6 @@ public class EffortCalibrator : MonoBehaviour
             HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0.08f);
             counter = 0;
             resetTimer();
-            StartCoroutine(EffortCalibratorCoroutine());
             instructUI.SetActive(false);
         }
         else
@@ -83,7 +82,7 @@ public class EffortCalibrator : MonoBehaviour
     {
         InvokeRepeating("UpdateTimer", 0f, 0.01f);
         pressable=true;
-        yield return new WaitForSeconds(5.0f);
+        yield return new WaitForSeconds(10.0f);
         Debug.Log("Current Average Latency: " + CalculateAverage(pressTimes, true) + " seconds");
         meanLatencies.Add(CalculateAverage(pressTimes, true));
         meanPressCount.Add(counter);
@@ -99,6 +98,10 @@ public class EffortCalibrator : MonoBehaviour
 
     void OnEffort()
     {
+        if(counter==0)
+        {
+            StartCoroutine(EffortCalibratorCoroutine());
+        }
         if(pressable)
         {
             if (Keyboard.current.sKey.isPressed && Keyboard.current.dKey.isPressed && Keyboard.current.fKey.isPressed)
@@ -175,7 +178,7 @@ public class EffortCalibrator : MonoBehaviour
             if (uiController != null)
             {
                 // Call the DecreaseTime method from UIController
-                uiController.DecreaseTime(0.01f/5f);
+                uiController.DecreaseTime(0.01f/10f);
             }
         }
 
