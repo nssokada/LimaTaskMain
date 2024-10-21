@@ -395,6 +395,8 @@ MonoBehaviour:
   escapeStateScreen: {fileID: 1231703834}
   freeStateScreen: {fileID: 1585638543}
   capturedStateScreen: {fileID: 1912476647}
+  anxiousReport: {fileID: 485393814}
+  confidenceReport: {fileID: 866904020}
   startUI: {fileID: 932060174}
   player: {fileID: 597418898}
   playerManager: {fileID: 2116837191}
@@ -707,14 +709,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1113177325}
-        m_TargetAssemblyTypeName: SessionGenerator, Assembly-CSharp
-        m_MethodName: MainGameButton
-        m_Mode: 1
+      - m_Target: {fileID: 97862585}
+        m_TargetAssemblyTypeName: LimaTask, Assembly-CSharp
+        m_MethodName: registerSubjectiveReport
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -1433,14 +1435,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1113177325}
-        m_TargetAssemblyTypeName: SessionGenerator, Assembly-CSharp
-        m_MethodName: MainGameButton
-        m_Mode: 1
+      - m_Target: {fileID: 97862585}
+        m_TargetAssemblyTypeName: LimaTask, Assembly-CSharp
+        m_MethodName: registerSubjectiveReport
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 7
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -1618,14 +1620,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1113177325}
-        m_TargetAssemblyTypeName: SessionGenerator, Assembly-CSharp
-        m_MethodName: MainGameButton
-        m_Mode: 1
+      - m_Target: {fileID: 97862585}
+        m_TargetAssemblyTypeName: LimaTask, Assembly-CSharp
+        m_MethodName: registerSubjectiveReport
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 5
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -2187,14 +2189,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1113177325}
-        m_TargetAssemblyTypeName: SessionGenerator, Assembly-CSharp
-        m_MethodName: MainGameButton
-        m_Mode: 1
+      - m_Target: {fileID: 97862585}
+        m_TargetAssemblyTypeName: LimaTask, Assembly-CSharp
+        m_MethodName: registerSubjectiveReport
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 4
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -3207,14 +3209,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1113177325}
-        m_TargetAssemblyTypeName: SessionGenerator, Assembly-CSharp
-        m_MethodName: MainGameButton
-        m_Mode: 1
+      - m_Target: {fileID: 97862585}
+        m_TargetAssemblyTypeName: LimaTask, Assembly-CSharp
+        m_MethodName: registerSubjectiveReport
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 6
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -5787,14 +5789,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1113177325}
-        m_TargetAssemblyTypeName: SessionGenerator, Assembly-CSharp
-        m_MethodName: MainGameButton
-        m_Mode: 1
+      - m_Target: {fileID: 97862585}
+        m_TargetAssemblyTypeName: LimaTask, Assembly-CSharp
+        m_MethodName: registerSubjectiveReport
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 7
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -6963,14 +6965,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1113177325}
-        m_TargetAssemblyTypeName: SessionGenerator, Assembly-CSharp
-        m_MethodName: MainGameButton
-        m_Mode: 1
+      - m_Target: {fileID: 97862585}
+        m_TargetAssemblyTypeName: LimaTask, Assembly-CSharp
+        m_MethodName: registerSubjectiveReport
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -7393,10 +7395,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1113177325}
-        m_TargetAssemblyTypeName: SessionGenerator, Assembly-CSharp
-        m_MethodName: MainGameButton
-        m_Mode: 1
+      - m_Target: {fileID: 97862585}
+        m_TargetAssemblyTypeName: LimaTask, Assembly-CSharp
+        m_MethodName: registerSubjectiveReport
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -8877,14 +8879,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1113177325}
-        m_TargetAssemblyTypeName: SessionGenerator, Assembly-CSharp
-        m_MethodName: MainGameButton
-        m_Mode: 1
+      - m_Target: {fileID: 97862585}
+        m_TargetAssemblyTypeName: LimaTask, Assembly-CSharp
+        m_MethodName: registerSubjectiveReport
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 6
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -9145,10 +9147,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1113177325}
-        m_TargetAssemblyTypeName: SessionGenerator, Assembly-CSharp
-        m_MethodName: MainGameButton
-        m_Mode: 1
+      - m_Target: {fileID: 97862585}
+        m_TargetAssemblyTypeName: LimaTask, Assembly-CSharp
+        m_MethodName: registerSubjectiveReport
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -9355,14 +9357,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1113177325}
-        m_TargetAssemblyTypeName: SessionGenerator, Assembly-CSharp
-        m_MethodName: MainGameButton
-        m_Mode: 1
+      - m_Target: {fileID: 97862585}
+        m_TargetAssemblyTypeName: LimaTask, Assembly-CSharp
+        m_MethodName: registerSubjectiveReport
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -9648,14 +9650,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1113177325}
-        m_TargetAssemblyTypeName: SessionGenerator, Assembly-CSharp
-        m_MethodName: MainGameButton
-        m_Mode: 1
+      - m_Target: {fileID: 97862585}
+        m_TargetAssemblyTypeName: LimaTask, Assembly-CSharp
+        m_MethodName: registerSubjectiveReport
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -10653,14 +10655,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1113177325}
-        m_TargetAssemblyTypeName: SessionGenerator, Assembly-CSharp
-        m_MethodName: MainGameButton
-        m_Mode: 1
+      - m_Target: {fileID: 97862585}
+        m_TargetAssemblyTypeName: LimaTask, Assembly-CSharp
+        m_MethodName: registerSubjectiveReport
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 4
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -16376,14 +16378,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1113177325}
-        m_TargetAssemblyTypeName: SessionGenerator, Assembly-CSharp
-        m_MethodName: MainGameButton
-        m_Mode: 1
+      - m_Target: {fileID: 97862585}
+        m_TargetAssemblyTypeName: LimaTask, Assembly-CSharp
+        m_MethodName: registerSubjectiveReport
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -17023,14 +17025,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1113177325}
-        m_TargetAssemblyTypeName: SessionGenerator, Assembly-CSharp
-        m_MethodName: MainGameButton
-        m_Mode: 1
+      - m_Target: {fileID: 97862585}
+        m_TargetAssemblyTypeName: LimaTask, Assembly-CSharp
+        m_MethodName: registerSubjectiveReport
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -17531,14 +17533,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1113177325}
-        m_TargetAssemblyTypeName: SessionGenerator, Assembly-CSharp
-        m_MethodName: MainGameButton
-        m_Mode: 1
+      - m_Target: {fileID: 97862585}
+        m_TargetAssemblyTypeName: LimaTask, Assembly-CSharp
+        m_MethodName: registerSubjectiveReport
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 5
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0

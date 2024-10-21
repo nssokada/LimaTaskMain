@@ -13,6 +13,8 @@ public class LimaTask : MonoBehaviour
     public GameObject escapeStateScreen;
     public GameObject freeStateScreen;
     public GameObject capturedStateScreen;
+    public GameObject anxiousReport;
+    public GameObject confidenceReport;
     public GameObject  startUI;
 
     public GameObject player;
@@ -36,6 +38,7 @@ public class LimaTask : MonoBehaviour
     private bool cookiesActive;
     private bool acornsActive;
 
+    private int currentTransition;
     private float startTime;
     private float endTime;
     private Coroutine freeMovementCoroutine; // Reference to store the coroutine
@@ -105,7 +108,19 @@ public class LimaTask : MonoBehaviour
                 break;
             case GameState.EffortPeriod:
                 dataHandler.stopRecordContinuousMouse("choiceperiod");
-                BeginEffortPeriod();
+
+                if(currentTransition==5) // ANXIOUS
+                {
+                    anxiousReport.SetActive(true);
+                }
+                else if(currentTransition==6) //CONFIDENCE
+                {
+                    confidenceReport.SetActive(true);
+                }
+                else
+                {
+                    BeginEffortPeriod();
+                }
                 break;
             case GameState.EndingPeriod:
                 EndTrial();
@@ -242,7 +257,7 @@ public class LimaTask : MonoBehaviour
         sessionGen.pushTrialData(trial, trialNum);
 
         // Get the current transition state for this trial
-        int currentTransition = sessionGen.trials[trialNum].transitionState;
+        currentTransition = sessionGen.trials[trialNum].transitionState;
 
         // Increment and save the updated trial number
         trialNum++;
@@ -309,6 +324,35 @@ public class LimaTask : MonoBehaviour
     #endregion
 
     #region Wrappers and Helpers
+
+    public void registerSubjectiveReport(int clickResponse)
+    {
+        SubjectiveReport report = new SubjectiveReport();
+        report.trialNumber = PlayerPrefs.GetInt("trialNum");
+        report.attackingProb = trial.attackingProb;
+        report.trialCookie = playerManager.cookieChoice;
+        report.response =clickResponse;  //how do I know which button they pressed? ;
+        report.questionType = currentTransition; // 5 ANXIOUS / 6 CONFIDENCE
+
+        string reportName = "";
+
+        if(currentTransition==5)
+        {
+            anxiousReport.SetActive(false);
+            reportName = "Anxiety_"+report.trialNumber;
+        }
+        else if(currentTransition==6)
+        {
+            confidenceReport.SetActive(false);
+            reportName = "Confidence_"+report.trialNumber;
+        }
+        
+        SessionGenerator.GetComponent<SessionGenerator>().pushSubjectiveData(report, reportName);
+        BeginEffortPeriod();
+    }
+
+
+
     public void EnableAcornPeriod()
     {
         HeadsUpDisplay.SetActive(true);
