@@ -284,6 +284,33 @@ public class SessionGenerator : MonoBehaviour
     }
 
 
+    public void pushSubjectiveData(SubjectiveReport report, string reportName)
+    {
+         // Serialize the trial data to check if it is valid JSON
+        try
+        {
+            string jsonData = JsonUtility.ToJson(report);
+
+            if (string.IsNullOrEmpty(jsonData))
+            {
+                Debug.LogError($"Serialization failed for {reportName}. Data is null or invalid.");
+                return; // Stop the process if serialization fails
+            }
+
+            Debug.Log($"Serialized {reportName} data: {jsonData}");
+
+            // Now proceed with pushing data to Firebase
+            Debug.Log($"Pushing {reportName} data to Firebase.");
+            writeToFirebase(reportName, report);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error serializing {reportName} data: {e.Message}");
+        }
+
+    }
+
+
 
     private void createExperimentInfo(string attributeName, string conditionFile)
     {
@@ -363,7 +390,22 @@ public class SessionGenerator : MonoBehaviour
     // Write survey info to Firebase
     private void writeToFirebase(string attributeName, QuestionResponseList attribute)
     {
-        string path = persistentDataPath + "/" + attributeName + ".json";
+        string path = persistentDataPath + "/Surveys/" + attributeName + ".json";
+        Debug.Log($"Writing experiment info for {attributeName} to Firebase at {path}");
+
+        RestClient.Put(path, attribute).Then(response => 
+        {
+            Debug.Log($"Successfully wrote experiment info for {attributeName} to Firebase.");
+        }).Catch(err => 
+        {
+            Debug.LogError($"Failed to write experiment info for {attributeName} to Firebase. Error: {err.Message}");
+        });
+    }
+
+     // Write subjective report to Firebase
+    private void writeToFirebase(string attributeName, SubjectiveReport attribute)
+    {
+        string path = persistentDataPath + "/SubjectiveReports/" + attributeName + ".json";
         Debug.Log($"Writing experiment info for {attributeName} to Firebase at {path}");
 
         RestClient.Put(path, attribute).Then(response => 

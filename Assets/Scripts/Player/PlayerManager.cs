@@ -72,7 +72,7 @@ public class PlayerManager : MonoBehaviour
                     player.GetComponent<PlayerMovement>().SetLightSpeed(); //speed multiplier higher is faster
                     HeadsUpDisplay.GetComponent<UIController>().SetHUDReward((int)rewardValue);
                 }
-
+                player.GetComponent<PlayerMovement>().clickingPeriod = false;
                 rewardPotential = rewardValue;
                 cookieChoice = new CookieChoice(rewardValue,weight,cookiePosition.x,cookiePosition.z,Time.realtimeSinceStartup);
                 task.GetComponent<LimaTask>().HandleGameState(LimaTask.GameState.EffortPeriod);
