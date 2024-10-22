@@ -18,12 +18,14 @@ public class UIController : MonoBehaviour
     public TMP_Text energyText;
 
     public TMP_Text rewardTextHUD;
+    public TMP_Text totalScoreTextHUD;
 
 
 
     void OnEnable()
     {
         SetEnergy(0f);
+        SetTotalScore(PlayerPrefs.GetFloat("TotalScore"));
     }
     void OnDisable()
     {
@@ -78,6 +80,10 @@ public class UIController : MonoBehaviour
     {
         Debug.Log("Setting HUD reward");
         rewardTextHUD.text = "+"+rewardValue.ToString();
+    }
+    public void SetTotalScore(float totalScore)
+    {
+        totalScoreTextHUD.text = ((int)totalScore).ToString();
     }
 
 

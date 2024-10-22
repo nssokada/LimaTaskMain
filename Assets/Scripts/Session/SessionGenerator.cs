@@ -187,6 +187,7 @@ public class SessionGenerator : MonoBehaviour
 
         createExperimentInfo(username, conditionFile);
         PlayerPrefs.SetInt("trialNum", 0);
+        PlayerPrefs.SetFloat("TotalScore", 0.0f);
         Task.SetActive(true);
         startUI.SetActive(true);
         SessionScreen.SetActive(false);

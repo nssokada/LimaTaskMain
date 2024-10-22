@@ -465,6 +465,10 @@ public class LimaTask : MonoBehaviour
         trial.trialEndState = playerManager.playerState;
         trial.acornsSpawned = trialController.GetComponent<TrialController>().acornLoggedPositions;
         trial.acornsCollected = playerManager.acornsCollected;
+        
+        float totalScore = PlayerPrefs.GetFloat("TotalScore");
+        totalScore+=playerManager.earnedReward;
+        PlayerPrefs.SetFloat("TotalScore", totalScore);
     }
 
 
