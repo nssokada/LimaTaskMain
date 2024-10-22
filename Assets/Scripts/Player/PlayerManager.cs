@@ -28,6 +28,8 @@ public class PlayerManager : MonoBehaviour
         rewardPotential = 0;
         exitSafety = false;
 
+        HeadsUpDisplay.GetComponent<UIController>().SetTotalScore(PlayerPrefs.GetFloat("TotalScore"));
+
         // Clear cookies and acorns attached to the player
         ClearPlayerItems();
     }
@@ -72,6 +74,7 @@ public class PlayerManager : MonoBehaviour
                     player.GetComponent<PlayerMovement>().SetLightSpeed(); //speed multiplier higher is faster
                     HeadsUpDisplay.GetComponent<UIController>().SetHUDReward((int)rewardValue);
                 }
+
                 player.GetComponent<PlayerMovement>().clickingPeriod = false;
                 rewardPotential = rewardValue;
                 cookieChoice = new CookieChoice(rewardValue,weight,cookiePosition.x,cookiePosition.z,Time.realtimeSinceStartup);

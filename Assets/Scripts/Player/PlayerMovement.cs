@@ -71,7 +71,7 @@ public class PlayerMovement : MonoBehaviour
     void SetStepSize()
     {
         stepSize = 8.25f /(MinPressCount*0.9f);
-        lightSpeed =  stepSize/MinPressLatency;
+        lightSpeed =  stepSize/MinPressLatency*1.10f;
     }
 
     public void SetLightSpeed()

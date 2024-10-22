@@ -25,7 +25,6 @@ public class UIController : MonoBehaviour
     void OnEnable()
     {
         SetEnergy(0f);
-        SetTotalScore(PlayerPrefs.GetFloat("TotalScore"));
     }
     void OnDisable()
     {
