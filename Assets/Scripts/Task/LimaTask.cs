@@ -109,11 +109,11 @@ public class LimaTask : MonoBehaviour
             case GameState.EffortPeriod:
                 dataHandler.stopRecordContinuousMouse("choiceperiod");
 
-                if(currentTransition==5) // ANXIOUS
+                if(trial.type==5) // ANXIOUS
                 {
                     anxiousReport.SetActive(true);
                 }
-                else if(currentTransition==6) //CONFIDENCE
+                else if(trial.type==6) //CONFIDENCE
                 {
                     confidenceReport.SetActive(true);
                 }
@@ -332,16 +332,16 @@ public class LimaTask : MonoBehaviour
         report.attackingProb = trial.attackingProb;
         report.trialCookie = playerManager.cookieChoice;
         report.response =clickResponse;  //how do I know which button they pressed? ;
-        report.questionType = currentTransition; // 5 ANXIOUS / 6 CONFIDENCE
+        report.questionType = trial.type; // 5 ANXIOUS / 6 CONFIDENCE
 
         string reportName = "";
 
-        if(currentTransition==5)
+        if(trial.type==5)
         {
             anxiousReport.SetActive(false);
             reportName = "Anxiety_"+report.trialNumber;
         }
-        else if(currentTransition==6)
+        else if(trial.type==6)
         {
             confidenceReport.SetActive(false);
             reportName = "Confidence_"+report.trialNumber;

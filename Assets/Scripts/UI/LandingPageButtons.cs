@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
 
@@ -12,7 +12,7 @@ public class LandingPageButtons : MonoBehaviour
     private const string CheckPointKey = "CheckPoint";
     private const string GameStateKey = "GameState";
 
-    public TMP_InputField participantID;
+    public InputField participantID;
 
 public void LoginButton()
 {
