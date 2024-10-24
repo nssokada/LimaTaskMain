@@ -2085,7 +2085,7 @@ MonoBehaviour:
     - 4 - Almost Always
     correctAnswerIndex: 0
   surveyName: MFIS
-  surveyInstruct: Begin the test
+  surveyInstruct: 
   sessionGenerator: {fileID: 1538333187}
   beginButton: {fileID: 1289911064}
   introUI: {fileID: 1575619055}
@@ -5131,7 +5131,7 @@ MonoBehaviour:
       All of my relationships have suffered or ended.  My family life is extremely
       strained'
     correctAnswerIndex: 0
-  surveyName: 
+  surveyName: OASIS
   surveyInstruct: 
   sessionGenerator: {fileID: 1538333187}
   beginButton: {fileID: 211205520}
@@ -6586,7 +6586,7 @@ MonoBehaviour:
     - Completely TRUE
     correctAnswerIndex: 0
   surveyName: AMI
-  surveyInstruct: Fu hu
+  surveyInstruct: 
   sessionGenerator: {fileID: 1538333187}
   beginButton: {fileID: 1535182955}
   introUI: {fileID: 1575619055}
@@ -9878,7 +9878,7 @@ MonoBehaviour:
     - 4 - Very Much So
     correctAnswerIndex: 0
   surveyName: STICSA
-  surveyInstruct: hi bae
+  surveyInstruct: 
   sessionGenerator: {fileID: 1538333187}
   beginButton: {fileID: 162195816}
   introUI: {fileID: 1575619055}
@@ -14882,7 +14882,7 @@ MonoBehaviour:
     - 3 - Nearly every day
     correctAnswerIndex: 0
   surveyName: PHQ9
-  surveyInstruct: This is PHQ9
+  surveyInstruct: 
   sessionGenerator: {fileID: 1538333187}
   beginButton: {fileID: 1986989036}
   introUI: {fileID: 1575619055}

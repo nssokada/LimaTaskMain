@@ -84,7 +84,7 @@ public class PlayerManager : MonoBehaviour
 
           else if(other.gameObject.tag == "Safety")
         {
-            if( exitSafety && task.GetComponent<LimaTask>().trialEndable && (carrying | acorn_carrying))
+            if( exitSafety && task.GetComponent<LimaTask>().trialEndable && (carrying | acorn_carrying | task.GetComponent<LimaTask>().predator.GetComponent<PredatorControls>().circaStrike))
             {
                 foreach(Transform child in player.transform)
                     {

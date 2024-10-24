@@ -16,8 +16,14 @@ public class PredatorControls : MonoBehaviour
 
     private void OnEnable() 
     {
-    
-        speed = CalculatePredatorSpeed();
+        if(player.GetComponent<PlayerMovement>().acornPeriod)
+        {
+            speed = 10f;
+        }
+        else
+        {
+            speed = CalculatePredatorSpeed();
+        }
     }
 
     float CalculatePredatorSpeed()

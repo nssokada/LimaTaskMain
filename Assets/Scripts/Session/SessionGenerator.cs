@@ -232,7 +232,7 @@ public class SessionGenerator : MonoBehaviour
 
    public void pushTrialData(LimaTrial trial, int trialNum)
     {
-        string trial_num = trialNum.ToString("D2");
+        string trial_num = trialNum.ToString("0000");
 
         // Serialize the trial data to check if it is valid JSON
         try

@@ -38,12 +38,18 @@ public class TrialDataHandler : MonoBehaviour
     // Method to clear all the lists
     public void ClearAllTrialDataHandlers()
     {
-        playerPosition.Clear();
-        predatorPosition.Clear();
-        mouseTrackChoicePeriod.Clear();
-        mouseTrackEffortPeriod.Clear();
-        effortRate.Clear();
-        Debug.Log("All position lists have been cleared.");
+        // playerPosition.Clear();
+        // predatorPosition.Clear();
+        // mouseTrackChoicePeriod.Clear();
+        // mouseTrackEffortPeriod.Clear();
+        // effortRate.Clear();
+        // Debug.Log("All position lists have been cleared.");
+
+         playerPosition = new List<PositionHandler>();
+        predatorPosition = new List<PositionHandler>();
+        mouseTrackChoicePeriod = new List<PositionHandler>();
+        mouseTrackEffortPeriod = new List<PositionHandler>();
+        effortRate  = new List<float>();
     }
 
 

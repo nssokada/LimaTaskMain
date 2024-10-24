@@ -361,6 +361,7 @@ public class LimaTask : MonoBehaviour
         HeadsUpDisplay.SetActive(true);
         dataHandler.StartRecordingPlayerPosition();
         player.GetComponent<PlayerMovement>().enableAcorns();
+        TogglePredator();
         SetPredator(trial);
         // Start free movement and store the reference
         if (freeMovementCoroutine == null)
