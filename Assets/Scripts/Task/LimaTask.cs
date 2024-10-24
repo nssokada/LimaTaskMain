@@ -239,7 +239,10 @@ public class LimaTask : MonoBehaviour
         }
 
         trialEndable = false;
-
+        
+        dataHandler.stopRecordContinuousMouse("effortPeriod");
+        dataHandler.StopRecordingPlayerPosition();
+        dataHandler.StopRecordingPredatorPosition();
 
         CancelInvoke("UpdateTimer");
         endTime = Time.realtimeSinceStartup;
