@@ -70,8 +70,9 @@ private void SkipTutorial(string username)
     {
         PlayerPrefs.DeleteAll();
         PlayerPrefs.SetString(UserIdKey, username);
+        PlayerPrefs.SetInt("TutorialCompleted", 0);
         Debug.Log($"New user generated: {username}");
-        SceneManager.LoadScene("Tutorial");
+        SceneManager.LoadScene("EffortCalibrator");
     }
 
     // Load from old user wherever they left off
@@ -82,7 +83,7 @@ private void SkipTutorial(string username)
         // Dictionary mapping checkpoints to scene names
         var sceneMap = new Dictionary<string, string>()
         {
-            { "Tutorial", "Tutorial" },
+            { "Tutorial", "EffortCalibrator" },
             { "MainGame", "MainGame" },
             { "Survey", "Survey" },
             { "AcornGame", "AcornGame" }

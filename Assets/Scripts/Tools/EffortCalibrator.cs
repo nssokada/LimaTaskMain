@@ -31,6 +31,11 @@ public class EffortCalibrator : MonoBehaviour
         {
             nextTrialType = PlayerPrefs.GetInt("nextType");
         }
+        else if (PlayerPrefs.GetInt("TutorialCompleted")==0)
+        {
+            nextTrialType = 10;
+        }
+
     }
 
     public void beginButton()
@@ -53,15 +58,27 @@ public class EffortCalibrator : MonoBehaviour
             PlayerPrefs.SetFloat("PressCount", MinPressCount);
             PlayerPrefs.Save();
 
-
-                if (nextTrialType==4)
+            if(MinPressCount<5f)
+            {
+                PlayerPrefs.SetString("FailReason","Unfortunately, the calibration of your keyboard didn’t meet the necessary criteria to continue with the study");
+                PlayerPrefs.SetString("CompletionPath","https://app.prolific.com/submissions/complete?cc=C1FU3LPS");
+                SceneManager.LoadScene("EndGame");
+            }
+            else
+            {
+                 if (nextTrialType==4)
                 {
                     SceneManager.LoadScene("AcornTutorial");
+                }
+                else if (nextTrialType==10)
+                {
+                    SceneManager.LoadScene("MoveTutorial");
                 }
                 else
                 {
                     SceneManager.LoadScene("MainGame");
-                }
+                } 
+            }
         }
     }
 

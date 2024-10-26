@@ -27,6 +27,7 @@ public class SessionGenerator : MonoBehaviour
     public async void MainGameButton()
     {
         username = PlayerPrefs.GetString("userID");
+        PlayerPrefs.SetFloat("StartTime", Time.realtimeSinceStartup);
 
         //IF THERE IS NOT ALREADY A DATAPATH LET'S CREATE ONE
         if(!PlayerPrefs.HasKey("DataPath"))
@@ -107,6 +108,7 @@ public class SessionGenerator : MonoBehaviour
     public void TutorialButton()
     {
         username = PlayerPrefs.GetString("userID");
+        PlayerPrefs.SetFloat("StartTime", Time.realtimeSinceStartup);
 
         //IF THERE IS NOT ALREADY A DATAPATH LET'S CREATE ONE
         if(!PlayerPrefs.HasKey("DataPath"))
@@ -119,6 +121,7 @@ public class SessionGenerator : MonoBehaviour
         //Set the datapath
         persistentDataPath = PlayerPrefs.GetString("DataPath");
         Debug.Log("Persistent DataPath set: " + persistentDataPath);
+        persistentDataPath = persistentDataPath+"/Tutorial";
 
         //SET KEYS
         PlayerPrefs.SetString("CheckPoint", "Tutorial");
@@ -209,10 +212,23 @@ public class SessionGenerator : MonoBehaviour
 
     private void GenerateTutorial()
     {
+        // Debug.Log("Generating tutorial...");
+        // createExperimentInfo(username+"_Tutorial", conditionFile);
+        // SessionScreen.SetActive(false);
+        // Task.GetComponent<TutorialController>().StartMainTutorial(); 
+        CSVReader reader = new CSVReader();
+        trials  = reader.ReadTrialCSV(conditionFile);   
+        numTrials = trials.Count;
+        Debug.Log("Generated experiment with condition file: " + conditionFile);
+        Debug.Log("Number of trials: " + numTrials);
+
         Debug.Log("Generating tutorial...");
         createExperimentInfo(username+"_Tutorial", conditionFile);
+        PlayerPrefs.SetInt("trialNum", 0);
+        PlayerPrefs.SetFloat("TotalScore", 0.0f);
+        Task.SetActive(true);
+        startUI.SetActive(true);
         SessionScreen.SetActive(false);
-        Task.GetComponent<TutorialController>().StartMainTutorial(); 
     }
 
        private void GenerateAcornTutorial()

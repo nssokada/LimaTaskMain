@@ -16,6 +16,7 @@ public class UIController : MonoBehaviour
     public Material low;
     public MeshRenderer grass;
     public TMP_Text energyText;
+    public TMP_Text instructText;
 
     public TMP_Text rewardTextHUD;
     public TMP_Text totalScoreTextHUD;
@@ -53,6 +54,11 @@ public class UIController : MonoBehaviour
     public void SetEnergyText(int count)
     {
         energyText.text  = count.ToString();
+    }
+
+    public void SetInstructText(string instruct)
+    {
+        instructText.text  = instruct;
     }
 
     public void SetEnergy(float energyValue)

@@ -15,6 +15,7 @@ public class LimaTask : MonoBehaviour
     public GameObject capturedStateScreen;
     public GameObject anxiousReport;
     public GameObject confidenceReport;
+    public GameObject tutorialUI;
     public GameObject  startUI;
 
     public GameObject player;
@@ -32,6 +33,7 @@ public class LimaTask : MonoBehaviour
     private TrialDataHandler dataHandler;
     public bool trialEndable;
     public bool shouldStopCoroutine = false;
+
 
     private bool acorns;
     private Vector3 home;
@@ -275,6 +277,8 @@ public class LimaTask : MonoBehaviour
             // Handle transitions based on the current transition state
             if (currentTransition == 1)
             {
+                PlayerPrefs.SetString("FailReason","Thank you for your participation! You have completed the game.");
+                PlayerPrefs.SetString("CompletionPath","https://app.prolific.com/submissions/complete?cc=CUEPFERC");
                 SceneManager.LoadScene("EndGame");
             }
             else if (currentTransition == 2 || currentTransition == 3 || currentTransition == 4)
@@ -283,6 +287,10 @@ public class LimaTask : MonoBehaviour
                 PlayerPrefs.SetInt("nextType", nextTrialType);
                 PlayerPrefs.SetInt("transitionState", currentTransition);
                 SceneManager.LoadScene("SurveyScene"); // Placeholder for the questionnaire scene
+            }
+            else if(currentTransition == 10)
+            {
+                tutorialUI.SetActive(true);
             }
             else
             {

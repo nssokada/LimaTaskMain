@@ -65,6 +65,8 @@ public class PlayerManager : MonoBehaviour
                     player.GetComponent<PlayerMovement>().speed = 0f;  //speed multiplier higher is faster
                     Debug.Log("speed:"+player.GetComponent<PlayerMovement>().speed);
                     HeadsUpDisplay.GetComponent<UIController>().SetHUDReward((int)rewardValue);
+                    HeadsUpDisplay.GetComponent<UIController>().SetInstructText("While holding 'SDF', press 'A' to move back to safety");
+
                 }
                 else 
                 {
@@ -73,6 +75,8 @@ public class PlayerManager : MonoBehaviour
                     player.GetComponent<PlayerMovement>().cookieWeight = weight;
                     player.GetComponent<PlayerMovement>().SetLightSpeed(); //speed multiplier higher is faster
                     HeadsUpDisplay.GetComponent<UIController>().SetHUDReward((int)rewardValue);
+                    HeadsUpDisplay.GetComponent<UIController>().SetInstructText("Us only your mouse to move to safety");
+
                 }
 
                 player.GetComponent<PlayerMovement>().clickingPeriod = false;
@@ -110,7 +114,7 @@ public class PlayerManager : MonoBehaviour
                         else if(child.CompareTag("Acorn")) Destroy(child.gameObject);
                     }
                     playerState ="captured";
-                    earnedReward =-25f;
+                    earnedReward =-100f;
                     carrying = false;                     
                     acorn_carrying = false; 
                     task.GetComponent<LimaTask>().HandleGameState(LimaTask.GameState.EndingPeriod);

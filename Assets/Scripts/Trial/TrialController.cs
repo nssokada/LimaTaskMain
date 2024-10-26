@@ -74,7 +74,7 @@ public class TrialController : MonoBehaviour
             Debug.Log("set med");
             probability.GetComponent<probability>().setProbabilityMed();
         }
-        if(attackingProb==0.1f)
+        if(attackingProb<=0.1f)
         {
             Debug.Log("set low");
             probability.GetComponent<probability>().setProbabilityLow();
@@ -130,6 +130,11 @@ public class TrialController : MonoBehaviour
                     foreach (Vector3 pos in acornPositions)
                     {
                         if (Vector3.Distance(pos, spawnPosition) < minDistanceBetweenAcorns)
+                        {
+                            isValid = false;
+                            break;
+                        }
+                        else if (Vector3.Distance(centerPt.position, spawnPosition) < minDistanceBetweenAcorns)
                         {
                             isValid = false;
                             break;

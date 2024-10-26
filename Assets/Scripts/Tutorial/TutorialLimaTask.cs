@@ -161,8 +161,7 @@ public void OnDisable()
         arena.SetActive(true);
         map.SetActive(true);
         togglePlayer(); 
-        mainCamera.GetComponent<ChangeCursor>().MoveCursorToCenterAndUnlock();
-        mainCamera.GetComponent<ChangeCursor>().setTargetCursor();
+        mainCamera.GetComponent<ChangeCursor>().setMoveCursor();
         yield return new WaitForSeconds(1.0f);
 
         setCookie(Random.Range(0,1),Random.Range(0,6),0f,0);
