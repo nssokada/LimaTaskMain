@@ -3,35 +3,38 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using System.Linq;
 using TMPro;
 public class EffortCalibrator : MonoBehaviour
 {
-    
+
     PlayerInput playerInput;
     public GameObject HeadsUpDisplay;
     public GameObject instructUI;
     public TMP_Text instructText;
+    public GameObject SessionGenerator;
     int counter;
     bool pressable;
     int repeatNum;
     private List<float> pressTimes = new List<float>();
     private List<float> meanLatencies = new List<float>();
-    private List<int> meanPressCount = new List<int>();
+    private List<int> maxPressCount = new List<int>();
 
     int nextTrialType;
+
 
 
     // Start is called before the first frame update
     void Start()
     {
-        PlayerPrefs.SetString("GameState","Calibrator");
+        PlayerPrefs.SetString("GameState", "EffortCalibrator");
         PlayerPrefs.Save();
 
         if (PlayerPrefs.HasKey("nextType"))
         {
             nextTrialType = PlayerPrefs.GetInt("nextType");
         }
-        else if (PlayerPrefs.GetInt("TutorialCompleted")==0)
+        else if (PlayerPrefs.GetInt("TutorialCompleted") == 0)
         {
             nextTrialType = 10;
         }
@@ -40,7 +43,7 @@ public class EffortCalibrator : MonoBehaviour
 
     public void beginButton()
     {
-        if(repeatNum<3)
+        if (repeatNum < 3)
         {
             HeadsUpDisplay.SetActive(true);
             HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0.08f);
@@ -54,30 +57,31 @@ public class EffortCalibrator : MonoBehaviour
             float pressLatency = CalculateAverage(meanLatencies);
             PlayerPrefs.SetFloat("PressLatency", pressLatency);
 
-            float MinPressCount = GetMeanPressCount(meanPressCount);
+            float MinPressCount = GetMaxPressCount(maxPressCount); //lets change this to max press count
             PlayerPrefs.SetFloat("PressCount", MinPressCount);
             PlayerPrefs.Save();
 
-            if(MinPressCount<5f)
+            if (MinPressCount < 5f)
             {
-                PlayerPrefs.SetString("FailReason","Unfortunately, the calibration of your keyboard didn’t meet the necessary criteria to continue with the study");
-                PlayerPrefs.SetString("CompletionPath","https://app.prolific.com/submissions/complete?cc=C1FU3LPS");
+                PlayerPrefs.SetString("FailReason", "Unfortunately, the calibration of your keyboard didn’t meet the necessary criteria to continue with the study");
+                PlayerPrefs.SetString("CompletionPath", "https://app.prolific.com/submissions/complete?cc=C1FU3LPS");
                 SceneManager.LoadScene("EndGame");
             }
             else
             {
-                 if (nextTrialType==4)
+                if (nextTrialType == 4)
                 {
                     SceneManager.LoadScene("AcornTutorial");
                 }
-                else if (nextTrialType==10)
+                else if (nextTrialType == 10)
                 {
                     SceneManager.LoadScene("MoveTutorial");
                 }
                 else
                 {
+                    SessionGenerator.GetComponent<SessionGenerator>().pushResetExperimentInfo();
                     SceneManager.LoadScene("MainGame");
-                } 
+                }
             }
         }
     }
@@ -89,7 +93,7 @@ public class EffortCalibrator : MonoBehaviour
         resetTimer();
         HeadsUpDisplay.SetActive(false);
         instructUI.SetActive(true);
-        if(repeatNum>2)
+        if (repeatNum > 2)
         {
             instructText.text = "Great work! Now press \"Next\" to begin the game.";
         }
@@ -98,11 +102,11 @@ public class EffortCalibrator : MonoBehaviour
     IEnumerator EffortCalibratorCoroutine()
     {
         InvokeRepeating("UpdateTimer", 0f, 0.01f);
-        pressable=true;
+        pressable = true;
         yield return new WaitForSeconds(10.0f);
         Debug.Log("Current Average Latency: " + CalculateAverage(pressTimes, true) + " seconds");
         meanLatencies.Add(CalculateAverage(pressTimes, true));
-        meanPressCount.Add(counter);
+        maxPressCount.Add(counter);
         yield return new WaitForSeconds(1.0f);
         resetCalibrator();
     }
@@ -115,11 +119,11 @@ public class EffortCalibrator : MonoBehaviour
 
     void OnEffort()
     {
-        if(counter==0)
+        if (counter == 0)
         {
             StartCoroutine(EffortCalibratorCoroutine());
         }
-        if(pressable)
+        if (pressable)
         {
             if (Keyboard.current.sKey.isPressed && Keyboard.current.dKey.isPressed && Keyboard.current.fKey.isPressed)
             {
@@ -129,14 +133,14 @@ public class EffortCalibrator : MonoBehaviour
                 pressTimes.Add(pressTime);
                 counter++;
             }
-          
+
         }
-       
+
     }
 
 
 
-        private float CalculateAverage(List<float> latencies, bool isConsecutiveDifferences = false)
+    private float CalculateAverage(List<float> latencies, bool isConsecutiveDifferences = false)
     {
         if (latencies.Count == 0 || (isConsecutiveDifferences && latencies.Count < 2))
         {
@@ -162,7 +166,7 @@ public class EffortCalibrator : MonoBehaviour
         }
     }
 
-        private float GetMeanPressCount(List<int> meanPressCount)
+    private float GetMeanPressCount(List<int> meanPressCount)
     {
         if (meanPressCount == null || meanPressCount.Count == 0)
         {
@@ -183,34 +187,44 @@ public class EffortCalibrator : MonoBehaviour
         return mean;
     }
 
+    private float GetMaxPressCount(List<int> pressCounts)
+    {
+        if (pressCounts == null || pressCounts.Count == 0)
+        {
+            return 0f;
+        }
+
+        return (float)pressCounts.Max();
+    }
+
 
 
     #region Continous Methods
 
     void UpdateTimer()
-        {
-            // Assuming movementStartTimeHeadsUpDisplay is a GameObject with UIController script attached
-            UIController uiController = HeadsUpDisplay.GetComponent<UIController>();
+    {
+        // Assuming movementStartTimeHeadsUpDisplay is a GameObject with UIController script attached
+        UIController uiController = HeadsUpDisplay.GetComponent<UIController>();
 
-            if (uiController != null)
-            {
-                // Call the DecreaseTime method from UIController
-                uiController.DecreaseTime(0.01f/10f);
-            }
+        if (uiController != null)
+        {
+            // Call the DecreaseTime method from UIController
+            uiController.DecreaseTime(0.01f / 10f);
         }
+    }
 
 
     void resetTimer()
-        {
-            // Assuming movementStartTimeHeadsUpDisplay is a GameObject with UIController script attached
-            UIController uiController = HeadsUpDisplay.GetComponent<UIController>();
+    {
+        // Assuming movementStartTimeHeadsUpDisplay is a GameObject with UIController script attached
+        UIController uiController = HeadsUpDisplay.GetComponent<UIController>();
 
-            if (uiController != null)
-            {
-                // Call the DecreaseTime method from UIController
-                uiController.SetTime(1f);
-            }
+        if (uiController != null)
+        {
+            // Call the DecreaseTime method from UIController
+            uiController.SetTime(1f);
         }
+    }
     #endregion
-   
+
 }

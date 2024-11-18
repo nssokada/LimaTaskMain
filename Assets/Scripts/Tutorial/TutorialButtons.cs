@@ -10,7 +10,7 @@ public class TutorialButtons : MonoBehaviour
     {
         //if the navigation is passed move them to the next scene. If it is failed then fail them
         float totalScore = PlayerPrefs.GetFloat("TotalScore");
-        if(totalScore<110f)
+        if(totalScore<20f)
         {
             PlayerPrefs.SetString("FailReason","Unfortunately, your performance on the game did not qualify for our study.");
             PlayerPrefs.SetString("CompletionPath","https://app.prolific.com/submissions/complete?cc=C1DWO1L4");

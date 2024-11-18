@@ -34,37 +34,37 @@ public class UIController : MonoBehaviour
     }
     public void DecreaseEnergy(float energyValue)
     {
-        float energy =  energySlider.value;
+        float energy = energySlider.value;
         float decrease = energy - energyValue;
         energySlider.value = decrease;
     }
-    
+
     public void IncreaseEnergy(float energyValue)
     {
-        float energy =  energySlider.value;
+        float energy = energySlider.value;
         float increase = energy + energyValue;
         energySlider.value = increase;
     }
-    
+
     public float GetEnergy()
     {
-        float energy =  energySlider.value;
+        float energy = energySlider.value;
         return energy;
     }
     public void SetEnergyText(int count)
     {
-        energyText.text  = count.ToString();
+        energyText.text = count.ToString();
     }
 
     public void SetInstructText(string instruct)
     {
-        instructText.text  = instruct;
+        instructText.text = instruct;
     }
 
     public void SetEnergy(float energyValue)
     {
         // Set energy
-        energySlider.value =energyValue;
+        energySlider.value = energyValue;
     }
     public void DecreaseTime(float timeDecreaseRate)
     {
@@ -77,14 +77,14 @@ public class UIController : MonoBehaviour
     public void SetTime(float timeValue)
     {
         // Set Time
-        timeSlider.value =timeValue;
+        timeSlider.value = timeValue;
     }
 
 
     public void SetHUDReward(int rewardValue)
     {
         Debug.Log("Setting HUD reward");
-        rewardTextHUD.text = "+"+rewardValue.ToString();
+        rewardTextHUD.text = "+" + rewardValue.ToString();
     }
     public void SetTotalScore(float totalScore)
     {

@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 public class TutorialLimaTask : MonoBehaviour
 {
     PlayerInput playerInput;
-    public  GameObject mainCamera;
+    public GameObject mainCamera;
 
     public GameObject trialController;
     public TutorialController TutorialController;
@@ -24,7 +24,7 @@ public class TutorialLimaTask : MonoBehaviour
 
     public GameObject arena;
     public GameObject map;
-   
+
     public GameObject probabilityDisplay;
 
     public LimaTrial trial;
@@ -38,47 +38,47 @@ public class TutorialLimaTask : MonoBehaviour
     float movementStartTime; //likely will change this to trial start time
     public GameObject HeadsUpDisplay;
     int numCookies;
-    public TMP_Text instructText;    
+    public TMP_Text instructText;
     public GameObject HandsOnKeys;
     public GameObject EffortDisplay;
     private List<float> pressTimes = new List<float>();
     public ChangeCursor changeCursor;
 
-#region  Running the Tutorial
+    #region  Running the Tutorial
 
     //Upon enabling this gameobject the first trial will run.
     public void OnEnable()
     {
-       numCookies=0;
-       Debug.Log(numCookies);
-       gameStateController(TutorialController.tutorialState);
+        numCookies = 0;
+        Debug.Log(numCookies);
+        gameStateController(TutorialController.tutorialState);
     }
-    
 
-public void OnDisable()
-{
-    if (mainCamera != null)
+
+    public void OnDisable()
     {
-        if (changeCursor != null)
+        if (mainCamera != null)
         {
-            changeCursor.setDefaultCursor();
+            if (changeCursor != null)
+            {
+                changeCursor.setDefaultCursor();
+            }
         }
     }
-}
 
-/// <GameStateController>
-/// This is a game state controller for the Tutorial. It controls the shift in states within the tutorial of the game. 
-/// Reference the main game state controller for more specifics.
-/// </summary>
-/// <param name="gameState"></param>
+    /// <GameStateController>
+    /// This is a game state controller for the Tutorial. It controls the shift in states within the tutorial of the game. 
+    /// Reference the main game state controller for more specifics.
+    /// </summary>
+    /// <param name="gameState"></param>
     public void gameStateController(string gameState)
-    {   
+    {
         switch (gameState)
         {
             case "cookieSelection":
                 Debug.Log("Running tutorial intro");
-                if(numCookies<=1) StartCoroutine(CookieSelection());
-                else 
+                if (numCookies <= 1) StartCoroutine(CookieSelection());
+                else
                 {
                     StartCoroutine(endCookieSelection());
                     changeCursor.setDefaultCursor();
@@ -89,7 +89,7 @@ public void OnDisable()
                 break;
             case "navigationTutorial":
                 trialEndable = true;
-                if(numCookies<=0) StartCoroutine(navigationTutorial());
+                if (numCookies <= 0) StartCoroutine(navigationTutorial());
                 else
                 {
                     StartCoroutine(endNavigationTutorial());
@@ -98,17 +98,17 @@ public void OnDisable()
                 break;
             case "cookieTutorial":
                 trialEndable = true;
-                if(numCookies<=2) StartCoroutine(cookieTutorial());
+                if (numCookies <= 2) StartCoroutine(cookieTutorial());
                 else
                 {
                     StartCoroutine(endCookieTutorial());
                     changeCursor?.setDefaultCursor();
-                } 
+                }
                 break;
             case "mapTutorial":
                 trialEndable = true;
-                if(numCookies<=2) StartCoroutine(mapTutorial(trial));
-                else 
+                if (numCookies <= 2) StartCoroutine(mapTutorial(trial));
+                else
                 {
                     StartCoroutine(endMapTutorial());
                     changeCursor?.setDefaultCursor();
@@ -116,83 +116,83 @@ public void OnDisable()
                 break;
             case "acornTutorial":
                 trialEndable = true;
-                if(numCookies<=1) StartCoroutine(acornTutorial());
+                if (numCookies <= 1) StartCoroutine(acornTutorial());
                 else
                 {
-                        StartCoroutine(endacornTutorial());
-                        changeCursor?.setDefaultCursor();
-                } 
+                    StartCoroutine(endacornTutorial());
+                    changeCursor?.setDefaultCursor();
+                }
                 break;
 
             case "effortPeriod":
                 if (TutorialController.tutorialState == "navigationTutorial" | TutorialController.tutorialState == "cookieTutorial") EnableEffortPhase(0);
-                else if(TutorialController.tutorialState == "mapTutorial") EnableEffortPhase(1);
+                else if (TutorialController.tutorialState == "mapTutorial") EnableEffortPhase(1);
                 break;
-             case "endingPeriod":
+            case "endingPeriod":
                 HeadsUpDisplay.GetComponent<UIController>().SetHUDReward(0);
                 EndTrial();
                 break;
             case "nextTrialPeriod":
-                if (TutorialController.tutorialState == "navigationTutorial")  gameStateController("navigationTutorial");
-                else if (TutorialController.tutorialState == "cookieTutorial")  gameStateController("cookieTutorial");
-                else if(TutorialController.tutorialState == "mapTutorial")  gameStateController("mapTutorial");
+                if (TutorialController.tutorialState == "navigationTutorial") gameStateController("navigationTutorial");
+                else if (TutorialController.tutorialState == "cookieTutorial") gameStateController("cookieTutorial");
+                else if (TutorialController.tutorialState == "mapTutorial") gameStateController("mapTutorial");
                 else if (TutorialController.tutorialState == "acornTutorial") gameStateController("acornTutorial");
                 break;
         }
     }
 
-#endregion 
+    #endregion
 
 
-#region  Cookie Selection: Intro 1
-    
+    #region  Cookie Selection: Intro 1
+
     private IEnumerator CookieSelection()
     {
 
-        if(numCookies!=0) 
+        if (numCookies != 0)
         {
             yield return new WaitForSeconds(1.0f);
-            setCookie(Random.Range(0,1),Random.Range(0,6),0f,0);
-            togglePlayer();     
+            setCookie(Random.Range(0, 1), Random.Range(0, 6), 0f, 0);
+            togglePlayer();
         }
 
         HeadsUpDisplay.SetActive(true);
         instructText.text = "Click on the cookies as they appear!";
         arena.SetActive(true);
         map.SetActive(true);
-        togglePlayer(); 
+        togglePlayer();
         mainCamera.GetComponent<ChangeCursor>().setMoveCursor();
         yield return new WaitForSeconds(1.0f);
 
-        setCookie(Random.Range(0,1),Random.Range(0,6),0f,0);
-               
-        EnableClickingPeriod(); 
+        setCookie(Random.Range(0, 1), Random.Range(0, 6), 0f, 0);
+
+        EnableClickingPeriod();
         numCookies++;
- 
+
     }
 
-      private IEnumerator endCookieSelection()
+    private IEnumerator endCookieSelection()
     {
         //something weird is happening here so we need to set this up like this. I will evaluate in code review on Friday
-        setCookie(Random.Range(0,1),Random.Range(0,6),0f,0);
+        setCookie(Random.Range(0, 1), Random.Range(0, 6), 0f, 0);
         togglePlayer();
         Debug.Log("last call");
         instructText.text = "Great work! Now let's learn about movement in the game!";
         yield return new WaitForSeconds(4.0f);
-        HeadsUpDisplay.SetActive(false);   
+        HeadsUpDisplay.SetActive(false);
         SwitchToTutorial("effortIntro");
     }
 
-#endregion 
+    #endregion
 
 
-#region Effort Intro
+    #region Effort Intro
 
-void Update()
-{
-    if(TutorialController.tutorialState == "effortIntro")
+    void Update()
+    {
+        if (TutorialController.tutorialState == "effortIntro")
         {
-            if(HandsOnKeys.activeSelf)
+            if (HandsOnKeys.activeSelf)
             {
                 if (Keyboard.current.sKey.isPressed && Keyboard.current.dKey.isPressed && Keyboard.current.fKey.isPressed)
                 {
@@ -202,18 +202,18 @@ void Update()
                 }
             }
         }
-}
+    }
 
-//One coroutine to ensure players are holding the keys
+    //One coroutine to ensure players are holding the keys
     private void keysSetUp()
     {
         HandsOnKeys.SetActive(true);
     }
     void OnEffort()
     {
-        if(TutorialController.tutorialState == "effortIntro")
+        if (TutorialController.tutorialState == "effortIntro")
         {
-            if(EffortDisplay.activeSelf)
+            if (EffortDisplay.activeSelf)
             {
                 if (Keyboard.current.sKey.isPressed && Keyboard.current.dKey.isPressed && Keyboard.current.fKey.isPressed)
                 {
@@ -221,20 +221,20 @@ void Update()
                     float energy = EffortDisplay.GetComponent<UIController>().GetEnergy();
                     float pressTime = Time.time;
                     pressTimes.Add(pressTime);
-                    if(energy>=0.9) StartCoroutine(endEffortIntro());
+                    if (energy >= 0.9) StartCoroutine(endEffortIntro());
                 }
             }
         }
     }
 
-     private IEnumerator endEffortIntro()
+    private IEnumerator endEffortIntro()
     {
-        float total=0f;
+        float total = 0f;
         for (int i = 1; i < pressTimes.Count; i++)
         {
-                 total += (pressTimes[i] - pressTimes[i - 1]);
+            total += (pressTimes[i] - pressTimes[i - 1]);
         }
-        float latency =  total / (pressTimes.Count - 1);
+        float latency = total / (pressTimes.Count - 1);
 
         PlayerPrefs.SetFloat("PressLatency", latency);
         EffortDisplay.GetComponent<UIController>().energyText.text = "Great work!";
@@ -245,35 +245,35 @@ void Update()
         SwitchToTutorial("navigationTutorial");
     }
 
-//One coroutine for effort
+    //One coroutine for effort
 
 
-#endregion
+    #endregion
 
 
-#region Navigation Tutorial
+    #region Navigation Tutorial
 
-private IEnumerator navigationTutorial()
-{
-    
+    private IEnumerator navigationTutorial()
+    {
+
         HeadsUpDisplay.SetActive(true);
         instructText.text = "Click on the cookie to begin!";
         arena.SetActive(true);
         map.SetActive(true);
-        togglePlayer();     
+        togglePlayer();
         mainCamera.GetComponent<ChangeCursor>().MoveCursorToCenterAndUnlock();
         mainCamera.GetComponent<ChangeCursor>().setTargetCursor();
         yield return new WaitForSeconds(1.0f);
 
-        setCookie(Random.Range(0,1),Random.Range(0,6),1f,10);
+        setCookie(Random.Range(0, 1), Random.Range(0, 6), 1f, 10);
         Debug.Log("set cookie");
 
-        EnableClickingPeriod(); 
+        EnableClickingPeriod();
         numCookies++;
-}
+    }
 
-private IEnumerator endNavigationTutorial()
-{        
+    private IEnumerator endNavigationTutorial()
+    {
         HeadsUpDisplay.SetActive(true);
         instructText.text = "Great work!";
         yield return new WaitForSeconds(2.0f);
@@ -282,16 +282,16 @@ private IEnumerator endNavigationTutorial()
         EffortDisplay.SetActive(false);
         HeadsUpDisplay.SetActive(false);
         SwitchToTutorial("cookieTutorial");
-}
+    }
 
 
-#endregion
+    #endregion
 
 
-#region cookieTutorial
+    #region cookieTutorial
 
-private IEnumerator cookieTutorial()
-{   
+    private IEnumerator cookieTutorial()
+    {
         HeadsUpDisplay.SetActive(true);
         instructText.text = "Click on the cookie to begin!";
         arena.SetActive(true);
@@ -299,19 +299,19 @@ private IEnumerator cookieTutorial()
 
         togglePlayer();
         mainCamera.GetComponent<ChangeCursor>().MoveCursorToCenterAndUnlock();
-        mainCamera.GetComponent<ChangeCursor>().setTargetCursor();     
+        mainCamera.GetComponent<ChangeCursor>().setTargetCursor();
         yield return new WaitForSeconds(1.0f);
 
-        if(numCookies<1)setCookie(Random.Range(0,1),Random.Range(0,6),3f,100);
-        else if(numCookies<2)setCookie(Random.Range(0,1),Random.Range(0,6),2f,100);
-        else setCookie(Random.Range(0,1),Random.Range(0,6),1f,10);
+        if (numCookies < 1) setCookie(Random.Range(0, 1), Random.Range(0, 6), 3f, 100);
+        else if (numCookies < 2) setCookie(Random.Range(0, 1), Random.Range(0, 6), 2f, 100);
+        else setCookie(Random.Range(0, 1), Random.Range(0, 6), 1f, 10);
         Debug.Log("set cookie");
 
-        EnableClickingPeriod(); 
+        EnableClickingPeriod();
         numCookies++;
-}
-private IEnumerator endCookieTutorial()
-{        
+    }
+    private IEnumerator endCookieTutorial()
+    {
         HeadsUpDisplay.SetActive(true);
         instructText.text = "Great work!";
         yield return new WaitForSeconds(1.5f);
@@ -320,14 +320,14 @@ private IEnumerator endCookieTutorial()
         EffortDisplay.SetActive(false);
         HeadsUpDisplay.SetActive(false);
         SwitchToTutorial("mapTutorial");
-}
-#endregion
+    }
+    #endregion
 
 
-#region Map Tutorial
+    #region Map Tutorial
 
-private IEnumerator mapTutorial(LimaTrial trial)
-{
+    private IEnumerator mapTutorial(LimaTrial trial)
+    {
         HeadsUpDisplay.SetActive(true);
         instructText.text = "Click on a cookie to begin!";
         arena.SetActive(true);
@@ -339,15 +339,15 @@ private IEnumerator mapTutorial(LimaTrial trial)
         mainCamera.GetComponent<ChangeCursor>().setTargetCursor();
         yield return new WaitForSeconds(1.0f);
 
-         //Set Rewards -> Spawns 3 cookies based on trial information
-        toggleRewards(trial);     
+        //Set Rewards -> Spawns 3 cookies based on trial information
+        toggleRewards(trial);
         yield return new WaitForSeconds(1.0f);
 
-        EnableClickingPeriod(); 
+        EnableClickingPeriod();
         numCookies++;
-}
-private IEnumerator endMapTutorial()
-{        
+    }
+    private IEnumerator endMapTutorial()
+    {
         HeadsUpDisplay.SetActive(true);
         instructText.text = "Great work!";
         yield return new WaitForSeconds(1.5f);
@@ -356,13 +356,13 @@ private IEnumerator endMapTutorial()
         EffortDisplay.SetActive(false);
         HeadsUpDisplay.SetActive(false);
         TutorialController.SwitchScene();
-}
-#endregion
+    }
+    #endregion
 
 
-#region Acorn Tutorial
-private IEnumerator acornTutorial()
-{
+    #region Acorn Tutorial
+    private IEnumerator acornTutorial()
+    {
         HeadsUpDisplay.SetActive(true);
         instructText.text = "Move your mouse to find acorns";
         arena.SetActive(true);
@@ -371,19 +371,19 @@ private IEnumerator acornTutorial()
         mainCamera.GetComponent<ChangeCursor>().MoveCursorToCenterAndUnlock();
         yield return new WaitForSeconds(1.0f);
         mainCamera.GetComponent<ChangeCursor>().setMoveCursor();
-        togglePlayer();     
+        togglePlayer();
         yield return new WaitForSeconds(1.0f);
 
-         //Set Rewards -> Spawns 3 cookies based on trial information
-        toggleAcorns();     
+        //Set Rewards -> Spawns 3 cookies based on trial information
+        toggleAcorns();
         yield return new WaitForSeconds(1.0f);
 
         EnableAcornPeriod();
         numCookies++;
-}
+    }
 
-private IEnumerator endacornTutorial()
-{        
+    private IEnumerator endacornTutorial()
+    {
         HeadsUpDisplay.SetActive(true);
         instructText.text = "Great work!";
         yield return new WaitForSeconds(1.5f);
@@ -392,11 +392,11 @@ private IEnumerator endacornTutorial()
         EffortDisplay.SetActive(false);
         HeadsUpDisplay.SetActive(false);
         TutorialController.SwitchScene();
-}
+    }
 
-#endregion
+    #endregion
 
-#region  Ending a Trial
+    #region  Ending a Trial
 
     public void EndTrial()
     {
@@ -407,23 +407,24 @@ private IEnumerator endacornTutorial()
         {
             Debug.Log("Long Routine Called");
             StartCoroutine(TrialEndRoutine(trial));
-        } 
-        else if(TutorialController.tutorialState == "navigationTutorial" | TutorialController.tutorialState =="cookieTutorial")
+        }
+        else if (TutorialController.tutorialState == "navigationTutorial" | TutorialController.tutorialState == "cookieTutorial")
         {
             Debug.Log("Short Routine Called");
             StartCoroutine(TrialEndRoutineShort(trial));
-        } 
+        }
         else if (TutorialController.tutorialState == "acornTutorial")
         {
             StartCoroutine(TrialEndRoutineAcorn(trial));
         }
-            
+
     }
 
     IEnumerator TrialEndRoutineShort(LimaTrial trial)
     {
         player.GetComponent<PlayerMovement>().effortPeriod = false;
-        predator.GetComponent<PredatorControls>().circaStrike = false;
+        predator.GetComponent<PredatorControls>().circaStrike_bool = false;
+        predator.GetComponent<PredatorControls>().strike_bool = false;
 
         HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0f);
         HeadsUpDisplay.SetActive(false);
@@ -435,15 +436,16 @@ private IEnumerator endacornTutorial()
         map.SetActive(false);
         // toggleRewards(); //removed since we don't have this here
         // toggleProbability();
-        setCookie(Random.Range(0,1),Random.Range(0,6),0f,0);
+        setCookie(Random.Range(0, 1), Random.Range(0, 6), 0f, 0);
         toggleEndStateScreen();
         gameStateController("nextTrialPeriod");
     }
 
-     IEnumerator TrialEndRoutine(LimaTrial trial)
+    IEnumerator TrialEndRoutine(LimaTrial trial)
     {
         player.GetComponent<PlayerMovement>().effortPeriod = false;
-        predator.GetComponent<PredatorControls>().circaStrike = false;
+        predator.GetComponent<PredatorControls>().circaStrike_bool = false;
+        predator.GetComponent<PredatorControls>().strike_bool = false;
 
         HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0f);
         HeadsUpDisplay.SetActive(false);
@@ -463,7 +465,8 @@ private IEnumerator endacornTutorial()
     IEnumerator TrialEndRoutineAcorn(LimaTrial trial)
     {
         player.GetComponent<PlayerMovement>().effortPeriod = false;
-        predator.GetComponent<PredatorControls>().circaStrike = false;
+        predator.GetComponent<PredatorControls>().circaStrike_bool = false;
+        predator.GetComponent<PredatorControls>().strike_bool = false;
 
         HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0f);
         HeadsUpDisplay.SetActive(false);
@@ -479,13 +482,13 @@ private IEnumerator endacornTutorial()
         resetTimer();
         gameStateController("nextTrialPeriod");
     }
-#endregion
+    #endregion
 
 
 
 
 
-#region  Wrappers and Helpers
+    #region  Wrappers and Helpers
 
     private void SwitchToTutorial(string tutorialState)
     {
@@ -496,7 +499,7 @@ private IEnumerator endacornTutorial()
 
 
 
- //This period is ended by PlayerManager when player picks up the cookie
+    //This period is ended by PlayerManager when player picks up the cookie
     public void EnableClickingPeriod()
     {
         player.GetComponent<PlayerMovement>().clickingPeriod = true;
@@ -505,16 +508,16 @@ private IEnumerator endacornTutorial()
     public void EnableAcornPeriod()
     {
         player.GetComponent<PlayerMovement>().enableAcorns();
-        setPredator(trial);  
+        setPredator(trial);
         StartCoroutine("freeMovement");
 
     }
-     public void EnableEffortPhase(int version)
+    public void EnableEffortPhase(int version)
     {
         if (version == 0)
         {
             mainCamera.GetComponent<ChangeCursor>().setMoveCursor();
-            Debug.Log("Starting freemovement Sequence");   
+            Debug.Log("Starting freemovement Sequence");
             instructText.text = "Now bring the cookie back to safety";
             HeadsUpDisplay.SetActive(true);
             toggleEffort();
@@ -522,31 +525,31 @@ private IEnumerator endacornTutorial()
         else if (version == 1)
         {
             mainCamera.GetComponent<ChangeCursor>().setMoveCursor();
-            Debug.Log("Starting freemovement Sequence");   
+            Debug.Log("Starting freemovement Sequence");
             instructText.text = "Now bring the cookie back to safety";
             HeadsUpDisplay.SetActive(true);
             toggleEffort();
             // toggleWind();
             //Sets Predator probability and attack 
             togglePredator();
-            setPredator(trial);  
+            setPredator(trial);
             StartCoroutine("freeMovement");
 
         }
-      
+
     }
 
-IEnumerator freeMovement()
-    { 
+    IEnumerator freeMovement()
+    {
         InvokeRepeating("UpdateTimer", 0f, 0.01f);
         yield return new WaitForSeconds(10.0f);
-        if(trialEndable)    gameStateController("endingPeriod");
+        if (trialEndable) gameStateController("endingPeriod");
 
     }
-   
- void toggleProbability()
+
+    void toggleProbability()
     {
-        if(!probabilityDisplay.activeSelf)
+        if (!probabilityDisplay.activeSelf)
         {
             Debug.Log("changingMaterial color");
             trialController.GetComponent<TrialController>().setProbability(trial.attackingProb);
@@ -562,7 +565,7 @@ IEnumerator freeMovement()
 
     public void togglePlayer()
     {
-        if(!player.activeSelf)
+        if (!player.activeSelf)
         {
             home = player.transform.position;
             player.SetActive(true);
@@ -571,56 +574,56 @@ IEnumerator freeMovement()
         else
         {
             Debug.Log("Toggle player off");
-           playerManager.playerState = "free";
-           player.GetComponent<PlayerMovement>().effortPeriod = false;
-           player.GetComponent<PlayerMovement>().clickingPeriod = false;
-           
-           Debug.Log("playerManager.carrying"+playerManager.carrying);
-           
-           if(playerManager.carrying)
-           {
+            playerManager.playerState = "free";
+            player.GetComponent<PlayerMovement>().effortPeriod = false;
+            player.GetComponent<PlayerMovement>().clickingPeriod = false;
+
+            Debug.Log("playerManager.carrying" + playerManager.carrying);
+
+            if (playerManager.carrying)
+            {
                 playerManager.carrying = false;
-                  foreach(Transform child in player.transform)
-                    {
-                        if(child.CompareTag("Cookie")) Destroy(child.gameObject);
-                    }
-           }
-           if(playerManager.acorn_carrying) 
+                foreach (Transform child in player.transform)
+                {
+                    if (child.CompareTag("Cookie")) Destroy(child.gameObject);
+                }
+            }
+            if (playerManager.acorn_carrying)
             {
                 playerManager.acorn_carrying = false;
-                  foreach(Transform child in player.transform)
-                    {
-                        if(child.CompareTag("Acorn")) Destroy(child.gameObject);
-                    }
-           }
-           player.transform.position = home;
+                foreach (Transform child in player.transform)
+                {
+                    if (child.CompareTag("Acorn")) Destroy(child.gameObject);
+                }
+            }
+            player.transform.position = home;
 
-           player.SetActive(false);
+            player.SetActive(false);
         }
     }
 
     void togglePredator()
     {
-        if(!predator.activeSelf)
+        if (!predator.activeSelf)
         {
             predator.SetActive(true);
         }
 
         else
         {
-           predator.SetActive(false);
+            predator.SetActive(false);
         }
     }
 
     void toggleEffort()
     {
-         player.GetComponent<PlayerMovement>().enableEffort(0.5f);
+        player.GetComponent<PlayerMovement>().enableEffort(0.5f);
     }
 
 
     void toggleEndStateScreen()
     {
-        if(!endStateScreen.activeSelf)
+        if (!endStateScreen.activeSelf)
         {
             endStateScreen.SetActive(true);
             Debug.Log(playerManager.playerState);
@@ -632,7 +635,7 @@ IEnumerator freeMovement()
             {
                 capturedStateScreen.SetActive(true);
             }
-            else 
+            else
             {
                 freeStateScreen.SetActive(true);
             }
@@ -647,11 +650,11 @@ IEnumerator freeMovement()
         }
     }
 
-     void setCookie(int x, int y, float weight, int value)
+    void setCookie(int x, int y, float weight, int value)
     {
-        if(!cookies)
+        if (!cookies)
         {
-            trialController.GetComponent<TrialController>().spawnRewards(x,y,weight,value);
+            trialController.GetComponent<TrialController>().spawnRewards(x, y, weight, value);
             cookies = true;
         }
         else
@@ -661,16 +664,16 @@ IEnumerator freeMovement()
 
     }
 
- 
+
 
 
     void toggleRewards(LimaTrial trial)
     {
-        if(!cookies)
+        if (!cookies)
         {
-            trialController.GetComponent<TrialController>().spawnRewards(trial.cookie1PosX,trial.cookie1PosY,trial.cookie1Weight,trial.cookie1RewardValue);
-            trialController.GetComponent<TrialController>().spawnRewards(trial.cookie2PosX,trial.cookie2PosY,trial.cookie2Weight,trial.cookie2RewardValue);
-            trialController.GetComponent<TrialController>().spawnRewards(trial.cookie3PosX,trial.cookie3PosY,trial.cookie3Weight,trial.cookie3RewardValue);
+            trialController.GetComponent<TrialController>().spawnRewards(trial.cookie1PosX, trial.cookie1PosY, trial.cookie1Weight, trial.cookie1RewardValue);
+            trialController.GetComponent<TrialController>().spawnRewards(trial.cookie2PosX, trial.cookie2PosY, trial.cookie2Weight, trial.cookie2RewardValue);
+            trialController.GetComponent<TrialController>().spawnRewards(trial.cookie3PosX, trial.cookie3PosY, trial.cookie3Weight, trial.cookie3RewardValue);
             cookies = true;
         }
         else
@@ -685,7 +688,7 @@ IEnumerator freeMovement()
 
     void toggleAcorns()
     {
-        if(!acorns)
+        if (!acorns)
         {
             Debug.Log("spawning acorns");
             trialController.GetComponent<TrialController>().spawnAcorns(5);
@@ -705,11 +708,11 @@ IEnumerator freeMovement()
         predator.GetComponent<PredatorControls>().setAttack(trial.attackingProb);
     }
 
-#endregion
+    #endregion
 
-#region Continous Methods
+    #region Continous Methods
 
- void UpdateTimer()
+    void UpdateTimer()
     {
         // Assuming movementStartTimeHeadsUpDisplay is a GameObject with UIController script attached
         UIController uiController = HeadsUpDisplay.GetComponent<UIController>();
@@ -717,12 +720,12 @@ IEnumerator freeMovement()
         if (uiController != null)
         {
             // Call the DecreaseTime method from UIController
-            uiController.DecreaseTime(0.01f/10f);
+            uiController.DecreaseTime(0.01f / 10f);
         }
     }
 
 
- void resetTimer()
+    void resetTimer()
     {
         // Assuming movementStartTimeHeadsUpDisplay is a GameObject with UIController script attached
         UIController uiController = HeadsUpDisplay.GetComponent<UIController>();
@@ -733,7 +736,7 @@ IEnumerator freeMovement()
             uiController.SetTime(1f);
         }
     }
-#endregion
+    #endregion
 
 
 }

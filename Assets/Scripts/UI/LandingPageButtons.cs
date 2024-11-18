@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
+using System.Text.RegularExpressions;
 
 public class LandingPageButtons : MonoBehaviour
 {
@@ -24,6 +25,11 @@ public void LoginButton()
         Debug.LogWarning("Login failed: Username is empty.");
         return;
     }    
+    if (username != null)
+    {
+        // Replace any non-alphanumeric character with an empty string
+        username = Regex.Replace(username, "[^a-zA-Z0-9]", "");
+    }
 
     string existingUsername = PlayerPrefs.GetString(UserIdKey, null);
 
@@ -54,6 +60,46 @@ public void LoginButton()
     PlayerPrefs.Save();
 }
 
+
+public void ResetButton()
+{
+    PlayerPrefs.SetString(GameStateKey, "Login");
+    string username = participantID.text?.Trim();
+
+    if (string.IsNullOrEmpty(username))
+    {
+        Debug.LogWarning("Login failed: Username is empty.");
+        return;
+    } 
+
+        string existingUsername = PlayerPrefs.GetString(UserIdKey, null);
+
+    if (!string.IsNullOrEmpty(existingUsername))
+    {
+        if (existingUsername.Equals(username))
+        {
+            LoadFromOldUser();
+        }
+        else if(username.IndexOf("skipTutorial", StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            SkipTutorial(username);
+        }
+        else
+        {
+            GenerateReset1(username);
+        }
+    }
+    else if(username.IndexOf("skipTutorial", StringComparison.OrdinalIgnoreCase) >= 0)
+    {
+        SkipTutorial(username);
+    }
+    else
+    {
+        GenerateReset1(username);
+    }
+
+    PlayerPrefs.Save(); 
+}
 private void SkipTutorial(string username)
 {
     Debug.Log("Tutorial skipped.");
@@ -75,17 +121,30 @@ private void SkipTutorial(string username)
         SceneManager.LoadScene("EffortCalibrator");
     }
 
+    void GenerateReset1(string username)
+    {
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.SetString(UserIdKey, username);
+        PlayerPrefs.SetInt("trialNum", 41);
+        PlayerPrefs.SetString("ConditionFile", "condition_0");
+
+        PlayerPrefs.SetInt("TutorialCompleted", 1);
+        Debug.Log($"New user generated: {username}");
+        SceneManager.LoadScene("EffortCalibrator");
+    }
+
     // Load from old user wherever they left off
     void LoadFromOldUser()
     {
         string oldCheckPoint = PlayerPrefs.GetString(CheckPointKey);
+        PlayerPrefs.SetInt("TutorialCompleted", 1);
 
         // Dictionary mapping checkpoints to scene names
         var sceneMap = new Dictionary<string, string>()
         {
             { "Tutorial", "EffortCalibrator" },
             { "MainGame", "MainGame" },
-            { "Survey", "Survey" },
+            { "Survey", "SurveyScene" },
             { "AcornGame", "AcornGame" }
         };
 

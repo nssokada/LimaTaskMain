@@ -16,7 +16,7 @@ public class LimaTask : MonoBehaviour
     public GameObject anxiousReport;
     public GameObject confidenceReport;
     public GameObject tutorialUI;
-    public GameObject  startUI;
+    public GameObject startUI;
 
     public GameObject player;
     public PlayerManager playerManager;
@@ -80,15 +80,15 @@ public class LimaTask : MonoBehaviour
         trial = SessionGenerator.GetComponent<SessionGenerator>().trials[trialNum];
         startTime = Time.realtimeSinceStartup;
         dataHandler.recordMouseStartPosition();
-        
-        if(trial.type == 4)
+
+        if (trial.type == 4)
         {
-             gameState=GameState.AcornPeriod;
+            gameState = GameState.AcornPeriod;
             mainCamera.GetComponent<ChangeCursor>().setMoveCursor();
         }
         else
         {
-             gameState=GameState.SpawningPeriod;
+            gameState = GameState.SpawningPeriod;
             mainCamera.GetComponent<ChangeCursor>().setTargetCursor();
         }
 
@@ -111,11 +111,11 @@ public class LimaTask : MonoBehaviour
             case GameState.EffortPeriod:
                 dataHandler.stopRecordContinuousMouse("choiceperiod");
 
-                if(trial.type==5) // ANXIOUS
+                if (trial.type == 5) // ANXIOUS
                 {
                     anxiousReport.SetActive(true);
                 }
-                else if(trial.type==6) //CONFIDENCE
+                else if (trial.type == 6) //CONFIDENCE
                 {
                     confidenceReport.SetActive(true);
                 }
@@ -136,8 +136,6 @@ public class LimaTask : MonoBehaviour
     IEnumerator HandleSpawnSequence(LimaTrial trial)
     {
         PrepareArena(trial);
-        //Let's set the mouse here
-        // mainCamera.GetComponent<ChangeCursor>().MoveCursorToCenterAndUnlock();
         yield return new WaitForSeconds(1.0f);
         ToggleRewards(trial);
         BeginClickingPeriod();
@@ -146,7 +144,6 @@ public class LimaTask : MonoBehaviour
     IEnumerator HandleAcornSpawnSequence(LimaTrial trial)
     {
         PrepareArena(trial);
-        // mainCamera.GetComponent<ChangeCursor>().MoveCursorToCenterAndUnlock();
         yield return new WaitForSeconds(1.0f);
         mainCamera.GetComponent<ChangeCursor>().setMoveCursor();
         ToggleAcorns();
@@ -230,7 +227,7 @@ public class LimaTask : MonoBehaviour
 
     public void EndTrial()
     {
-         // Set flag to stop the coroutine at the next check
+        // Set flag to stop the coroutine at the next check
         shouldStopCoroutine = true;
 
         // Ensure that the free movement coroutine is stopped
@@ -241,7 +238,7 @@ public class LimaTask : MonoBehaviour
         }
 
         trialEndable = false;
-        
+
         dataHandler.stopRecordContinuousMouse("effortPeriod");
         dataHandler.StopRecordingPlayerPosition();
         dataHandler.StopRecordingPredatorPosition();
@@ -251,7 +248,7 @@ public class LimaTask : MonoBehaviour
         StartCoroutine(TrialEndRoutine(trial));
     }
 
-        public void OnTrialEnd()
+    public void OnTrialEnd()
     {
         // Retrieve and update trial number
         int trialNum = PlayerPrefs.GetInt("trialNum");
@@ -272,23 +269,23 @@ public class LimaTask : MonoBehaviour
 
         // Check if there are more trials left
         if (trialNum <= sessionGen.numTrials)
-        { 
+        {
 
             // Handle transitions based on the current transition state
             if (currentTransition == 1)
             {
-                PlayerPrefs.SetString("FailReason","Thank you for your participation! You have completed the game.");
-                PlayerPrefs.SetString("CompletionPath","https://app.prolific.com/submissions/complete?cc=CUEPFERC");
+                PlayerPrefs.SetString("FailReason", "Thank you for your participation! You have completed the game.");
+                PlayerPrefs.SetString("CompletionPath", "https://app.prolific.com/submissions/complete?cc=CUEPFERC");
                 SceneManager.LoadScene("EndGame");
             }
             else if (currentTransition == 2 || currentTransition == 3 || currentTransition == 4)
-            { 
+            {
                 int nextTrialType = sessionGen.trials[trialNum].type;
                 PlayerPrefs.SetInt("nextType", nextTrialType);
                 PlayerPrefs.SetInt("transitionState", currentTransition);
                 SceneManager.LoadScene("SurveyScene"); // Placeholder for the questionnaire scene
             }
-            else if(currentTransition == 10)
+            else if (currentTransition == 10)
             {
                 tutorialUI.SetActive(true);
             }
@@ -312,7 +309,8 @@ public class LimaTask : MonoBehaviour
     private void ResetTrialSettings()
     {
         player.GetComponent<PlayerMovement>().effortPeriod = false;
-        predator.GetComponent<PredatorControls>().circaStrike = false;
+        predator.GetComponent<PredatorControls>().circaStrike_bool = false;
+        predator.GetComponent<PredatorControls>().strike_bool = false;
         HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0f);
         HeadsUpDisplay.SetActive(false);
         ToggleEndStateScreen(playerManager.playerState);
@@ -327,7 +325,7 @@ public class LimaTask : MonoBehaviour
         {
             ToggleAcorns();
         }
-       
+
         ToggleProbability(trial);
         ResetTimer();
     }
@@ -342,22 +340,22 @@ public class LimaTask : MonoBehaviour
         report.trialNumber = PlayerPrefs.GetInt("trialNum");
         report.attackingProb = trial.attackingProb;
         report.trialCookie = playerManager.cookieChoice;
-        report.response =clickResponse;  //how do I know which button they pressed? ;
+        report.response = clickResponse;  //how do I know which button they pressed? ;
         report.questionType = trial.type; // 5 ANXIOUS / 6 CONFIDENCE
 
         string reportName = "";
 
-        if(trial.type==5)
+        if (trial.type == 5)
         {
             anxiousReport.SetActive(false);
-            reportName = "Anxiety_"+report.trialNumber;
+            reportName = "Anxiety_" + report.trialNumber;
         }
-        else if(trial.type==6)
+        else if (trial.type == 6)
         {
             confidenceReport.SetActive(false);
-            reportName = "Confidence_"+report.trialNumber;
+            reportName = "Confidence_" + report.trialNumber;
         }
-        
+
         SessionGenerator.GetComponent<SessionGenerator>().pushSubjectiveData(report, reportName);
         BeginEffortPeriod();
     }
@@ -429,9 +427,9 @@ public class LimaTask : MonoBehaviour
         }
     }
 
-    void ToggleEffort() 
+    void ToggleEffort()
     {
-        float latency = PlayerPrefs.GetFloat("PressLatency"); 
+        float latency = PlayerPrefs.GetFloat("PressLatency");
         player.GetComponent<PlayerMovement>().enableEffort(latency);
     }
 
@@ -478,7 +476,7 @@ public class LimaTask : MonoBehaviour
         {
             trialController.GetComponent<TrialController>().spawnRewards(trial.cookie1PosX, trial.cookie1PosY, trial.cookie1Weight, trial.cookie1RewardValue);
             trialController.GetComponent<TrialController>().spawnRewards(trial.cookie2PosX, trial.cookie2PosY, trial.cookie2Weight, trial.cookie2RewardValue);
-            trialController.GetComponent<TrialController>().spawnRewards(trial.cookie3PosX, trial.cookie3PosY, trial.cookie3Weight, trial.cookie3RewardValue);
+            // trialController.GetComponent<TrialController>().spawnRewards(trial.cookie3PosX, trial.cookie3PosY, trial.cookie3Weight, trial.cookie3RewardValue);
             cookiesActive = true;
         }
         else
@@ -490,7 +488,7 @@ public class LimaTask : MonoBehaviour
 
     void ToggleAcorns()
     {
-        if(!acorns)
+        if (!acorns)
         {
             Debug.Log("spawning acorns");
             trialController.GetComponent<TrialController>().spawnAcorns(5);
@@ -505,7 +503,7 @@ public class LimaTask : MonoBehaviour
     }
 
 
-    public void SetPredator(LimaTrial trial) {predator.GetComponent<PredatorControls>().setAttack(trial.attackingProb);}
+    public void SetPredator(LimaTrial trial) { predator.GetComponent<PredatorControls>().setAttack(trial.attackingProb); }
 
     void LogTrialData(LimaTrial trial)
     {
@@ -521,9 +519,9 @@ public class LimaTask : MonoBehaviour
         trial.trialEndState = playerManager.playerState;
         trial.acornsSpawned = trialController.GetComponent<TrialController>().acornLoggedPositions;
         trial.acornsCollected = playerManager.acornsCollected;
-        
+
         float totalScore = PlayerPrefs.GetFloat("TotalScore");
-        totalScore+=playerManager.earnedReward;
+        totalScore += playerManager.earnedReward;
         PlayerPrefs.SetFloat("TotalScore", totalScore);
     }
 

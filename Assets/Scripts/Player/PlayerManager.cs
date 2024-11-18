@@ -12,7 +12,7 @@ public class PlayerManager : MonoBehaviour
     public string playerState;
     public string cookieState;
     public CookieChoice cookieChoice;
-    public List<PositionHandler> acornsCollected; 
+    public List<PositionHandler> acornsCollected;
     public float earnedReward;
     private float rewardPotential;
     public GameObject HeadsUpDisplay;
@@ -44,105 +44,107 @@ public class PlayerManager : MonoBehaviour
             }
         }
     }
-    private void OnTriggerEnter(Collider other) 
+    private void OnTriggerEnter(Collider other)
     {
-        
-            if (other.gameObject.tag == "Cookie")
-            {
-                other.gameObject.GetComponent<Collider>().enabled = false;
-                float weight  = other.gameObject.GetComponent<Cookie>().weight;
-                rewardValue = other.gameObject.GetComponent<Cookie>().rewardValue;
-                Vector3 cookiePosition = other.gameObject.transform.position;
-                Debug.Log("cookie hit"+rewardValue);
 
-                other.transform.parent = player.transform;
-
-                if(weight>=3) 
-                {
-                    cookieState = "heavy";
-                    // playerLayer = other.gameObject.GetComponent<Cookie>().layer;
-                    player.GetComponent<PlayerMovement>().cookieWeight = weight;
-                    player.GetComponent<PlayerMovement>().speed = 0f;  //speed multiplier higher is faster
-                    Debug.Log("speed:"+player.GetComponent<PlayerMovement>().speed);
-                    HeadsUpDisplay.GetComponent<UIController>().SetHUDReward((int)rewardValue);
-                    HeadsUpDisplay.GetComponent<UIController>().SetInstructText("While holding 'SDF', press 'A' to move back to safety");
-
-                }
-                else 
-                {
-                    cookieState = "light";
-                    // playerLayer = other.gameObject.GetComponent<Cookie>().layer;
-                    player.GetComponent<PlayerMovement>().cookieWeight = weight;
-                    player.GetComponent<PlayerMovement>().SetLightSpeed(); //speed multiplier higher is faster
-                    HeadsUpDisplay.GetComponent<UIController>().SetHUDReward((int)rewardValue);
-                    HeadsUpDisplay.GetComponent<UIController>().SetInstructText("Us only your mouse to move to safety");
-
-                }
-
-                player.GetComponent<PlayerMovement>().clickingPeriod = false;
-                rewardPotential = rewardValue;
-                cookieChoice = new CookieChoice(rewardValue,weight,cookiePosition.x,cookiePosition.z,Time.realtimeSinceStartup);
-                task.GetComponent<LimaTask>().HandleGameState(LimaTask.GameState.EffortPeriod);
-                carrying = true; 
-            }
-
-          else if(other.gameObject.tag == "Safety")
+        if (other.gameObject.tag == "Cookie")
         {
-            if( exitSafety && task.GetComponent<LimaTask>().trialEndable && (carrying | acorn_carrying | task.GetComponent<LimaTask>().predator.GetComponent<PredatorControls>().circaStrike))
+            other.gameObject.GetComponent<Collider>().enabled = false;
+            float weight = other.gameObject.GetComponent<Cookie>().weight;
+            rewardValue = other.gameObject.GetComponent<Cookie>().rewardValue;
+            Vector3 cookiePosition = other.gameObject.transform.position;
+            Debug.Log("cookie hit" + rewardValue);
+
+            other.transform.parent = player.transform;
+
+            if (weight >= 3)
             {
-                foreach(Transform child in player.transform)
-                    {
-                        if(child.CompareTag("Cookie")) Destroy(child.gameObject);                        
-                        else if(child.CompareTag("Acorn")) Destroy(child.gameObject);
-                    }
-                    playerState ="escaped";
-                    earnedReward = rewardPotential;
-                    Debug.Log("earn reward");
-                    carrying = false;                    
-                    acorn_carrying = false; 
-                    task.GetComponent<LimaTask>().HandleGameState(LimaTask.GameState.EndingPeriod);
+                cookieState = "heavy";
+                // playerLayer = other.gameObject.GetComponent<Cookie>().layer;
+                player.GetComponent<PlayerMovement>().cookieWeight = weight;
+                player.GetComponent<PlayerMovement>().SetPressRate(weight);
+                // player.GetComponent<PlayerMovement>().speed = 0f;  //speed multiplier higher is faster
+                Debug.Log("speed:" + player.GetComponent<PlayerMovement>().speed);
+                HeadsUpDisplay.GetComponent<UIController>().SetHUDReward((int)rewardValue);
+                HeadsUpDisplay.GetComponent<UIController>().SetInstructText("While holding 'SDF', press 'A' to move back to safety");
+
             }
+            else
+            {
+                cookieState = "light";
+                // playerLayer = other.gameObject.GetComponent<Cookie>().layer;
+                player.GetComponent<PlayerMovement>().cookieWeight = weight;
+                player.GetComponent<PlayerMovement>().SetPressRate(weight);
+                // player.GetComponent<PlayerMovement>().SetLightSpeed(); //speed multiplier higher is faster
+                HeadsUpDisplay.GetComponent<UIController>().SetHUDReward((int)rewardValue);
+                HeadsUpDisplay.GetComponent<UIController>().SetInstructText("Us only your mouse to move to safety");
+
+            }
+
+            player.GetComponent<PlayerMovement>().clickingPeriod = false;
+            rewardPotential = rewardValue;
+            cookieChoice = new CookieChoice(rewardValue, weight, cookiePosition.x, cookiePosition.z, Time.realtimeSinceStartup);
+            task.GetComponent<LimaTask>().HandleGameState(LimaTask.GameState.EffortPeriod);
+            carrying = true;
         }
-        
-        else if(other.gameObject.tag == "Predator")
+
+        else if (other.gameObject.tag == "Safety")
         {
-            if( exitSafety && task.GetComponent<LimaTask>().trialEndable)
+            if (exitSafety && task.GetComponent<LimaTask>().trialEndable && (carrying | acorn_carrying | task.GetComponent<LimaTask>().predator.GetComponent<PredatorControls>().circaStrike_bool))
             {
-                foreach(Transform child in player.transform)
-                    {
-                        if(child.CompareTag("Cookie")) Destroy(child.gameObject);
-                        else if(child.CompareTag("Acorn")) Destroy(child.gameObject);
-                    }
-                    playerState ="captured";
-                    earnedReward =-100f;
-                    carrying = false;                     
-                    acorn_carrying = false; 
-                    task.GetComponent<LimaTask>().HandleGameState(LimaTask.GameState.EndingPeriod);
+                foreach (Transform child in player.transform)
+                {
+                    if (child.CompareTag("Cookie")) Destroy(child.gameObject);
+                    else if (child.CompareTag("Acorn")) Destroy(child.gameObject);
+                }
+                playerState = "escaped";
+                earnedReward = rewardPotential;
+                Debug.Log("earn reward");
+                carrying = false;
+                acorn_carrying = false;
+                task.GetComponent<LimaTask>().HandleGameState(LimaTask.GameState.EndingPeriod);
             }
         }
 
-        else if(other.gameObject.tag =="Acorn")
+        else if (other.gameObject.tag == "Predator")
+        {
+            if (exitSafety && task.GetComponent<LimaTask>().trialEndable)
             {
-                other.gameObject.GetComponent<Collider>().enabled = false;
-                logAcornPosition(other.gameObject);
-                Debug.Log("Acorn Hit");
-                HeadsUpDisplay.GetComponent<UIController>().SetHUDReward(2);
-                rewardPotential += 2;
-                foreach (Transform child in other.gameObject.transform)
-                    {
-                            // Set each child to active
-                            child.gameObject.SetActive(true); // Set to false if you want to deactivate
-                    }
-
-                other.transform.parent = player.transform;
-                acorn_carrying = true; 
+                foreach (Transform child in player.transform)
+                {
+                    if (child.CompareTag("Cookie")) Destroy(child.gameObject);
+                    else if (child.CompareTag("Acorn")) Destroy(child.gameObject);
+                }
+                playerState = "captured";
+                earnedReward = -100f;
+                carrying = false;
+                acorn_carrying = false;
+                task.GetComponent<LimaTask>().HandleGameState(LimaTask.GameState.EndingPeriod);
             }
+        }
+
+        else if (other.gameObject.tag == "Acorn")
+        {
+            other.gameObject.GetComponent<Collider>().enabled = false;
+            logAcornPosition(other.gameObject);
+            Debug.Log("Acorn Hit");
+            HeadsUpDisplay.GetComponent<UIController>().SetHUDReward(2);
+            rewardPotential += 2;
+            foreach (Transform child in other.gameObject.transform)
+            {
+                // Set each child to active
+                child.gameObject.SetActive(true); // Set to false if you want to deactivate
+            }
+
+            other.transform.parent = player.transform;
+            acorn_carrying = true;
+        }
     }
 
 
-     private void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider other)
     {
-        if(other.gameObject.tag == "Safety")
+        if (other.gameObject.tag == "Safety")
         {
             exitSafety = true;
         }
@@ -151,8 +153,8 @@ public class PlayerManager : MonoBehaviour
 
     void logAcornPosition(GameObject gameObject)
     {
-        PositionHandler acornPosition = new PositionHandler(gameObject.transform.position.x,gameObject.transform.position.z,Time.realtimeSinceStartup);
+        PositionHandler acornPosition = new PositionHandler(gameObject.transform.position.x, gameObject.transform.position.z, Time.realtimeSinceStartup);
         acornsCollected.Add(acornPosition);
     }
-  }
+}
 

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1835,7 +1835,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 796105023}
-  - component: {fileID: 796105024}
   m_Layer: 0
   m_Name: HeadAim
   m_TagString: Untagged
@@ -1859,18 +1858,6 @@ Transform:
   m_Father: {fileID: 1121429812}
   m_RootOrder: -2
   m_LocalEulerAnglesHint: {x: 0, y: 114.963, z: 0}
---- !u!114 &796105024
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 796105022}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3c430f382484144e925c097c2d33cfe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &874122303
 GameObject:
   m_ObjectHideFlags: 0
@@ -2697,7 +2684,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1121429812}
-  - component: {fileID: 1121429813}
   m_Layer: 0
   m_Name: HeadRig
   m_TagString: Untagged
@@ -2721,18 +2707,6 @@ Transform:
   m_Father: {fileID: 1406953455}
   m_RootOrder: -2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1121429813
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1121429811}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70b342d8ce5c2fd48b8fa3147d48d1d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1178249045
 GameObject:
   m_ObjectHideFlags: 0

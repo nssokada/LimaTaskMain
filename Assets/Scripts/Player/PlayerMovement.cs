@@ -22,10 +22,14 @@ public class PlayerMovement : MonoBehaviour
     public float rotationSpeed;
     private float minSpeed = 0f;
     private float baseSpeed = 4f;
-    private float maxSpeed = 4f;
+    private float maxSpeed = 0.85f;
     public float cookieWeight;
     public float thresholdLow = 0.1f; // Example threshold for low latency
     public float smoothingFactor = 0.1f;
+    public float requiredPressRate = 5f; // Presses per second required (e.g., 10 for heavy)
+    public float currentPressRate = 0f;   // Current presses per second
+    public float decayRate = 0.85f; // Speed decay rate when not maintaining effort
+
 
     //Togglable Bools
     public bool effortPeriod;
@@ -50,17 +54,20 @@ public class PlayerMovement : MonoBehaviour
     float lastPressTime;
     float latency;
     float currentSpeed;
-    
+
+    // Internal tracking of button press times
+    private List<float> pressTimes;
 
 
 
 
     void OnEnable()
     {
+        pressTimes = new List<float>();
         animator = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
         speed = baseSpeed;
-        
+
         // Fetch and log press latency from PlayerPrefs
         MinPressLatency = PlayerPrefs.GetFloat("PressLatency"); // Add default value to avoid null issues
         MinPressCount = PlayerPrefs.GetFloat("PressCount");
@@ -70,13 +77,26 @@ public class PlayerMovement : MonoBehaviour
 
     void SetStepSize()
     {
-        stepSize = 8.25f /(MinPressCount*0.9f);
-        lightSpeed =  stepSize/(MinPressLatency*0.65f);
+        stepSize = 8.25f / (MinPressCount * 0.9f);
+        lightSpeed = stepSize / (MinPressLatency * 0.65f);
     }
 
     public void SetLightSpeed()
     {
         speed = lightSpeed;
+    }
+
+    public void SetPressRate(float weight)
+    {
+        speed = 0f;
+        if (weight >= 3f)
+        {
+            requiredPressRate = (MinPressCount / 10f);
+        }
+        else
+        {
+            requiredPressRate = (MinPressCount / 10f) * 0.05f;
+        }
     }
 
 
@@ -86,32 +106,35 @@ public class PlayerMovement : MonoBehaviour
         acornPeriod = false;
         clickingPeriod = false;
         // Reset energy display when the player is disabled
-        if(HeadsUpDisplay!=null) HeadsUpDisplay.GetComponent<UIController>()?.SetEnergy(0f);
+        if (HeadsUpDisplay != null) HeadsUpDisplay.GetComponent<UIController>()?.SetEnergy(0f);
     }
 
-    
+
     void Update()
     {
-       
-       if(clickingPeriod==true)
-       {
+
+        if (clickingPeriod == true)
+        {
             mouseMove();
-       }
-       if(effortPeriod==true)
-       {
+        }
+        if (effortPeriod == true)
+        {
+
             mouseMove();
             effortUI();
-       }
-       else if(acornPeriod==true)
-       {
+            CalculatePressRate();
+            AdjustSpeed();
+        }
+        else if (acornPeriod == true)
+        {
             speed = 4f;
             mouseMove();
-       }
+        }
     }
 
 
 
-#region Clicking To Select Reward
+    #region Clicking To Select Reward
     // void OnMouseClick()
     // {
     //     if (!clickingPeriod) return;
@@ -132,7 +155,7 @@ public class PlayerMovement : MonoBehaviour
     //     }
     // }
 
-        IEnumerator MoveObject(Vector3 newPosition)
+    IEnumerator MoveObject(Vector3 newPosition)
     {
         float startTime = Time.time;
         float speed = 0.9f;
@@ -160,8 +183,8 @@ public class PlayerMovement : MonoBehaviour
 
     #endregion
 
-    
-#region Player Movement
+
+    #region Player Movement
     void mouseMove()
     {
         if (Mouse.current != null)
@@ -181,7 +204,7 @@ public class PlayerMovement : MonoBehaviour
 
         // Calculate the desired new position
         Vector3 newPosition = transform.position + direction * speed * Time.deltaTime;
-        
+
         // Check if the new position is within the allowed radius
         float distanceFromCenter = Vector3.Distance(centerPt.transform.position, newPosition);
         if (distanceFromCenter < radius)
@@ -202,7 +225,7 @@ public class PlayerMovement : MonoBehaviour
 
         // Check if close enough to stop moving
         float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
-        if (distanceToTarget < 0.1f) 
+        if (distanceToTarget < 0.1f)
         {
             animator.SetBool("IsRunning", false);
         }
@@ -222,22 +245,49 @@ public class PlayerMovement : MonoBehaviour
         return Vector3.zero;
     }
 
-#endregion
+    #endregion
 
-#region Effort Control
-    
+    #region Effort Control
+
     void OnEffort()
     {
-         if(effortPeriod==true)
+        if (effortPeriod == true)
         {
             if (Keyboard.current.sKey.isPressed && Keyboard.current.dKey.isPressed && Keyboard.current.fKey.isPressed)
             {
                 float currentTime = Time.time;
                 latency = currentTime - lastPressTime;
                 lastPressTime = currentTime;
+                pressTimes.Add(Time.time);
                 dataHandler.recordEffort();
-                effort();
             }
+        }
+    }
+
+    void CalculatePressRate()
+    {
+        float currentTime = Time.time;
+
+        // Remove presses older than 1 second
+        pressTimes.RemoveAll(time => time < currentTime - 1f);
+
+        // Update current press rate
+        currentPressRate = pressTimes.Count; // Since we're considering the last second
+    }
+
+    void AdjustSpeed()
+    {
+        // Determine the desired speed based on press rate
+        float desiredSpeed = Mathf.Clamp(currentPressRate / requiredPressRate, 0f, 1f) * maxSpeed;
+
+        // Smoothly interpolate current speed towards desired speed
+        speed = Mathf.MoveTowards(speed, desiredSpeed, Time.deltaTime * maxSpeed);
+
+        // If the press rate is below the required rate, apply decay
+        if (currentPressRate < requiredPressRate)
+        {
+            speed -= decayRate * Time.deltaTime;
+            speed = Mathf.Clamp(speed, 0f, maxSpeed);
         }
     }
 
@@ -248,86 +298,26 @@ public class PlayerMovement : MonoBehaviour
     {
         float targetUIspeed = speed / maxSpeed;
         currentUIspeed = Mathf.Lerp(currentUIspeed, targetUIspeed, Time.deltaTime * transitionSpeed);
-        HeadsUpDisplay.GetComponent<UIController>().SetEnergy(currentUIspeed);
-        HeadsUpDisplay.GetComponent<UIController>().SetEnergyText(Mathf.Clamp((int)speed, 0, 9));
+        HeadsUpDisplay.GetComponent<UIController>().SetEnergy(speed);
     }
-
-    void drag()
-    {
-        float decreaseRate =  1.5f; // Units per second
-        if(cookieWeight >= 3) speed = Mathf.Clamp(speed - decreaseRate * Time.deltaTime, minSpeed, maxSpeed);
-    }
-
-
-
-
-    void effort()
-    {   
-        if (cookieWeight >= 3)
-        {
-           Vector2 mouseScreenPosition = Mouse.current.position.ReadValue();
-           targetPosition = GetWorldPosition(mouseScreenPosition);
-           setStepDirection();
-        }
-    }
-
-     void setStepDirection()
-    {
-        // Calculate direction towards the mouse
-        Vector3 direction = (targetPosition - transform.position).normalized;
-        direction.y = 0; // Prevent vertical movement
-
-        // Calculate the desired new position
-        Vector3 newPosition = transform.position + direction * stepSize;
-        
-        // Check if the new position is within the allowed radius
-        float distanceFromCenter = Vector3.Distance(centerPt.transform.position, newPosition);
-        if (distanceFromCenter < radius)
-        {
-            // If within the radius, move normally
-            transform.position = newPosition;
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            player.transform.rotation = Quaternion.Slerp(player.transform.rotation, targetRotation, 1f);
-            animator.SetBool("IsRunning", true);
-        }
-        else
-        {
-            // If outside the radius, move to the closest point on the boundary
-            Vector3 clampedPosition = centerPt.transform.position + (newPosition - centerPt.transform.position).normalized * radius;
-            transform.position = clampedPosition;
-            animator.SetBool("IsRunning", true);
-        }
-        // Check if close enough to stop moving
-        float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
-        if (distanceToTarget < 0.1f) 
-        {
-            animator.SetBool("IsRunning", false);
-        }
-    }
-
-
-
 
 
     public void enableEffort(float latency)
-        {
-            effortPeriod = true;
-            MinPressLatency = latency;
-            HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0f);
-        }
+    {
+        effortPeriod = true;
+        MinPressLatency = latency;
+        HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0f);
+    }
     public void enableAcorns()
-        {
-            acornPeriod = true;
-            HeadsUpDisplay.GetComponent<UIController>().SetEnergy(1f);
-        }
+    {
+        acornPeriod = true;
+        HeadsUpDisplay.GetComponent<UIController>().SetEnergy(1f);
+    }
 
+    #endregion
 
-#endregion
-
-
-
-#region Old Code
-/// OLD MOVEMENT CODE DO NOT DELETE UNTIL GAME IS LIVE
+    #region Old Code
+    /// OLD MOVEMENT CODE DO NOT DELETE UNTIL GAME IS LIVE
     // void move()
     // {
     //             if (effortPeriod == true)
@@ -344,7 +334,7 @@ public class PlayerMovement : MonoBehaviour
     //         if (mover != Vector3.zero)
     //         {
     //             // Calculate the target rotation based on the movement direction
-                
+
     //             // Move the player forward based on movement direction
     //             animator.SetBool("IsRunning", true);
     //             transform.Translate(mover * speed * Time.deltaTime);
@@ -352,7 +342,7 @@ public class PlayerMovement : MonoBehaviour
     //             player.transform.rotation = Quaternion.Slerp(player.transform.rotation, targetRotation, 1f);
 
     //         }
-          
+
     //         else if(mover2 != Vector3.zero)
     //         {
     //             Debug.Log("mover2");
@@ -392,7 +382,7 @@ public class PlayerMovement : MonoBehaviour
     //         if(numPress==pressLimit)  StartCoroutine(CoolDown());
     //     }
     // }
-        //  public void RotatePlayer()
+    //  public void RotatePlayer()
     // {
     //     float rotationSpeed = 150f;
     //     // float horizontalInput = Input.GetAxis("Horizontal");
@@ -401,7 +391,7 @@ public class PlayerMovement : MonoBehaviour
     //     // Calculate the movement direction based on input
     //     // Vector3 movementDirection = new Vector3(horizontalInput, 0, verticalInput).normalized;
 
-      
+
     //         // Calculate the target rotation based on the movement direction
     //         // Quaternion targetRotation = Quaternion.LookRotation(movementDirection);
     //          Vector3 targetDirection = centerPt.transform.position - transform.position;
@@ -412,92 +402,92 @@ public class PlayerMovement : MonoBehaviour
     // }
 
 
-    
-        // if(player.GetComponent<PlayerManager>().cookieState == "light")
-        // {
-        //          if(latency<=0.22f)
-        //   {
-        //     speed = 7f;
-        //     HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0.85f);
-        //   }
-        //   else if (latency<=0.5f)
-        //   {
-        //     speed = 4f;
-        //     HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0.5f);
 
-        //   }
-        //   else if (latency<=3f)
-        //   {
-        //     speed = 2.5f;
-        //     HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0.25f);
-        //   }
-        //   else
-        //   {
-        //     speed=2f; 
-        //   }
-        //   latency+=0.001f;
-        //   HeadsUpDisplay.GetComponent<UIController>().DecreaseEnergy(0.1f);
+    // if(player.GetComponent<PlayerManager>().cookieState == "light")
+    // {
+    //          if(latency<=0.22f)
+    //   {
+    //     speed = 7f;
+    //     HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0.85f);
+    //   }
+    //   else if (latency<=0.5f)
+    //   {
+    //     speed = 4f;
+    //     HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0.5f);
 
-        // }
+    //   }
+    //   else if (latency<=3f)
+    //   {
+    //     speed = 2.5f;
+    //     HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0.25f);
+    //   }
+    //   else
+    //   {
+    //     speed=2f; 
+    //   }
+    //   latency+=0.001f;
+    //   HeadsUpDisplay.GetComponent<UIController>().DecreaseEnergy(0.1f);
 
-        // else  if(player.GetComponent<PlayerManager>().cookieState == "heavy")
-        // {
-        //     if(latency<=0.18f)
-        //   {
-        //     speed = 7f;
-        //     HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0.85f);
-        //   }
-        //   else if (latency<=0.3f)
-        //   {
-        //     speed = 4f;
-        //     HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0.5f);
+    // }
 
-        //   }
-        //   else if (latency<=2f)
-        //   {
-        //     speed = 2.5f;
-        //     HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0.25f);
-        //   }
-        //   else
-        //   {
-        //     speed=1f; 
-        //   }
-        //   latency+=0.001f;
-        //   HeadsUpDisplay.GetComponent<UIController>().DecreaseEnergy(0.1f);
+    // else  if(player.GetComponent<PlayerManager>().cookieState == "heavy")
+    // {
+    //     if(latency<=0.18f)
+    //   {
+    //     speed = 7f;
+    //     HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0.85f);
+    //   }
+    //   else if (latency<=0.3f)
+    //   {
+    //     speed = 4f;
+    //     HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0.5f);
 
-        // }
-       
-// #region Drift
-//     void drift()
-//             {
-//                 // Calculate the direction vector from the player to the target
-//                 Vector3 targetDirection = centerPt.transform.position - transform.position;
+    //   }
+    //   else if (latency<=2f)
+    //   {
+    //     speed = 2.5f;
+    //     HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0.25f);
+    //   }
+    //   else
+    //   {
+    //     speed=1f; 
+    //   }
+    //   latency+=0.001f;
+    //   HeadsUpDisplay.GetComponent<UIController>().DecreaseEnergy(0.1f);
 
-//                 Debug.DrawRay(transform.position, targetDirection, Color.blue, debugLineWidth);
+    // }
 
-//                 // Apply the offset angle
-//                 Quaternion targetRotation = Quaternion.Euler(0f, theta, 0f);                
-            
-//                 // Calculate the drift vector (theta degrees away from the target direction)
-//                 driftVector =targetRotation * targetDirection;
-//                 // Normalize the drift vector and scale it by the drift speed
-//                 driftVector = new Vector3(driftVector.x, 0f, driftVector.z).normalized * resistance;
-//                 Debug.DrawRay(transform.position, driftVector, Color.red, debugLineWidth);
-//                 // Apply the drift vector to the player's position
-//                 driftdrawVector = transform.position+driftVector;
-                
-                
-//                 Vector3 newPosition = transform.position + driftVector * Time.deltaTime;
-                
-                
-//                 float distanceFromCenter = Vector3.Distance(centerPt.transform.position, newPosition);
-//                 if (distanceFromCenter <= radius)
-//                 {
-//                     // Apply the drift vector to the player's position
-//                     transform.position = newPosition;
-//                 }
-// //             }
-// #endregion
+    // #region Drift
+    //     void drift()
+    //             {
+    //                 // Calculate the direction vector from the player to the target
+    //                 Vector3 targetDirection = centerPt.transform.position - transform.position;
+
+    //                 Debug.DrawRay(transform.position, targetDirection, Color.blue, debugLineWidth);
+
+    //                 // Apply the offset angle
+    //                 Quaternion targetRotation = Quaternion.Euler(0f, theta, 0f);                
+
+    //                 // Calculate the drift vector (theta degrees away from the target direction)
+    //                 driftVector =targetRotation * targetDirection;
+    //                 // Normalize the drift vector and scale it by the drift speed
+    //                 driftVector = new Vector3(driftVector.x, 0f, driftVector.z).normalized * resistance;
+    //                 Debug.DrawRay(transform.position, driftVector, Color.red, debugLineWidth);
+    //                 // Apply the drift vector to the player's position
+    //                 driftdrawVector = transform.position+driftVector;
+
+
+    //                 Vector3 newPosition = transform.position + driftVector * Time.deltaTime;
+
+
+    //                 float distanceFromCenter = Vector3.Distance(centerPt.transform.position, newPosition);
+    //                 if (distanceFromCenter <= radius)
+    //                 {
+    //                     // Apply the drift vector to the player's position
+    //                     transform.position = newPosition;
+    //                 }
+    // //             }
+    // #endregion
 
     // IEnumerator CoolDown()
     // {
@@ -528,7 +518,51 @@ public class PlayerMovement : MonoBehaviour
     //     HeadsUpDisplay.SetActive(false);
 
     // }
-#endregion
+
+    // void effort()
+    // {   
+    //     if (cookieWeight >= 3)
+    //     {
+    //        Vector2 mouseScreenPosition = Mouse.current.position.ReadValue();
+    //        targetPosition = GetWorldPosition(mouseScreenPosition);
+    //        setStepDirection();
+    //     }
+    // }
+
+    //  void setStepDirection()
+    // {
+    //     // Calculate direction towards the mouse
+    //     Vector3 direction = (targetPosition - transform.position).normalized;
+    //     direction.y = 0; // Prevent vertical movement
+
+    //     // Calculate the desired new position
+    //     Vector3 newPosition = transform.position + direction * stepSize;
+
+    //     // Check if the new position is within the allowed radius
+    //     float distanceFromCenter = Vector3.Distance(centerPt.transform.position, newPosition);
+    //     if (distanceFromCenter < radius)
+    //     {
+    //         // If within the radius, move normally
+    //         transform.position = newPosition;
+    //         Quaternion targetRotation = Quaternion.LookRotation(direction);
+    //         player.transform.rotation = Quaternion.Slerp(player.transform.rotation, targetRotation, 1f);
+    //         animator.SetBool("IsRunning", true);
+    //     }
+    //     else
+    //     {
+    //         // If outside the radius, move to the closest point on the boundary
+    //         Vector3 clampedPosition = centerPt.transform.position + (newPosition - centerPt.transform.position).normalized * radius;
+    //         transform.position = clampedPosition;
+    //         animator.SetBool("IsRunning", true);
+    //     }
+    //     // Check if close enough to stop moving
+    //     float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
+    //     if (distanceToTarget < 0.1f) 
+    //     {
+    //         animator.SetBool("IsRunning", false);
+    //     }
+    // }
+    #endregion
 
 }
 

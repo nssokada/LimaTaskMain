@@ -12,5 +12,6 @@ public class experimentInfo
     public string experimentDate;
 
     public float effortPressLatency;
+    public float effortPressCount;
     public string datapath;
 }

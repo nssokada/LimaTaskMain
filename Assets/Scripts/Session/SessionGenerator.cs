@@ -30,7 +30,7 @@ public class SessionGenerator : MonoBehaviour
         PlayerPrefs.SetFloat("StartTime", Time.realtimeSinceStartup);
 
         //IF THERE IS NOT ALREADY A DATAPATH LET'S CREATE ONE
-        if(!PlayerPrefs.HasKey("DataPath"))
+        if (!PlayerPrefs.HasKey("DataPath"))
         {
             persistentDataPath = CreatePersistentPath(username);
             PlayerPrefs.SetString("DataPath", persistentDataPath);
@@ -46,7 +46,7 @@ public class SessionGenerator : MonoBehaviour
         PlayerPrefs.SetString("GameState", "MainGame");
 
         //IF OLD USER resume game
-        if(PlayerPrefs.HasKey("ConditionFile"))
+        if (PlayerPrefs.HasKey("ConditionFile"))
         {
             conditionFile = PlayerPrefs.GetString("ConditionFile");
             Debug.Log("Resuming game with condition file: " + conditionFile);
@@ -68,23 +68,23 @@ public class SessionGenerator : MonoBehaviour
         pushLatencyToFirebase(playerPressLatency);
     }
 
-   
+
 
     public async Task<float> GetPressLatencyFromDB()
     {
         // Call the PullPressLatency method to retrieve the latency from Firebase
         float latency = await PullPressLatency();
-        
+
         // Return the pulled latency
         return latency;
     }
 
     public void AcornButton()
     {
-         username = PlayerPrefs.GetString("userID");
+        username = PlayerPrefs.GetString("userID");
 
         //IF THERE IS NOT ALREADY A DATAPATH LET'S CREATE ONE
-        if(!PlayerPrefs.HasKey("DataPath"))
+        if (!PlayerPrefs.HasKey("DataPath"))
         {
             persistentDataPath = CreatePersistentPath(username);
             PlayerPrefs.SetString("DataPath", persistentDataPath);
@@ -98,11 +98,11 @@ public class SessionGenerator : MonoBehaviour
         //SET KEYS
         PlayerPrefs.SetString("CheckPoint", "AcornGame");
         PlayerPrefs.SetString("GameState", "AcornGame");
-        
-        
+
+
         Debug.Log("Starting tutorial...");
         GenerateAcornTutorial();
-     
+
     }
 
     public void TutorialButton()
@@ -111,7 +111,7 @@ public class SessionGenerator : MonoBehaviour
         PlayerPrefs.SetFloat("StartTime", Time.realtimeSinceStartup);
 
         //IF THERE IS NOT ALREADY A DATAPATH LET'S CREATE ONE
-        if(!PlayerPrefs.HasKey("DataPath"))
+        if (!PlayerPrefs.HasKey("DataPath"))
         {
             persistentDataPath = CreatePersistentPath(username);
             PlayerPrefs.SetString("DataPath", persistentDataPath);
@@ -121,7 +121,7 @@ public class SessionGenerator : MonoBehaviour
         //Set the datapath
         persistentDataPath = PlayerPrefs.GetString("DataPath");
         Debug.Log("Persistent DataPath set: " + persistentDataPath);
-        persistentDataPath = persistentDataPath+"/Tutorial";
+        persistentDataPath = persistentDataPath + "/Tutorial";
 
         //SET KEYS
         PlayerPrefs.SetString("CheckPoint", "Tutorial");
@@ -137,7 +137,7 @@ public class SessionGenerator : MonoBehaviour
         username = PlayerPrefs.GetString("userID");
 
         //IF THERE IS NOT ALREADY A DATAPATH LET'S CREATE ONE
-        if(!PlayerPrefs.HasKey("DataPath"))
+        if (!PlayerPrefs.HasKey("DataPath"))
         {
             persistentDataPath = CreatePersistentPath(username);
             PlayerPrefs.SetString("DataPath", persistentDataPath);
@@ -163,16 +163,16 @@ public class SessionGenerator : MonoBehaviour
         switch (transferState)
         {
             case "Tutorial":
-                PlayerPrefs.SetString("GameState",transferState);
+                PlayerPrefs.SetString("GameState", transferState);
                 break;
             case "CookieGame":
-                PlayerPrefs.SetString("GameState",transferState);
+                PlayerPrefs.SetString("GameState", transferState);
                 break;
             case "AcornGame":
-                PlayerPrefs.SetString("GameState",transferState);
+                PlayerPrefs.SetString("GameState", transferState);
                 break;
             case "Survey":
-                PlayerPrefs.SetString("GameState",transferState);
+                PlayerPrefs.SetString("GameState", transferState);
                 break;
             default:
                 Debug.LogError("Unhandled game state: " + transferState);
@@ -183,7 +183,7 @@ public class SessionGenerator : MonoBehaviour
     private void GenerateExperiment(string conditionFile)
     {
         CSVReader reader = new CSVReader();
-        trials  = reader.ReadTrialCSV(conditionFile);   
+        trials = reader.ReadTrialCSV(conditionFile);
         numTrials = trials.Count;
         Debug.Log("Generated experiment with condition file: " + conditionFile);
         Debug.Log("Number of trials: " + numTrials);
@@ -199,7 +199,7 @@ public class SessionGenerator : MonoBehaviour
     private void ReLoadExperiment(string conditionFile)
     {
         CSVReader reader = new CSVReader();
-        trials  = reader.ReadTrialCSV(conditionFile);   
+        trials = reader.ReadTrialCSV(conditionFile);
         numTrials = trials.Count;
         Debug.Log("Reloaded experiment with condition file: " + conditionFile);
         Debug.Log("Number of trials: " + numTrials);
@@ -217,13 +217,13 @@ public class SessionGenerator : MonoBehaviour
         // SessionScreen.SetActive(false);
         // Task.GetComponent<TutorialController>().StartMainTutorial(); 
         CSVReader reader = new CSVReader();
-        trials  = reader.ReadTrialCSV(conditionFile);   
+        trials = reader.ReadTrialCSV(conditionFile);
         numTrials = trials.Count;
         Debug.Log("Generated experiment with condition file: " + conditionFile);
         Debug.Log("Number of trials: " + numTrials);
 
         Debug.Log("Generating tutorial...");
-        createExperimentInfo(username+"_Tutorial", conditionFile);
+        createExperimentInfo(username + "_Tutorial", conditionFile);
         PlayerPrefs.SetInt("trialNum", 0);
         PlayerPrefs.SetFloat("TotalScore", 0.0f);
         Task.SetActive(true);
@@ -231,12 +231,12 @@ public class SessionGenerator : MonoBehaviour
         SessionScreen.SetActive(false);
     }
 
-       private void GenerateAcornTutorial()
+    private void GenerateAcornTutorial()
     {
         Debug.Log("Generating tutorial...");
-        createExperimentInfo(username+"_AcornTutorial", conditionFile);
+        createExperimentInfo(username + "_AcornTutorial", conditionFile);
         SessionScreen.SetActive(false);
-        Task.GetComponent<TutorialController>().StartAcornTutorial(); 
+        Task.GetComponent<TutorialController>().StartAcornTutorial();
     }
 
     private string CreatePersistentPath(string username)
@@ -246,7 +246,7 @@ public class SessionGenerator : MonoBehaviour
         return path;
     }
 
-   public void pushTrialData(LimaTrial trial, int trialNum)
+    public void pushTrialData(LimaTrial trial, int trialNum)
     {
         string trial_num = trialNum.ToString("0000");
 
@@ -261,7 +261,7 @@ public class SessionGenerator : MonoBehaviour
                 return; // Stop the process if serialization fails
             }
 
-            Debug.Log($"Serialized trial {trial_num} data: {jsonData}");
+            Debug.Log($"Serialized trial {trial_num}");
 
             // Now proceed with pushing data to Firebase
             Debug.Log($"Pushing trial {trial_num} data to Firebase.");
@@ -275,7 +275,7 @@ public class SessionGenerator : MonoBehaviour
 
     public void pushSurveyData(QuestionResponseList surveyResponse, string surveyName)
     {
-         // Serialize the trial data to check if it is valid JSON
+        // Serialize the trial data to check if it is valid JSON
         try
         {
             string jsonData = JsonUtility.ToJson(surveyResponse);
@@ -299,10 +299,17 @@ public class SessionGenerator : MonoBehaviour
 
     }
 
+    public void pushResetExperimentInfo()
+    {
+        username = PlayerPrefs.GetString("userID");
+        conditionFile = PlayerPrefs.GetString("ConditionFile");
+        resetExperimentInfo(username, conditionFile);
+    }
+
 
     public void pushSubjectiveData(SubjectiveReport report, string reportName)
     {
-         // Serialize the trial data to check if it is valid JSON
+        // Serialize the trial data to check if it is valid JSON
         try
         {
             string jsonData = JsonUtility.ToJson(report);
@@ -335,7 +342,8 @@ public class SessionGenerator : MonoBehaviour
         exp.participantID = username;
         exp.experimentDate = "" + System.DateTime.Now;
         exp.datapath = persistentDataPath;
-        exp.effortPressLatency = PlayerPrefs.GetFloat("PressLatency",-1f);
+        exp.effortPressLatency = PlayerPrefs.GetFloat("PressLatency", -1f);
+        exp.effortPressCount = PlayerPrefs.GetFloat("PressCount", -1f);
         Debug.Log("Creating experiment info for: " + attributeName);
         writeToFirebase(attributeName, exp);
     }
@@ -347,7 +355,8 @@ public class SessionGenerator : MonoBehaviour
         exp.participantID = username;
         exp.experimentDate = "" + System.DateTime.Now;
         exp.datapath = persistentDataPath;
-        exp.effortPressLatency = PlayerPrefs.GetFloat("PressLatency",-1f);
+        exp.effortPressLatency = PlayerPrefs.GetFloat("PressLatency", -1f);
+        exp.effortPressCount = PlayerPrefs.GetFloat("PressCount", -1f);
         Debug.Log("Resetting experiment info for: " + username);
         writeToFirebase(username + "_reset", exp);
     }
@@ -379,10 +388,10 @@ public class SessionGenerator : MonoBehaviour
         string path = persistentDataPath + "/TrialData/trial_" + trial_num + "/" + attributeName + ".json";
         Debug.Log($"Writing trial {trial_num} data to Firebase at {path}");
 
-        RestClient.Put(path, attribute).Then(response => 
+        RestClient.Put(path, attribute).Then(response =>
         {
             Debug.Log($"Successfully wrote trial {trial_num} data to Firebase.");
-        }).Catch(err => 
+        }).Catch(err =>
         {
             Debug.LogError($"Failed to write trial {trial_num} data to Firebase. Error: {err.Message}");
         });
@@ -394,10 +403,10 @@ public class SessionGenerator : MonoBehaviour
         string path = persistentDataPath + "/" + attributeName + ".json";
         Debug.Log($"Writing experiment info for {attributeName} to Firebase at {path}");
 
-        RestClient.Put(path, attribute).Then(response => 
+        RestClient.Put(path, attribute).Then(response =>
         {
             Debug.Log($"Successfully wrote experiment info for {attributeName} to Firebase.");
-        }).Catch(err => 
+        }).Catch(err =>
         {
             Debug.LogError($"Failed to write experiment info for {attributeName} to Firebase. Error: {err.Message}");
         });
@@ -409,65 +418,65 @@ public class SessionGenerator : MonoBehaviour
         string path = persistentDataPath + "/Surveys/" + attributeName + ".json";
         Debug.Log($"Writing experiment info for {attributeName} to Firebase at {path}");
 
-        RestClient.Put(path, attribute).Then(response => 
+        RestClient.Put(path, attribute).Then(response =>
         {
             Debug.Log($"Successfully wrote experiment info for {attributeName} to Firebase.");
-        }).Catch(err => 
+        }).Catch(err =>
         {
             Debug.LogError($"Failed to write experiment info for {attributeName} to Firebase. Error: {err.Message}");
         });
     }
 
-     // Write subjective report to Firebase
+    // Write subjective report to Firebase
     private void writeToFirebase(string attributeName, SubjectiveReport attribute)
     {
         string path = persistentDataPath + "/SubjectiveReports/" + attributeName + ".json";
         Debug.Log($"Writing experiment info for {attributeName} to Firebase at {path}");
 
-        RestClient.Put(path, attribute).Then(response => 
+        RestClient.Put(path, attribute).Then(response =>
         {
             Debug.Log($"Successfully wrote experiment info for {attributeName} to Firebase.");
-        }).Catch(err => 
+        }).Catch(err =>
         {
             Debug.LogError($"Failed to write experiment info for {attributeName} to Firebase. Error: {err.Message}");
         });
     }
 
 
-        private void pushLatencyToFirebase(float latency)
+    private void pushLatencyToFirebase(float latency)
     {
         string path = persistentDataPath + "/PlayerData/pressLatency.json";
         Debug.Log($"Writing press latency data to Firebase at {path}");
 
-        RestClient.Put(path, latency).Then(response => 
+        RestClient.Put(path, latency).Then(response =>
         {
             Debug.Log("Successfully wrote press latency data to Firebase.");
-        }).Catch(err => 
+        }).Catch(err =>
         {
             Debug.LogError("Failed to write press latency data to Firebase. Error: " + err.Message);
         });
     }
 
-            private async Task<float> PullPressLatency()
+    private async Task<float> PullPressLatency()
+    {
+        var tcs = new TaskCompletionSource<float>();
+        string path = persistentDataPath + "/PlayerData/pressLatency.json";
+
+        RestClient.Get(path).Then(response =>
         {
-            var tcs = new TaskCompletionSource<float>();
-            string path = persistentDataPath + "/PlayerData/pressLatency.json";
-
-            RestClient.Get(path).Then(response =>
-            {
-                float latency = float.Parse(response.Text);
-                playerPressLatency = latency;
-                Debug.Log("Pulled player press latency: " + latency);
-                tcs.SetResult(latency);
-            }).Catch(err =>
-            {
-                Debug.LogError("Error pulling press latency: " + err.Message);
-                tcs.SetException(err);
-            });
+            float latency = float.Parse(response.Text);
+            playerPressLatency = latency;
+            Debug.Log("Pulled player press latency: " + latency);
+            tcs.SetResult(latency);
+        }).Catch(err =>
+        {
+            Debug.LogError("Error pulling press latency: " + err.Message);
+            tcs.SetException(err);
+        });
 
 
-            return await tcs.Task;
-        }
+        return await tcs.Task;
+    }
 
 
 }
