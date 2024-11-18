@@ -22,13 +22,13 @@ public class PlayerMovement : MonoBehaviour
     public float rotationSpeed;
     private float minSpeed = 0f;
     private float baseSpeed = 4f;
-    private float maxSpeed = 0.85f;
+    private float maxSpeed = 0.9f;
     public float cookieWeight;
     public float thresholdLow = 0.1f; // Example threshold for low latency
     public float smoothingFactor = 0.1f;
     public float requiredPressRate = 5f; // Presses per second required (e.g., 10 for heavy)
     public float currentPressRate = 0f;   // Current presses per second
-    public float decayRate = 0.85f; // Speed decay rate when not maintaining effort
+    private float decayRate = 0.9f; // Speed decay rate when not maintaining effort
 
 
     //Togglable Bools
@@ -92,10 +92,12 @@ public class PlayerMovement : MonoBehaviour
         if (weight >= 3f)
         {
             requiredPressRate = (MinPressCount / 10f);
+            decayRate =1f;
         }
         else
         {
             requiredPressRate = (MinPressCount / 10f) * 0.05f;
+            decayRate =0.8f;
         }
     }
 
@@ -312,6 +314,14 @@ public class PlayerMovement : MonoBehaviour
     {
         acornPeriod = true;
         HeadsUpDisplay.GetComponent<UIController>().SetEnergy(1f);
+    }
+
+    public void stopRunning()
+    {
+        animator.SetBool("IsRunning", false);
+        effortPeriod=false;
+        speed=0f;
+        transform.position = new Vector3(0f, 0f,0f);
     }
 
     #endregion

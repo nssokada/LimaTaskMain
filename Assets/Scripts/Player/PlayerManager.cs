@@ -11,6 +11,8 @@ public class PlayerManager : MonoBehaviour
     public GameObject task;
     public string playerState;
     public string cookieState;
+    public float escapeTime;
+    public float captureTime;
     public CookieChoice cookieChoice;
     public List<PositionHandler> acornsCollected;
     public float earnedReward;
@@ -26,6 +28,8 @@ public class PlayerManager : MonoBehaviour
         acornsCollected = new List<PositionHandler>();
         earnedReward = 0;
         rewardPotential = 0;
+        escapeTime = -1f;
+        captureTime = -1f;
         exitSafety = false;
 
         HeadsUpDisplay.GetComponent<UIController>().SetTotalScore(PlayerPrefs.GetFloat("TotalScore"));
@@ -102,13 +106,15 @@ public class PlayerManager : MonoBehaviour
                 Debug.Log("earn reward");
                 carrying = false;
                 acorn_carrying = false;
-                task.GetComponent<LimaTask>().HandleGameState(LimaTask.GameState.EndingPeriod);
+                escapeTime= Time.realtimeSinceStartup;
+                player.GetComponent<PlayerMovement>().stopRunning(); //stop movement
+                // task.GetComponent<LimaTask>().HandleGameState(LimaTask.GameState.EndingPeriod);
             }
         }
 
         else if (other.gameObject.tag == "Predator")
         {
-            if (exitSafety && task.GetComponent<LimaTask>().trialEndable)
+            if (exitSafety && task.GetComponent<LimaTask>().trialEndable && playerState !="escaped")
             {
                 foreach (Transform child in player.transform)
                 {
@@ -119,6 +125,11 @@ public class PlayerManager : MonoBehaviour
                 earnedReward = -100f;
                 carrying = false;
                 acorn_carrying = false;
+                captureTime = Time.realtimeSinceStartup;
+                task.GetComponent<LimaTask>().HandleGameState(LimaTask.GameState.EndingPeriod);
+            }
+            else
+            {
                 task.GetComponent<LimaTask>().HandleGameState(LimaTask.GameState.EndingPeriod);
             }
         }

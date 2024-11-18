@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1618,6 +1618,8 @@ MonoBehaviour:
   task: {fileID: 215954221}
   playerState: 
   cookieState: 
+  escapeTime: 0
+  captureTime: 0
   cookieChoice:
     rewardValue: 0
     weight: 0
@@ -8948,8 +8950,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.523451
-  m_Center: {x: -0.0032640768, y: 0, z: 0}
+  m_Radius: 0.28455502
+  m_Center: {x: -0.0032640696, y: 0.2186808, z: 0}
 --- !u!23 &689342849
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10474,9 +10476,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 1
+  m_MaxValue: 0.9
   m_WholeNumbers: 0
-  m_Value: 0.977
+  m_Value: 0.9
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -13785,7 +13787,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -13808,7 +13810,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 53.721016
+  field of view: 58.36428
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -15406,6 +15408,8 @@ MonoBehaviour:
   trials: []
   trial:
     attackingProb: NaN
+    attackingTime: NaN
+    isAttackTrial: -1
     cookie1PosX: -1
     cookie1PosY: -1
     cookie1Weight: NaN
@@ -15426,6 +15430,8 @@ MonoBehaviour:
     mouseTrackEffortPeriod: []
     effortRate: []
     trialStartTime: NaN
+    trialEscapeTime: NaN
+    trialCaptureTime: NaN
     trialEndTime: NaN
     trialEndState: 
     trialReward: NaN

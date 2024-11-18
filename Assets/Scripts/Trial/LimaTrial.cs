@@ -6,6 +6,9 @@ using System;
 public class LimaTrial
 {
     public float attackingProb;
+    public float attackingTime; // this is the delay in time after circa strike
+    public int isAttackTrial; // 1 attack, 0 no attack
+
     public int cookie1PosX;
     public int cookie1PosY;
     public float cookie1Weight;
@@ -28,6 +31,8 @@ public class LimaTrial
     public List<float> effortRate;
 
     public float trialStartTime;
+    public float trialEscapeTime;
+    public float trialCaptureTime;
     public float trialEndTime;
     public string trialEndState;
     public float trialReward;
@@ -36,11 +41,13 @@ public class LimaTrial
     public List<PositionHandler> acornsCollected;
 
     // Constructor with parameters
-    public LimaTrial(float attackingProb, int cookie1PosX, int cookie1PosY, float cookie1Weight, int cookie1RewardValue,
+    public LimaTrial(float attackingProb, float attackingTime, int isAttackTrial, int cookie1PosX, int cookie1PosY, float cookie1Weight, int cookie1RewardValue,
                      int cookie2PosX, int cookie2PosY, float cookie2Weight, int cookie2RewardValue,
                      int cookie3PosX, int cookie3PosY, float cookie3Weight, int cookie3RewardValue, int type)
     {
         this.attackingProb = attackingProb;
+        this.attackingTime = attackingTime;
+        this.isAttackTrial = isAttackTrial;
         this.cookie1PosX = cookie1PosX;
         this.cookie1PosY = cookie1PosY;
         this.cookie1Weight = cookie1Weight;
@@ -64,6 +71,8 @@ public class LimaTrial
 
         // Initialize other fields
         trialStartTime = float.NaN;
+        trialEscapeTime = float.NaN;
+        trialCaptureTime = float.NaN;
         trialEndTime = float.NaN;
         trialEndState = string.Empty; // Initialize to an empty string
         trialReward = float.NaN;
@@ -76,6 +85,8 @@ public class LimaTrial
     public LimaTrial()
     {
         attackingProb = float.NaN;
+        attackingTime = float.NaN;
+        isAttackTrial = -1;
         cookie1PosX = -1;  // Default to -1 to indicate uninitialized
         cookie1PosY = -1;
         cookie1Weight = float.NaN;
@@ -99,6 +110,8 @@ public class LimaTrial
 
         // Initialize other fields
         trialStartTime = float.NaN;
+        trialEscapeTime = float.NaN;
+        trialCaptureTime = float.NaN;
         trialEndTime = float.NaN;
         trialEndState = string.Empty;
         trialReward = float.NaN;

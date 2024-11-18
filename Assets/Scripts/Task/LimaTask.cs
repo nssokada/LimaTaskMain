@@ -503,7 +503,7 @@ public class LimaTask : MonoBehaviour
     }
 
 
-    public void SetPredator(LimaTrial trial) { predator.GetComponent<PredatorControls>().setAttack(trial.attackingProb); }
+    public void SetPredator(LimaTrial trial) { predator.GetComponent<PredatorControls>().setAttack(trial.attackingProb, trial.attackingTime, trial.isAttackTrial); }
 
     void LogTrialData(LimaTrial trial)
     {
@@ -513,6 +513,8 @@ public class LimaTask : MonoBehaviour
         trial.mouseTrackEffortPeriod = dataHandler.mouseTrackEffortPeriod;
         trial.effortRate = dataHandler.effortRate;
         trial.trialStartTime = startTime;
+        trial.trialEscapeTime = playerManager.escapeTime;
+        trial.trialCaptureTime = playerManager.captureTime;
         trial.trialEndTime = endTime;
         trial.trialReward = playerManager.earnedReward;
         trial.trialCookie = playerManager.cookieChoice;

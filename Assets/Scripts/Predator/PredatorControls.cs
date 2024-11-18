@@ -18,14 +18,15 @@ public class PredatorControls : MonoBehaviour
 
     private void OnEnable()
     {
-        if (player.GetComponent<PlayerMovement>().acornPeriod)
-        {
-            speed = 8f;
-        }
-        else
-        {
-            speed = CalculatePredatorSpeed();
-        }
+        speed=8f;
+        // if (player.GetComponent<PlayerMovement>().acornPeriod)
+        // {
+        //     speed = 8f;
+        // }
+        // else
+        // {
+        //     speed = CalculatePredatorSpeed();
+        // }
     }
 
     float CalculatePredatorSpeed()
@@ -52,9 +53,10 @@ public class PredatorControls : MonoBehaviour
         {
             fox.SetActive(true);
             predator.transform.LookAt(player.transform.position, Vector3.up);
+            predator.transform.position = Vector3.MoveTowards(predator.transform.position, player.transform.position, speed * Time.deltaTime);
+
             if (strike_bool)
             {
-                predator.transform.position = Vector3.MoveTowards(predator.transform.position, player.transform.position, speed * Time.deltaTime);
                 predator.transform.LookAt(player.transform.position, Vector3.up);
             }
         }
@@ -69,11 +71,13 @@ public class PredatorControls : MonoBehaviour
         // Set the predator's spawning position to the closest spawning position from the player
         strike_bool = true;
         foxAnimator.speed = 1f;
+        speed =8f;
 
     }
     void circaStrike()
     {
         predator.transform.position = findClosestSpawningPosition(player.transform.position);
+        speed =0.5f;
         // Set the predator's spawning position to the closest spawning position from the player
         circaStrike_bool = true;
         if (!tutorialMode) dataHandler.StartRecordingPredatorPosition();
@@ -81,18 +85,15 @@ public class PredatorControls : MonoBehaviour
 
     }
 
-    public void setAttack(float attackingProb)
+    public void setAttack(float attackingProb, float attackingTime, int isAttackTrial)
     {
-        float attackingTime = Random.Range(0.25f, 1f);
-        float encounterTime = Random.Range(2.5f, 3f);
-        float rand = Random.Range(0.0f, 1.0f);
+        float encounterTime = 2.5f;
 
-        if (rand < attackingProb)
+        if (isAttackTrial==1)
         {
-            Debug.Log("Attack Set: " + attackingTime);
+            Debug.Log("Attack Set: " + attackingTime+ encounterTime);
             Invoke("strike", attackingTime + encounterTime);
             Invoke("circaStrike", encounterTime);
-
         }
     }
 

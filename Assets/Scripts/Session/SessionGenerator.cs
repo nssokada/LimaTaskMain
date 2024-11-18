@@ -105,7 +105,7 @@ public class SessionGenerator : MonoBehaviour
 
     }
 
-    public void TutorialButton()
+    public void TutorialButton_1()
     {
         username = PlayerPrefs.GetString("userID");
         PlayerPrefs.SetFloat("StartTime", Time.realtimeSinceStartup);
@@ -121,7 +121,7 @@ public class SessionGenerator : MonoBehaviour
         //Set the datapath
         persistentDataPath = PlayerPrefs.GetString("DataPath");
         Debug.Log("Persistent DataPath set: " + persistentDataPath);
-        persistentDataPath = persistentDataPath + "/Tutorial";
+        persistentDataPath = persistentDataPath + "/Tutorial_1";
 
         //SET KEYS
         PlayerPrefs.SetString("CheckPoint", "Tutorial");
@@ -130,6 +130,32 @@ public class SessionGenerator : MonoBehaviour
         Debug.Log("Starting tutorial...");
         GenerateTutorial();
     }
+        public void TutorialButton_2()
+    {
+        username = PlayerPrefs.GetString("userID");
+        PlayerPrefs.SetFloat("StartTime", Time.realtimeSinceStartup);
+
+        //IF THERE IS NOT ALREADY A DATAPATH LET'S CREATE ONE
+        if (!PlayerPrefs.HasKey("DataPath"))
+        {
+            persistentDataPath = CreatePersistentPath(username);
+            PlayerPrefs.SetString("DataPath", persistentDataPath);
+            Debug.Log("DataPath created: " + persistentDataPath);
+        }
+
+        //Set the datapath
+        persistentDataPath = PlayerPrefs.GetString("DataPath");
+        Debug.Log("Persistent DataPath set: " + persistentDataPath);
+        persistentDataPath = persistentDataPath + "/Tutorial_2";
+
+        //SET KEYS
+        PlayerPrefs.SetString("CheckPoint", "Tutorial");
+        PlayerPrefs.SetString("GameState", "Tutorial");
+
+        Debug.Log("Starting tutorial...");
+        GenerateTutorial();
+    }
+
 
 
     public void SurveyButton()

@@ -69,7 +69,7 @@ public class PlayerManager_Tutorial : PlayerManager
                     playerState ="escaped";
                     
                 
-                    task.GetComponent<TutorialLimaTask>().gameStateController("endingPeriod");
+                    // task.GetComponent<TutorialLimaTask>().gameStateController("endingPeriod");
                     Debug.Log("earn reward");
                     carrying = false;                    
                     acorn_carrying = false; 

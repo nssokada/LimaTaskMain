@@ -705,7 +705,7 @@ public class TutorialLimaTask : MonoBehaviour
 
     void setPredator(LimaTrial trial)
     {
-        predator.GetComponent<PredatorControls>().setAttack(trial.attackingProb);
+        predator.GetComponent<PredatorControls>().setAttack(trial.attackingProb, trial.attackingTime, trial.isAttackTrial);
     }
 
     #endregion
