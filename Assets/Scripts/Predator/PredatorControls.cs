@@ -87,15 +87,49 @@ public class PredatorControls : MonoBehaviour
 
     public void setAttack(float attackingProb, float attackingTime, int isAttackTrial)
     {
-        float encounterTime = 2.5f;
+        float encounterTime = 0f;
+        float distance = Vector3.Distance(player.transform.position, new Vector3(0f, 0f, 0f));
 
-        if (isAttackTrial==1)
+        // Set encounterTime based on distance
+        if (distance >= 7)
         {
-            Debug.Log("Attack Set: " + attackingTime+ encounterTime);
-            Invoke("strike", attackingTime + encounterTime);
+            encounterTime = 5f;
+        }
+        else if (distance >= 5)
+        {
+            encounterTime = 3.5f;
+        }
+        else
+        {
+            encounterTime = 2.5f;
+        }
+
+        if (isAttackTrial == 1)
+        {
+            // Parameters for Gaussian distribution
+            float mean = 2 * encounterTime;
+            float stdDev = (mean - encounterTime) / 3f;
+
+            // Generate Gaussian-distributed value using Box-Muller Transform
+            float u1 = Mathf.Clamp01(attackingTime); // Use the provided attackingTime for randomness
+            float u2 = UnityEngine.Random.value;    // Generate another random value
+            float z0 = Mathf.Sqrt(-2.0f * Mathf.Log(Mathf.Max(u1, 1e-7f))) * Mathf.Cos(2.0f * Mathf.PI * u2);
+            float transformedTime = mean + stdDev * z0;
+
+            // Check for NaN and fallback to a safe value
+            if (float.IsNaN(transformedTime) || transformedTime <= 0)
+            {
+                Debug.LogWarning("Generated a NaN or invalid attacking time. Fallback to default.");
+                transformedTime = 2 * encounterTime; // Safe fallback value
+            }
+
+            // Debug and invoke attack events
+            Debug.Log($"Attack Set: {transformedTime} seconds after start.");
+            Invoke("strike", transformedTime);
             Invoke("circaStrike", encounterTime);
         }
     }
+
 
     void OnDisable()
     {

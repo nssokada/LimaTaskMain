@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System;
+
 public class PlayerMovement : MonoBehaviour
 {
 
@@ -14,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     public Camera mainCamera;
     public GameObject centerPt;
 
+
     //Public values
     public float speed;
     public int numPress;
@@ -22,14 +25,19 @@ public class PlayerMovement : MonoBehaviour
     public float rotationSpeed;
     private float minSpeed = 0f;
     private float baseSpeed = 4f;
-    private float maxSpeed = 0.9f;
+    private float maxSpeed = 2f;
     public float cookieWeight;
     public float thresholdLow = 0.1f; // Example threshold for low latency
     public float smoothingFactor = 0.1f;
-    public float requiredPressRate = 5f; // Presses per second required (e.g., 10 for heavy)
     public float currentPressRate = 0f;   // Current presses per second
     private float decayRate = 0.9f; // Speed decay rate when not maintaining effort
 
+    public float requiredPressRate;
+    public float requiredPressRate75;
+    public float requiredPressRate50;
+    public float requiredPressRate25;
+    
+    public float desiredSpeedMax;
 
     //Togglable Bools
     public bool effortPeriod;
@@ -40,6 +48,8 @@ public class PlayerMovement : MonoBehaviour
     private float MinPressLatency;
     private float MinPressCount;
     public float stepSize;
+    public float stepSize_Heavy;
+    public float stepSize_Light;
     public float lightSpeed;
     Vector3 targetPosition;
 
@@ -58,8 +68,13 @@ public class PlayerMovement : MonoBehaviour
     // Internal tracking of button press times
     private List<float> pressTimes;
 
-
-
+     // Smoothing factors
+    [Range(0f, 1f)]
+    public float pressRateSmoothing = 0.8f;   // Higher value = more smoothing
+    public float speedTransitionSpeed = 5f;   // Higher value = faster speed transitions
+    public int counter;
+    public float distance;
+    public float remainingPresses;
 
     void OnEnable()
     {
@@ -67,39 +82,50 @@ public class PlayerMovement : MonoBehaviour
         animator = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
         speed = baseSpeed;
-
+        counter=0;
         // Fetch and log press latency from PlayerPrefs
         MinPressLatency = PlayerPrefs.GetFloat("PressLatency"); // Add default value to avoid null issues
         MinPressCount = PlayerPrefs.GetFloat("PressCount");
-        SetStepSize();
         Debug.Log($"Initialized with Press Latency: {MinPressLatency} and Press Count {MinPressCount}");
     }
 
-    void SetStepSize()
+    public void SetStepSize(float weight, Vector3 playerPos)
     {
-        stepSize = 8.25f / (MinPressCount * 0.9f);
-        lightSpeed = stepSize / (MinPressLatency * 0.65f);
+        // Calculate distance from (0,0) using Pythagorean theorem
+        distance = Vector3.Distance(player.transform.position, centerPt.transform.position);
+        float stepCount = (MinPressCount*1.1f); 
+
+        // // Initialize step size variables
+        float stepSize_Heavy;
+        float stepSize_Light;
+
+        // Determine step sizes based on distance
+        if (distance >= 7 && weight >= 3f) // Far cookie
+        {
+            //Step Size =  TimeToReturn / %MaxPressCount
+            remainingPresses = stepCount;//(stepCount); // Heavy step size
+        }
+        else if (distance >= 5 && weight >= 3f) // Middle cookie
+        {
+            remainingPresses = stepCount*0.8f;//(stepCount*0.8f)); // Adjust for middle
+        }
+        else if(distance >= 2 && weight >= 3f) // Near cookie
+        {
+            remainingPresses = stepCount*0.6f;//(stepCount*0.6f)); // Adjust for near
+        }
+        else
+        {
+            remainingPresses = stepCount*0.2f; // Adjust for near
+        }
     }
+
 
     public void SetLightSpeed()
     {
         speed = lightSpeed;
     }
 
-    public void SetPressRate(float weight)
-    {
-        speed = 0f;
-        if (weight >= 3f)
-        {
-            requiredPressRate = (MinPressCount / 10f);
-            decayRate =1f;
-        }
-        else
-        {
-            requiredPressRate = (MinPressCount / 10f) * 0.05f;
-            decayRate =0.8f;
-        }
-    }
+   
 
 
     void OnDisable()
@@ -261,46 +287,147 @@ public class PlayerMovement : MonoBehaviour
                 latency = currentTime - lastPressTime;
                 lastPressTime = currentTime;
                 pressTimes.Add(Time.time);
-                dataHandler.recordEffort();
+                counter++;
+                dataHandler.recordEffort();  
+                // effort();      
             }
         }
     }
 
+     public void SetPressRate(float weight)
+    {
+        // Reset speed to 0
+        distance = Vector3.Distance(player.transform.position, centerPt.transform.position);
+         // Determine desired speeds for each distance category
+    
+        // Adjust required press rates and decay rate based on weight
+        if (distance >= 7 ) // Far cookie
+        {
+            desiredSpeedMax = distance/9f;
+        }
+        else if (distance >= 5 ) // Middle cookie
+        { 
+            desiredSpeedMax = distance/7f;
+        }
+        else  // Near cookie
+        { 
+            desiredSpeedMax = distance/5f;
+        }
+        
+        if(weight >= 3f)
+        {
+            requiredPressRate = (MinPressCount/10f);
+            decayRate = 4f;
+        }
+        else
+        {   
+            requiredPressRate= (MinPressCount/10f) * 0.4f;
+            decayRate = 1f;
+        }
+
+
+    }
+
     void CalculatePressRate()
     {
-        float currentTime = Time.time;
+        // Remove timestamps older than the time window
+        pressTimes.RemoveAll(timestamp => timestamp < Time.time - 1f);
 
-        // Remove presses older than 1 second
-        pressTimes.RemoveAll(time => time < currentTime - 1f);
-
-        // Update current press rate
-        currentPressRate = pressTimes.Count; // Since we're considering the last second
+        // Calculate the press rate as the number of presses per second
+        currentPressRate = pressTimes.Count / 1f;
     }
 
-    void AdjustSpeed()
+    /// <summary>
+    /// Adjusts the speed based on the current press rate and defined thresholds.
+    /// </summary>
+//    void AdjustSpeed()
+//     {
+//         float desiredSpeed;
+
+//         // Determine speed based on press rate
+//         if (currentPressRate >= requiredPressRate)
+//         {
+//             desiredSpeed = 1f; // Full speed
+//         }
+//         else if (currentPressRate >= requiredPressRate * 0.5f)
+//         {
+//             desiredSpeed = 0.5f; // Reduced speed
+//         }
+//         else if (currentPressRate >= requiredPressRate * 0.25f)
+//         {
+//             desiredSpeed = 0.25f; // Slower speed
+//         }
+//         else
+//         {
+//             desiredSpeed = 0f; // Speed decays to zero if press rate < 25% of required
+//         }
+
+//         // Interpolate the current speed towards the desired speed for smooth transitions
+//         speed = Mathf.Lerp(speed, desiredSpeed, Time.deltaTime * speedTransitionSpeed);
+
+//         // Apply decay only if press rate is below the 25% threshold
+//         if (currentPressRate < requiredPressRate * 0.25f)
+//         {
+//             float decayMultiplier = 0.85f; // Decay factor per second
+//             speed *= Mathf.Pow(decayMultiplier, Time.deltaTime);
+//             speed = Mathf.Clamp(speed, 0f, maxSpeed); // Ensure speed stays within bounds
+//         }
+
+//         // Ensure speed does not exceed maxSpeed
+//         speed = Mathf.Clamp(speed, 0f, maxSpeed);
+//     }
+void AdjustSpeed()
+{
+    float desiredSpeed=0;
+    // // Determine speed based on press rate
+    if (currentPressRate >= requiredPressRate)
     {
-        // Determine the desired speed based on press rate
-        float desiredSpeed = Mathf.Clamp(currentPressRate / requiredPressRate, 0f, 1f) * maxSpeed;
-
-        // Smoothly interpolate current speed towards desired speed
-        speed = Mathf.MoveTowards(speed, desiredSpeed, Time.deltaTime * maxSpeed);
-
-        // If the press rate is below the required rate, apply decay
-        if (currentPressRate < requiredPressRate)
-        {
-            speed -= decayRate * Time.deltaTime;
-            speed = Mathf.Clamp(speed, 0f, maxSpeed);
-        }
+        desiredSpeed = desiredSpeedMax; // Full speed
     }
+    else if (currentPressRate >= requiredPressRate * 0.5f)
+    {
+        desiredSpeed = desiredSpeedMax*0.5f; // Reduced speed
+    }
+    else if (currentPressRate >= requiredPressRate * 0.25f)
+    {
+        desiredSpeed = desiredSpeedMax*0.25f; // Slower speed
+    }
+    else
+    {
+        desiredSpeed = 0; // Speed decays to zero if press rate < 25% of required
+    }
+
+    // Use a steeper transition towards the desired speed
+    if (desiredSpeed > speed)
+    {
+        speed = Mathf.MoveTowards(speed, desiredSpeed, Time.deltaTime * speedTransitionSpeed); // Faster increase
+    }
+    else
+    {
+        speed = Mathf.Lerp(speed, desiredSpeed, Time.deltaTime * speedTransitionSpeed*2f); // Smooth decrease
+    }
+
+    // Apply decay if press rate is below the 25% threshold
+    if (currentPressRate < requiredPressRate * 0.25f)
+    {
+        // float decayMultiplier = 0.85f; // Decay factor per second
+        speed *= Mathf.Pow(decayRate, Time.deltaTime);
+        speed = Mathf.Clamp(speed, 0f, maxSpeed); // Ensure speed stays within bounds
+    }
+
+    // // Ensure speed does not exceed maxSpeed
+    speed = Mathf.Clamp(speed, 0f, maxSpeed);
+}
+
 
     private float currentUIspeed = 0f;
     public float transitionSpeed = 5f; // Adjust this value to control the smoothness
 
     void effortUI()
     {
-        float targetUIspeed = speed / maxSpeed;
+        float targetUIspeed = speed/desiredSpeedMax;
         currentUIspeed = Mathf.Lerp(currentUIspeed, targetUIspeed, Time.deltaTime * transitionSpeed);
-        HeadsUpDisplay.GetComponent<UIController>().SetEnergy(speed);
+        HeadsUpDisplay.GetComponent<UIController>().SetEnergy(currentUIspeed);
     }
 
 
@@ -529,50 +656,56 @@ public class PlayerMovement : MonoBehaviour
 
     // }
 
-    // void effort()
-    // {   
-    //     if (cookieWeight >= 3)
-    //     {
-    //        Vector2 mouseScreenPosition = Mouse.current.position.ReadValue();
-    //        targetPosition = GetWorldPosition(mouseScreenPosition);
-    //        setStepDirection();
-    //     }
-    // }
+    void effort()
+    {   
+           Vector2 mouseScreenPosition = Mouse.current.position.ReadValue();
+           targetPosition = GetWorldPosition(mouseScreenPosition);
+           setStepDirection();
+    }
 
-    //  void setStepDirection()
-    // {
-    //     // Calculate direction towards the mouse
-    //     Vector3 direction = (targetPosition - transform.position).normalized;
-    //     direction.y = 0; // Prevent vertical movement
+     void setStepDirection()
+    {
+        // Calculate direction towards the mouse
+        Vector3 direction = (targetPosition - transform.position).normalized;
+        direction.y = 0; // Prevent vertical movement
+        float remainingDistance = Vector3.Distance(transform.position, centerPt.transform.position);
 
-    //     // Calculate the desired new position
-    //     Vector3 newPosition = transform.position + direction * stepSize;
+        // Dynamically adjust step size
+        stepSize = remainingDistance / remainingPresses;
 
-    //     // Check if the new position is within the allowed radius
-    //     float distanceFromCenter = Vector3.Distance(centerPt.transform.position, newPosition);
-    //     if (distanceFromCenter < radius)
-    //     {
-    //         // If within the radius, move normally
-    //         transform.position = newPosition;
-    //         Quaternion targetRotation = Quaternion.LookRotation(direction);
-    //         player.transform.rotation = Quaternion.Slerp(player.transform.rotation, targetRotation, 1f);
-    //         animator.SetBool("IsRunning", true);
-    //     }
-    //     else
-    //     {
-    //         // If outside the radius, move to the closest point on the boundary
-    //         Vector3 clampedPosition = centerPt.transform.position + (newPosition - centerPt.transform.position).normalized * radius;
-    //         transform.position = clampedPosition;
-    //         animator.SetBool("IsRunning", true);
-    //     }
-    //     // Check if close enough to stop moving
-    //     float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
-    //     if (distanceToTarget < 0.1f) 
-    //     {
-    //         animator.SetBool("IsRunning", false);
-    //     }
-    // }
+        // Calculate the desired new position
+        Vector3 newPosition = transform.position + (direction * stepSize);
+
+        // Check if the new position is within the allowed radius
+        float distanceFromCenter = Vector3.Distance(centerPt.transform.position, newPosition);
+        if (distanceFromCenter < radius)
+        {
+            // If within the radius, move normally
+            transform.position = newPosition;
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            player.transform.rotation = Quaternion.Slerp(player.transform.rotation, targetRotation, 1f);
+            animator.SetBool("IsRunning", true);
+        }
+        else
+        {
+            // If outside the radius, move to the closest point on the boundary
+            Vector3 clampedPosition = centerPt.transform.position + (newPosition - centerPt.transform.position).normalized * radius;
+            transform.position = clampedPosition;
+            animator.SetBool("IsRunning", true);
+        }
+        // Check if close enough to stop moving
+        float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
+        if (distanceToTarget < 0.1f) 
+        {
+            animator.SetBool("IsRunning", false);
+        }
+
+        remainingPresses--;
+
+    }
     #endregion
 
 }
 
+
+  

@@ -200,7 +200,7 @@ public class LimaTask : MonoBehaviour
         InvokeRepeating("UpdateTimer", 0f, 0.01f);
 
         float elapsedTime = 0f;
-        while (elapsedTime < 10.0f)
+        while (elapsedTime < 15.0f)
         {
             if (shouldStopCoroutine) // Check if the coroutine should stop
             {
@@ -538,7 +538,7 @@ public class LimaTask : MonoBehaviour
         UIController uiController = HeadsUpDisplay.GetComponent<UIController>();
         if (uiController != null)
         {
-            uiController.DecreaseTime(0.01f / 10f);
+            uiController.DecreaseTime(0.01f / 15f);
         }
     }
 

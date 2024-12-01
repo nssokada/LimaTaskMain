@@ -10,7 +10,7 @@ public class TutorialButtons : MonoBehaviour
     {
         //if the navigation is passed move them to the next scene. If it is failed then fail them
         float totalScore = PlayerPrefs.GetFloat("TotalScore");
-        if(totalScore<20f)
+        if(totalScore<1f)
         {
             PlayerPrefs.SetString("FailReason","Unfortunately, your performance on the game did not qualify for our study.");
             PlayerPrefs.SetString("CompletionPath","https://app.prolific.com/submissions/complete?cc=C1DWO1L4");
@@ -27,19 +27,10 @@ public class TutorialButtons : MonoBehaviour
     {
         float startTime = PlayerPrefs.GetFloat("StartTime");
         float timeSpent = Time.realtimeSinceStartup - startTime;
-        
-        if(timeSpent>500f)
-        {
-            PlayerPrefs.SetString("FailReason","Unfortunately, your performance on the game did not qualify for our study");
-            PlayerPrefs.SetString("CompletionPath","https://app.prolific.com/submissions/complete?cc=C1BHFIGB");
-            SceneManager.LoadScene("EndGame");
-        }
-        else
-        {
-            PlayerPrefs.SetFloat("TotalScore", 0f);
-            PlayerPrefs.SetInt("TutorialCompleted", 1);
-            SceneManager.LoadScene("EffortCalibrator");
-        }
+    
+        PlayerPrefs.SetFloat("TotalScore", 0f);
+        PlayerPrefs.SetInt("TutorialCompleted", 1);
+        SceneManager.LoadScene("EffortCalibrator");
     }
 
 

@@ -67,6 +67,7 @@ public class PlayerManager : MonoBehaviour
                 // playerLayer = other.gameObject.GetComponent<Cookie>().layer;
                 player.GetComponent<PlayerMovement>().cookieWeight = weight;
                 player.GetComponent<PlayerMovement>().SetPressRate(weight);
+                player.GetComponent<PlayerMovement>().SetStepSize(weight, cookiePosition);
                 // player.GetComponent<PlayerMovement>().speed = 0f;  //speed multiplier higher is faster
                 Debug.Log("speed:" + player.GetComponent<PlayerMovement>().speed);
                 HeadsUpDisplay.GetComponent<UIController>().SetHUDReward((int)rewardValue);
@@ -79,9 +80,10 @@ public class PlayerManager : MonoBehaviour
                 // playerLayer = other.gameObject.GetComponent<Cookie>().layer;
                 player.GetComponent<PlayerMovement>().cookieWeight = weight;
                 player.GetComponent<PlayerMovement>().SetPressRate(weight);
+                player.GetComponent<PlayerMovement>().SetStepSize(weight, player.transform.position);
                 // player.GetComponent<PlayerMovement>().SetLightSpeed(); //speed multiplier higher is faster
                 HeadsUpDisplay.GetComponent<UIController>().SetHUDReward((int)rewardValue);
-                HeadsUpDisplay.GetComponent<UIController>().SetInstructText("Us only your mouse to move to safety");
+                HeadsUpDisplay.GetComponent<UIController>().SetInstructText("While holding 'SDF', press 'A' to move back to safety");
 
             }
 
@@ -122,7 +124,7 @@ public class PlayerManager : MonoBehaviour
                     else if (child.CompareTag("Acorn")) Destroy(child.gameObject);
                 }
                 playerState = "captured";
-                earnedReward = -100f;
+                earnedReward = -5f;
                 carrying = false;
                 acorn_carrying = false;
                 captureTime = Time.realtimeSinceStartup;

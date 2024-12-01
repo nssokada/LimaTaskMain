@@ -125,14 +125,31 @@ private void SkipTutorial(string username)
     {
         PlayerPrefs.DeleteAll();
         PlayerPrefs.SetString(UserIdKey, username);
-        PlayerPrefs.SetInt("trialNum", 41);
-        PlayerPrefs.SetString("ConditionFile", "condition_0");
 
+        // Extract the trialNum from the username after "RESET"
+        int trialNum = 0; // Default value in case of error
+        if (!string.IsNullOrEmpty(username))
+        {
+            // Extract the numeric portion following "RESET"
+            string trialNumString = System.Text.RegularExpressions.Regex.Match(username, @"RESET(\d+)").Groups[1].Value;
+            if (!string.IsNullOrEmpty(trialNumString))
+            {
+                trialNum = int.Parse(trialNumString);
+            }
+        }
+
+        Debug.Log("Extracted trialNum: " + trialNum);
+
+        // Set the trialNum in PlayerPrefs
+        PlayerPrefs.SetInt("trialNum", trialNum);
+
+        // Set other PlayerPrefs values
+        PlayerPrefs.SetString("ConditionFile", "condition_0");
         PlayerPrefs.SetInt("TutorialCompleted", 1);
+
         Debug.Log($"New user generated: {username}");
         SceneManager.LoadScene("EffortCalibrator");
     }
-
     // Load from old user wherever they left off
     void LoadFromOldUser()
     {

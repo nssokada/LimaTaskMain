@@ -24,7 +24,7 @@ public class SessionGenerator : MonoBehaviour
     public static string persistentDataPath; //datapath that will be used throughout the game. A concatenation of the username and DB path
     private string currentState;
 
-    public async void MainGameButton()
+    public void MainGameButton()
     {
         username = PlayerPrefs.GetString("userID");
         PlayerPrefs.SetFloat("StartTime", Time.realtimeSinceStartup);
@@ -57,15 +57,18 @@ public class SessionGenerator : MonoBehaviour
         {
             Debug.Log("Attempting to grab condition file...");
             //Determine Condition File:
-            await pullCondition();
+            conditionFile = "condition_0";
+            PlayerPrefs.SetString("ConditionFile", conditionFile);
             GenerateExperiment(conditionFile);
         }
     }
 
 
-    public void RecordPressLatency(float playerPressLatency)
+
+    public void RecordPressLatency(float playerPressLatency, float count)
     {
         pushLatencyToFirebase(playerPressLatency);
+        pushCountToFirebase(count);
     }
 
 
@@ -276,52 +279,13 @@ public class SessionGenerator : MonoBehaviour
     {
         string trial_num = trialNum.ToString("0000");
 
-        // Serialize the trial data to check if it is valid JSON
-        try
-        {
-            string jsonData = JsonUtility.ToJson(trial);
-
-            if (string.IsNullOrEmpty(jsonData))
-            {
-                Debug.LogError($"Serialization failed for trial {trial_num}. Data is null or invalid.");
-                return; // Stop the process if serialization fails
-            }
-
-            Debug.Log($"Serialized trial {trial_num}");
-
-            // Now proceed with pushing data to Firebase
-            Debug.Log($"Pushing trial {trial_num} data to Firebase.");
-            writeToFirebase(trial_num, "trial_data", trial);
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Error serializing trial {trial_num} data: {e.Message}");
-        }
+        writeToFirebase(trial_num, "trial_data", trial);
     }
 
     public void pushSurveyData(QuestionResponseList surveyResponse, string surveyName)
     {
-        // Serialize the trial data to check if it is valid JSON
-        try
-        {
-            string jsonData = JsonUtility.ToJson(surveyResponse);
 
-            if (string.IsNullOrEmpty(jsonData))
-            {
-                Debug.LogError($"Serialization failed for {surveyName}. Data is null or invalid.");
-                return; // Stop the process if serialization fails
-            }
-
-            Debug.Log($"Serialized {surveyName} data: {jsonData}");
-
-            // Now proceed with pushing data to Firebase
-            Debug.Log($"Pushing {surveyName} data to Firebase.");
-            writeToFirebase(surveyName, surveyResponse);
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Error serializing {surveyName} data: {e.Message}");
-        }
+        writeToFirebase(surveyName, surveyResponse);
 
     }
 
@@ -335,28 +299,8 @@ public class SessionGenerator : MonoBehaviour
 
     public void pushSubjectiveData(SubjectiveReport report, string reportName)
     {
-        // Serialize the trial data to check if it is valid JSON
-        try
-        {
-            string jsonData = JsonUtility.ToJson(report);
 
-            if (string.IsNullOrEmpty(jsonData))
-            {
-                Debug.LogError($"Serialization failed for {reportName}. Data is null or invalid.");
-                return; // Stop the process if serialization fails
-            }
-
-            Debug.Log($"Serialized {reportName} data: {jsonData}");
-
-            // Now proceed with pushing data to Firebase
-            Debug.Log($"Pushing {reportName} data to Firebase.");
-            writeToFirebase(reportName, report);
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Error serializing {reportName} data: {e.Message}");
-        }
-
+        writeToFirebase(reportName, report);
     }
 
 
@@ -384,29 +328,30 @@ public class SessionGenerator : MonoBehaviour
         exp.effortPressLatency = PlayerPrefs.GetFloat("PressLatency", -1f);
         exp.effortPressCount = PlayerPrefs.GetFloat("PressCount", -1f);
         Debug.Log("Resetting experiment info for: " + username);
-        writeToFirebase(username + "_reset", exp);
+        int resetTime = (int)(Time.realtimeSinceStartup * 1000) % 1000;
+        writeToFirebase(username + "_reset_time_"+resetTime, exp);
     }
 
-    private async Task pullCondition()
-    {
-        var tcs = new TaskCompletionSource<bool>();
-        Debug.Log("Pulling condition from Firebase...");
+    // private async Task pullCondition()
+    // {
+    //     var tcs = new TaskCompletionSource<bool>();
+    //     Debug.Log("Pulling condition from Firebase...");
 
-        RestClient.Get(dataBasePath + "ActiveCondition.json").Then(response =>
-        {
-            conditionFile = response.Text.Trim('"'); // Remove the leading and trailing quotation marks
-            PlayerPrefs.SetString("ConditionFile", conditionFile);
-            Debug.Log("Condition file received: " + conditionFile);
-            tcs.SetResult(true); // Signal that the task is complete
-        }).Catch(err =>
-        {
-            Debug.LogError("Error pulling condition: " + err.Message);
-            tcs.SetException(err); // Signal that the task failed
-        });
+    //     RestClient.Get(dataBasePath + "ActiveCondition.json").Then(response =>
+    //     {
+    //         conditionFile = response.Text.Trim('"'); // Remove the leading and trailing quotation marks
+    //         PlayerPrefs.SetString("ConditionFile", conditionFile);
+    //         Debug.Log("Condition file received: " + conditionFile);
+    //         tcs.SetResult(true); // Signal that the task is complete
+    //     }).Catch(err =>
+    //     {
+    //         Debug.LogError("Error pulling condition: " + err.Message);
+    //         tcs.SetException(err); // Signal that the task failed
+    //     });
 
-        // Await the task to ensure the method doesn't complete until the asynchronous operation is done
-        await tcs.Task;
-    }
+    //     // Await the task to ensure the method doesn't complete until the asynchronous operation is done
+    //     await tcs.Task;
+    // }
 
     // Write trial data to Firebase
     private void writeToFirebase(string trial_num, string attributeName, LimaTrial attribute)
@@ -471,10 +416,26 @@ public class SessionGenerator : MonoBehaviour
 
     private void pushLatencyToFirebase(float latency)
     {
-        string path = persistentDataPath + "/PlayerData/pressLatency.json";
+        int resetTime = (int)(Time.realtimeSinceStartup * 1000) % 1000;
+        string path = persistentDataPath + "/PlayerData/"+resetTime+"pressLatency.json";
         Debug.Log($"Writing press latency data to Firebase at {path}");
 
         RestClient.Put(path, latency).Then(response =>
+        {
+            Debug.Log("Successfully wrote press latency data to Firebase.");
+        }).Catch(err =>
+        {
+            Debug.LogError("Failed to write press latency data to Firebase. Error: " + err.Message);
+        });
+    }
+
+    private void pushCountToFirebase(float count)
+    {
+        int resetTime = (int)(Time.realtimeSinceStartup * 1000) % 1000;
+        string path = persistentDataPath + "/PlayerData/"+resetTime+"pressCount.json";
+        Debug.Log($"Writing press count data to Firebase at {path}");
+
+        RestClient.Put(path, count).Then(response =>
         {
             Debug.Log("Successfully wrote press latency data to Firebase.");
         }).Catch(err =>

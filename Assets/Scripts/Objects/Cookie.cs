@@ -13,9 +13,9 @@ public class Cookie: MonoBehaviour
 
     public void setCookieSize()
     {
-        if(weight==3f)
+        if(weight>=3f)
         {
-            this.transform.localScale = new Vector3 (85.0f, 85.0f, 85.0f);
+            this.transform.localScale = new Vector3 (100.0f, 100.0f, 100.0f);
         }
         else
         {
@@ -34,15 +34,10 @@ public class Cookie: MonoBehaviour
         Material material0 = plain;
         Material material1 = chocochip;
 
-        if (rewardValue > 10 && weight >= 3f)
+        if (weight >= 3f)
         {
             material0 = chocolate;
             material1 = chocochip;
-        }
-        else if (rewardValue > 10 && weight >= 2f)
-        {
-            material0 = plain;
-            material1 = strawbezzy;
         }
 
         // Assign materials only if there are changes

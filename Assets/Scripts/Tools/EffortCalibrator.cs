@@ -48,6 +48,7 @@ public class EffortCalibrator : MonoBehaviour
             HeadsUpDisplay.SetActive(true);
             HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0.08f);
             counter = 0;
+            pressTimes = new List<float>();
             resetTimer();
             instructUI.SetActive(false);
         }
@@ -61,9 +62,9 @@ public class EffortCalibrator : MonoBehaviour
             PlayerPrefs.SetFloat("PressCount", MinPressCount);
             PlayerPrefs.Save();
 
-            if (MinPressCount < 5f)
+            if (MinPressCount < 10f)
             {
-                PlayerPrefs.SetString("FailReason", "Unfortunately, the calibration of your keyboard didn’t meet the necessary criteria to continue with the study");
+                PlayerPrefs.SetString("FailReason", "Unfortunately, you did not press fast enough to pass the attention check. Please return to Prolific and return the study.");
                 PlayerPrefs.SetString("CompletionPath", "https://app.prolific.com/submissions/complete?cc=C1FU3LPS");
                 SceneManager.LoadScene("EndGame");
             }
@@ -79,7 +80,6 @@ public class EffortCalibrator : MonoBehaviour
                 }
                 else
                 {
-                    SessionGenerator.GetComponent<SessionGenerator>().pushResetExperimentInfo();
                     SceneManager.LoadScene("MainGame");
                 }
             }
@@ -107,7 +107,7 @@ public class EffortCalibrator : MonoBehaviour
         Debug.Log("Current Average Latency: " + CalculateAverage(pressTimes, true) + " seconds");
         meanLatencies.Add(CalculateAverage(pressTimes, true));
         maxPressCount.Add(counter);
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f);
         resetCalibrator();
     }
 

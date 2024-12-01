@@ -1868,10 +1868,6 @@ GameObject:
   m_Component:
   - component: {fileID: 874122311}
   - component: {fileID: 874122310}
-  - component: {fileID: 874122307}
-  - component: {fileID: 874122306}
-  - component: {fileID: 874122305}
-  - component: {fileID: 874122304}
   - component: {fileID: 874122312}
   m_Layer: 0
   m_Name: Main Camera00
@@ -1880,85 +1876,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &874122304
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 874122303}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65f5677aa325c184f801528d78a73827, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  reprojectionShader: {fileID: 4800000, guid: 7ca93c1a56ee0154b8c714591d6d211a, type: 3}
-  neighborhood: 1
-  unjitterColorSamples: 0
-  unjitterNeighborhood: 0
-  unjitterReprojection: 0
-  useYCoCg: 0
-  useClipping: 1
-  useDilation: 1
-  useMotionBlur: 0
-  useOptimizations: 1
-  feedbackMin: 0.88
-  feedbackMax: 1
-  motionBlurStrength: 1
-  motionBlurIgnoreFF: 0
---- !u!114 &874122305
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 874122303}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b642ff60407fe724bafa6602199213c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  velocityShader: {fileID: 4800000, guid: 0d7f09e63dd99504ca6e04212a21ec72, type: 3}
-  neighborMaxGen: 0
-  neighborMaxSupport: 1
-  numResident: 0
-  numRendered: 0
-  numDrawCalls: 0
---- !u!114 &874122306
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 874122303}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 899f97884c6d96b4ca20648ec109a37f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pattern: 12
-  patternScale: 1
-  activeSample: {x: 0, y: 0, z: 0, w: 0}
-  activeIndex: -2
---- !u!114 &874122307
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 874122303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6363bba448bf64e60a763433f9ddf81b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _threshold: 0.91
-  _softKnee: 0.614
-  _radius: 6.01
-  _intensity: 0.015
-  _highQuality: 1
-  _antiFlicker: 0
-  _shader: {fileID: 4800000, guid: 5a711a01011934ebcb58ef5ad52159d6, type: 3}
 --- !u!20 &874122310
 Camera:
   m_ObjectHideFlags: 0

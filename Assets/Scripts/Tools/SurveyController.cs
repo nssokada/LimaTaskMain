@@ -82,7 +82,7 @@ public class SurveyController : MonoBehaviour
         }
         else
         {
-             currentSurveys = new GameObject[1]{ surveys[6]};
+             currentSurveys = new GameObject[2]{ surveys[6], surveys[7]};
         }
     }
 }
