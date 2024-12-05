@@ -57,7 +57,7 @@ public class SessionGenerator : MonoBehaviour
         {
             Debug.Log("Attempting to grab condition file...");
             //Determine Condition File:
-            conditionFile = "condition_0";
+            conditionFile = "condition_3";
             PlayerPrefs.SetString("ConditionFile", conditionFile);
             GenerateExperiment(conditionFile);
         }

@@ -136,6 +136,18 @@ private void SkipTutorial(string username)
             {
                 trialNum = int.Parse(trialNumString);
             }
+
+            // Extract the condition digit after "CONDITION"
+            string conditionNumString = System.Text.RegularExpressions.Regex.Match(username, @"CONDITION(\d+)").Groups[1].Value;
+            string conditionFile = "condition_0"; // Default value
+            if (!string.IsNullOrEmpty(conditionNumString))
+            {
+                conditionFile = "condition_" + conditionNumString;
+            }
+
+            // Set the condition file in PlayerPrefs
+            PlayerPrefs.SetString("ConditionFile", conditionFile);
+            Debug.Log("Extracted condition file: " + conditionFile);
         }
 
         Debug.Log("Extracted trialNum: " + trialNum);
@@ -144,12 +156,15 @@ private void SkipTutorial(string username)
         PlayerPrefs.SetInt("trialNum", trialNum);
 
         // Set other PlayerPrefs values
-        PlayerPrefs.SetString("ConditionFile", "condition_0");
         PlayerPrefs.SetInt("TutorialCompleted", 1);
 
         Debug.Log($"New user generated: {username}");
         SceneManager.LoadScene("EffortCalibrator");
     }
+
+
+
+
     // Load from old user wherever they left off
     void LoadFromOldUser()
     {

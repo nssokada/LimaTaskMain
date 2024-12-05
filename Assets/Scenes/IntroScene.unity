@@ -519,7 +519,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 772463885}
         m_TargetAssemblyTypeName: LandingPageButtons, Assembly-CSharp
-        m_MethodName: LoginButton
+        m_MethodName: ResetButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
