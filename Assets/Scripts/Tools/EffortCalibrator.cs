@@ -105,6 +105,7 @@ public class EffortCalibrator : MonoBehaviour
         pressable = true;
         yield return new WaitForSeconds(10.0f);
         Debug.Log("Current Average Latency: " + CalculateAverage(pressTimes, true) + " seconds");
+        Debug.Log(counter);
         meanLatencies.Add(CalculateAverage(pressTimes, true));
         maxPressCount.Add(counter);
         yield return new WaitForSeconds(0.5f);
