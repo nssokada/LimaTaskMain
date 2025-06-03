@@ -21,7 +21,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Tutorial.unity
     guid: 017438218e6b74c74a5b86b010e9567e
   - enabled: 0
-    path: Assets/Scenes/AcornTutorial.unity
+    path: Assets/Scenes/AcornGame_Collab/AcornTutorial.unity
     guid: c3b096fb8cea749878505dd5ee7cc43b
   - enabled: 0
     path: Assets/Scenes/AcornGame.unity

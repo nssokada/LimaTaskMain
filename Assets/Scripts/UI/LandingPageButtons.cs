@@ -217,7 +217,19 @@ public class LandingPageButtons : MonoBehaviour
 
         SceneManager.LoadScene("HomeScreen");
     }
-    
+
+    public void AcornGameButton()
+    {
+        SceneManager.LoadScene("AcornGame_GameScene");
+
+    }
+
+    public void AcornGameTutorial()
+    {
+        SceneManager.LoadScene("AcornGame_GameScene");
+
+    }
+
     #endregion
 }
 

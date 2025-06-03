@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7828,6 +7828,7 @@ MonoBehaviour:
       time: 0
     acornsSpawned: []
     acornsCollected: []
+    escapeSignal: NaN
   trialEndable: 0
   HeadsUpDisplay: {fileID: 969886838}
   instructText: {fileID: 2106734200}
@@ -11140,14 +11141,24 @@ MonoBehaviour:
   cookieWeight: 0
   thresholdLow: 0.1
   smoothingFactor: 0.1
-  requiredPressRate: 5
   currentPressRate: 0
-  decayRate: 0.85
+  requiredPressRate: 5
+  requiredPressRate75: 0
+  requiredPressRate50: 0
+  requiredPressRate25: 0
+  desiredSpeedMax: 0
   effortPeriod: 0
   clickingPeriod: 0
   acornPeriod: 0
   stepSize: 0
+  stepSize_Heavy: 0
+  stepSize_Light: 0
   lightSpeed: 0
+  pressRateSmoothing: 0.8
+  speedTransitionSpeed: 5
+  counter: 0
+  distance: 0
+  remainingPresses: 0
   transitionSpeed: 5
 --- !u!114 &1299385437
 MonoBehaviour:
@@ -11363,6 +11374,9 @@ MonoBehaviour:
   earnedReward: 0
   HeadsUpDisplay: {fileID: 969886838}
   exitSafety: 0
+  canCollectAcorns: 0
+  audioSource: {fileID: 0}
+  coinSound: {fileID: 0}
 --- !u!54 &1348269557
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -14064,6 +14078,7 @@ MonoBehaviour:
   mouseTrackChoicePeriod: []
   mouseTrackEffortPeriod: []
   effortRate: []
+  escapeSignal: 0
   player: {fileID: 0}
   predator: {fileID: 0}
 --- !u!114 &1764971543
@@ -14080,7 +14095,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Task: {fileID: 857532100}
   SessionScreen: {fileID: 1137371489}
-  startUI: {fileID: 0}
+  startUI: {fileID: 1293917559}
   conditionFile: 
   username: 
   playerPressLatency: 0
@@ -14122,6 +14137,7 @@ MonoBehaviour:
       time: 0
     acornsSpawned: []
     acornsCollected: []
+    escapeSignal: NaN
   numTrials: 0
 --- !u!4 &1764971544
 Transform:
