@@ -20,6 +20,11 @@ public class PlayerManager : MonoBehaviour
     public GameObject HeadsUpDisplay;
     public bool exitSafety;
     float rewardValue;
+    public bool canCollectAcorns;
+
+
+    public AudioSource audioSource;
+    public AudioClip coinSound;
     void OnEnable()
     {
         // Reset player states
@@ -31,7 +36,7 @@ public class PlayerManager : MonoBehaviour
         escapeTime = -1f;
         captureTime = -1f;
         exitSafety = false;
-
+        canCollectAcorns = true;
         HeadsUpDisplay.GetComponent<UIController>().SetTotalScore(PlayerPrefs.GetFloat("TotalScore"));
 
         // Clear cookies and acorns attached to the player
@@ -138,19 +143,27 @@ public class PlayerManager : MonoBehaviour
 
         else if (other.gameObject.tag == "Acorn")
         {
-            other.gameObject.GetComponent<Collider>().enabled = false;
-            logAcornPosition(other.gameObject);
-            Debug.Log("Acorn Hit");
-            HeadsUpDisplay.GetComponent<UIController>().SetHUDReward(2);
-            rewardPotential += 2;
-            foreach (Transform child in other.gameObject.transform)
+            if (canCollectAcorns)
             {
-                // Set each child to active
-                child.gameObject.SetActive(true); // Set to false if you want to deactivate
-            }
+                playerState = "escaped"; // this will help us earn our
+                other.gameObject.GetComponent<Collider>().enabled = false;
+                logAcornPosition(other.gameObject);
+                Debug.Log("Acorn Hit");
+                HeadsUpDisplay.GetComponent<UIController>().SetHUDReward(2);
+                rewardPotential += 2;
+                earnedReward += 2;
+                foreach (Transform child in other.gameObject.transform)
+                {
+                    // Set each child to active
+                    child.gameObject.SetActive(true); // Set to false if you want to deactivate
+                }
 
-            other.transform.parent = player.transform;
-            acorn_carrying = true;
+                audioSource.PlayOneShot(coinSound);
+
+                other.transform.parent = player.transform;
+                acorn_carrying = true;
+            }
+        
         }
     }
 

@@ -26,6 +26,8 @@ public class UIController : MonoBehaviour
     void OnEnable()
     {
         SetEnergy(0f);
+        SetInstructText("Use your mouse to move");
+
     }
     void OnDisable()
     {
@@ -90,6 +92,7 @@ public class UIController : MonoBehaviour
     {
         totalScoreTextHUD.text = ((int)totalScore).ToString();
     }
+
 
 
 }

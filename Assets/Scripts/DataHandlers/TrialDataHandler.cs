@@ -10,6 +10,7 @@ public class TrialDataHandler : MonoBehaviour
     public List<PositionHandler> mouseTrackChoicePeriod;
     public List<PositionHandler> mouseTrackEffortPeriod;
     public List<float> effortRate;
+    public float escapeSignal;
     public GameObject player;
     public GameObject predator;
 
@@ -21,7 +22,7 @@ public class TrialDataHandler : MonoBehaviour
     //         recordMouseStartPosition();
     //     }
     // }
-   // Update is called once per frame
+    // Update is called once per frame
 
     #region Public Access Methods
 
@@ -32,7 +33,8 @@ public class TrialDataHandler : MonoBehaviour
         predatorPosition = new List<PositionHandler>();
         mouseTrackChoicePeriod = new List<PositionHandler>();
         mouseTrackEffortPeriod = new List<PositionHandler>();
-        effortRate  = new List<float>();
+        effortRate = new List<float>();
+        escapeSignal = -1;
     }
 
     // Method to clear all the lists
@@ -45,11 +47,13 @@ public class TrialDataHandler : MonoBehaviour
         // effortRate.Clear();
         // Debug.Log("All position lists have been cleared.");
 
-         playerPosition = new List<PositionHandler>();
+        playerPosition = new List<PositionHandler>();
         predatorPosition = new List<PositionHandler>();
         mouseTrackChoicePeriod = new List<PositionHandler>();
         mouseTrackEffortPeriod = new List<PositionHandler>();
-        effortRate  = new List<float>();
+        effortRate = new List<float>();
+        escapeSignal = -1;
+
     }
 
 
@@ -89,7 +93,7 @@ public class TrialDataHandler : MonoBehaviour
     public void stopRecordContinuousMouse(string period)
     {
         string currentPeriod = period.ToLower(); // Track the current period for cancelling
-        
+
         switch (currentPeriod)
         {
             case "choiceperiod":
@@ -106,10 +110,10 @@ public class TrialDataHandler : MonoBehaviour
         }
     }
 
- 
+
     //private method
 
-     // Method to record mouse position during choice period
+    // Method to record mouse position during choice period
     private void RecordMousePositionChoicePeriod()
     {
         RecordMousePosition(mouseTrackChoicePeriod);
@@ -130,7 +134,7 @@ public class TrialDataHandler : MonoBehaviour
         mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
 
         //Create a Mouse Position handler
-        PositionHandler mousePosHandler = new PositionHandler(mousePosition.x, mousePosition.z,Time.realtimeSinceStartup); // need to do Z since the game is XZ oriented
+        PositionHandler mousePosHandler = new PositionHandler(mousePosition.x, mousePosition.z, Time.realtimeSinceStartup); // need to do Z since the game is XZ oriented
 
         // Add the position to the list
         mouseTrackerList.Add(mousePosHandler);
@@ -143,55 +147,55 @@ public class TrialDataHandler : MonoBehaviour
     //public methods
 
     //player
-        // Generalized Start/Stop Recording
-        public void StartRecordingPosition(GameObject entity, Action recordAction)
-        {
-            InvokeRepeating(recordAction.Method.Name, 0f, 0.03f);
-        }
+    // Generalized Start/Stop Recording
+    public void StartRecordingPosition(GameObject entity, Action recordAction)
+    {
+        InvokeRepeating(recordAction.Method.Name, 0f, 0.03f);
+    }
 
-        public void StopRecordingPosition(Action recordAction)
-        {
-            CancelInvoke(recordAction.Method.Name);
-        }
+    public void StopRecordingPosition(Action recordAction)
+    {
+        CancelInvoke(recordAction.Method.Name);
+    }
 
-        // Start Recording for Player and Predator
-        public void StartRecordingPlayerPosition()
-        {
-            StartRecordingPosition(player, RecordPlayerPosition);
-        }
+    // Start Recording for Player and Predator
+    public void StartRecordingPlayerPosition()
+    {
+        StartRecordingPosition(player, RecordPlayerPosition);
+    }
 
-        public void StartRecordingPredatorPosition()
-        {
-            StartRecordingPosition(predator, RecordPredatorPosition);
-        }
+    public void StartRecordingPredatorPosition()
+    {
+        StartRecordingPosition(predator, RecordPredatorPosition);
+    }
 
-        public void StopRecordingPlayerPosition()
-        {
-            StopRecordingPosition(RecordPlayerPosition);
-        }
+    public void StopRecordingPlayerPosition()
+    {
+        StopRecordingPosition(RecordPlayerPosition);
+    }
 
-        public void StopRecordingPredatorPosition()
-        {
-            StopRecordingPosition(RecordPredatorPosition);
-        }
+    public void StopRecordingPredatorPosition()
+    {
+        StopRecordingPosition(RecordPredatorPosition);
+    }
 
-        // Private methods
-        private void RecordPlayerPosition()
-        {
-            RecordPosition(player, playerPosition);
-        }
+    // Private methods
+    private void RecordPlayerPosition()
+    {
+        RecordPosition(player, playerPosition);
+    }
 
-        private void RecordPredatorPosition()
-        {
-            RecordPosition(predator, predatorPosition);
-        }
+    private void RecordPredatorPosition()
+    {
+        RecordPosition(predator, predatorPosition);
+    }
 
-        private void RecordPosition(GameObject entity, List<PositionHandler> positionList)
-        {
-            Vector3 position = entity.transform.position;
-            PositionHandler pos = new PositionHandler(position.x, position.z, Time.realtimeSinceStartup);
-            positionList.Add(pos);
-        }
+    private void RecordPosition(GameObject entity, List<PositionHandler> positionList)
+    {
+        Vector3 position = entity.transform.position;
+        PositionHandler pos = new PositionHandler(position.x, position.z, Time.realtimeSinceStartup);
+        positionList.Add(pos);
+    }
 
 
 
@@ -207,6 +211,19 @@ public class TrialDataHandler : MonoBehaviour
     void RecordEffortInput()
     {
         effortRate.Add(Time.realtimeSinceStartup);
+    }
+    #endregion
+    
+    #region Escape Signal Tracking
+
+    public void recordEscape()
+    {
+        RecordEscapeInput();
+    }
+
+    void RecordEscapeInput()
+    {
+        escapeSignal = (Time.realtimeSinceStartup);
     }
     #endregion
 

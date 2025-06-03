@@ -113,60 +113,82 @@ public class TrialController : MonoBehaviour
     }
 
 
-    public void spawnAcorns(int numberOfAcorns)
+     public void spawnAcorns(int numberOfAcorns)
+{
+    acornPositions.Clear(); // Clear previous positions if re-spawning
+    acornLoggedPositions.Clear();
+
+    for (int i = 0; i < numberOfAcorns; i++)
     {
-        acornPositions.Clear(); // Clear previous positions if re-spawning
-        acornLoggedPositions.Clear();
+        Vector3 spawnPosition;
+        Quaternion spawnRotation;
+        bool positionFound = false;
 
-        for (int i = 0; i < numberOfAcorns; i++)
+        for (int j = 0; j < 100; j++) // Try 100 times to find a valid position
         {
-            Vector3 spawnPosition;
-            Quaternion spawnRotation;
-            bool positionFound = false;
+            spawnPosition = GetBiasedRandomPointInRadius(centerPt.position, radius);
 
-            for (int j = 0; j < 100; j++) // Try 100 times to find a valid position
+            // Check if the position is within the radius
+            if (Vector3.Distance(centerPt.position, spawnPosition) <= radius)
             {
-                spawnPosition = GetRandomPointInRadius(centerPt.position, radius);
-
-                // Check if the position is within the radius
-                if (Vector3.Distance(centerPt.position, spawnPosition) <= radius)
+                // Check if the position is far enough from existing acorns
+                bool isValid = true;
+                foreach (Vector3 pos in acornPositions)
                 {
-                    // Check if the position is far enough from existing acorns
-                    bool isValid = true;
-                    foreach (Vector3 pos in acornPositions)
+                    if (Vector3.Distance(pos, spawnPosition) < minDistanceBetweenAcorns)
                     {
-                        if (Vector3.Distance(pos, spawnPosition) < minDistanceBetweenAcorns)
-                        {
-                            isValid = false;
-                            break;
-                        }
-                        else if (Vector3.Distance(centerPt.position, spawnPosition) < minDistanceBetweenAcorns)
-                        {
-                            isValid = false;
-                            break;
-                        }
+                        isValid = false;
+                        break;
                     }
-
-                    if (isValid)
+                    else if (Vector3.Distance(centerPt.position, spawnPosition) < minDistanceBetweenAcorns)
                     {
-                        logAcornPosition(spawnPosition);
-
-                        // Generate a random rotation
-                        spawnRotation = UnityEngine.Random.rotation;
-
-                        Instantiate(acornPrefab, spawnPosition, spawnRotation);
-                        positionFound = true;
+                        isValid = false;
                         break;
                     }
                 }
-            }
 
-            if (!positionFound)
-            {
-                Debug.LogWarning("Could not find a valid position for acorn " + i);
+                if (isValid)
+                {
+                    logAcornPosition(spawnPosition);
+
+                    // Generate a random rotation
+                    spawnRotation = UnityEngine.Random.rotation;
+
+                    Instantiate(acornPrefab, spawnPosition, spawnRotation);
+                    positionFound = true;
+                    break;
+                }
             }
         }
+
+        if (!positionFound)
+        {
+            Debug.LogWarning("Could not find a valid position for acorn " + i);
+        }
     }
+}
+
+// Helper method that biases spawning toward the outer edge
+private Vector3 GetBiasedRandomPointInRadius(Vector3 center, float maxRadius)
+{
+    // Generate a random angle
+    float angle = UnityEngine.Random.Range(0f, 2f * Mathf.PI);
+    
+    // Use power function to bias toward outer edge
+    // Higher power = more bias toward edge
+    float biasStrength = 2f; // Adjust this value (1 = uniform, higher = more edge bias)
+    float normalizedRadius = Mathf.Pow(UnityEngine.Random.Range(0f, 1f), 1f / biasStrength);
+    float distance = normalizedRadius * maxRadius;
+    
+    // Convert polar coordinates to Cartesian (preserve Y coordinate from center)
+    return new Vector3(
+        center.x + Mathf.Cos(angle) * distance,
+        center.y + 0.5f, // Match the original +0.5f Y offset
+        center.z + Mathf.Sin(angle) * distance
+    );
+    
+}
+
 
     void logAcornPosition(Vector3 position)
     {

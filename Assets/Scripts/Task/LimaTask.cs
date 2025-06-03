@@ -289,6 +289,10 @@ public class LimaTask : MonoBehaviour
             {
                 tutorialUI.SetActive(true);
             }
+            else if (currentTransition == 11)
+            {
+                SceneManager.LoadScene("GameCompletionScreen");
+            }
             else
             {
                 startUI.SetActive(true);
@@ -313,6 +317,7 @@ public class LimaTask : MonoBehaviour
         predator.GetComponent<PredatorControls>().strike_bool = false;
         HeadsUpDisplay.GetComponent<UIController>().SetEnergy(0f);
         HeadsUpDisplay.SetActive(false);
+        mainCamera.GetComponent<CameraGreyScale>().SetGreyscale(false);
         ToggleEndStateScreen(playerManager.playerState);
         TogglePlayer();
         TogglePredator();
@@ -491,7 +496,7 @@ public class LimaTask : MonoBehaviour
         if (!acorns)
         {
             Debug.Log("spawning acorns");
-            trialController.GetComponent<TrialController>().spawnAcorns(5);
+            trialController.GetComponent<TrialController>().spawnAcorns(10);
             acorns = true;
         }
         else
@@ -521,6 +526,7 @@ public class LimaTask : MonoBehaviour
         trial.trialEndState = playerManager.playerState;
         trial.acornsSpawned = trialController.GetComponent<TrialController>().acornLoggedPositions;
         trial.acornsCollected = playerManager.acornsCollected;
+        trial.escapeSignal = dataHandler.escapeSignal;
 
         float totalScore = PlayerPrefs.GetFloat("TotalScore");
         totalScore += playerManager.earnedReward;

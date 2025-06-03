@@ -6,6 +6,14 @@ using UnityEngine.SceneManagement;
 using System;
 using System.Threading.Tasks;
 
+
+[System.Serializable]
+public class UserSessionInfo
+{
+    public int sessionCount;
+    public string lastSessionDate;
+    public string currentCondition;
+}
 public class SessionGenerator : MonoBehaviour
 {
     public GameObject Task;
@@ -20,7 +28,7 @@ public class SessionGenerator : MonoBehaviour
     public LimaTrial trial;
     public int numTrials;
 
-    private string dataBasePath = "https://limatask-a554a-default-rtdb.firebaseio.com/";
+    private string dataBasePath = "https://acorngame-default-rtdb.firebaseio.com/"; // this DB path is currently for the acornGame
     public static string persistentDataPath; //datapath that will be used throughout the game. A concatenation of the username and DB path
     private string currentState;
 
@@ -103,8 +111,22 @@ public class SessionGenerator : MonoBehaviour
         PlayerPrefs.SetString("GameState", "AcornGame");
 
 
-        Debug.Log("Starting tutorial...");
-        GenerateAcornTutorial();
+        //IF OLD USER resume game
+        if (PlayerPrefs.HasKey("ConditionFile"))
+        {
+            conditionFile = PlayerPrefs.GetString("ConditionFile");
+            Debug.Log("Resuming game with condition file: " + conditionFile);
+            ReLoadExperiment(conditionFile);
+        }
+        //ELSE Start new game
+        else
+        {
+            Debug.Log("Attempting to grab condition file...");
+            //Determine Condition File:
+            conditionFile = "acorn_Game";
+            PlayerPrefs.SetString("ConditionFile", conditionFile);
+            GenerateExperiment(conditionFile);
+        }
 
     }
 
@@ -133,7 +155,7 @@ public class SessionGenerator : MonoBehaviour
         Debug.Log("Starting tutorial...");
         GenerateTutorial();
     }
-        public void TutorialButton_2()
+    public void TutorialButton_2()
     {
         username = PlayerPrefs.GetString("userID");
         PlayerPrefs.SetFloat("StartTime", Time.realtimeSinceStartup);
@@ -329,7 +351,7 @@ public class SessionGenerator : MonoBehaviour
         exp.effortPressCount = PlayerPrefs.GetFloat("PressCount", -1f);
         Debug.Log("Resetting experiment info for: " + username);
         int resetTime = (int)(Time.realtimeSinceStartup * 1000) % 1000;
-        writeToFirebase(username + "_reset_time_"+resetTime, exp);
+        writeToFirebase(username + "_reset_time_" + resetTime, exp);
     }
 
     // private async Task pullCondition()
@@ -417,7 +439,7 @@ public class SessionGenerator : MonoBehaviour
     private void pushLatencyToFirebase(float latency)
     {
         int resetTime = (int)(Time.realtimeSinceStartup * 1000) % 1000;
-        string path = persistentDataPath + "/PlayerData/"+resetTime+"pressLatency.json";
+        string path = persistentDataPath + "/PlayerData/" + resetTime + "pressLatency.json";
         Debug.Log($"Writing press latency data to Firebase at {path}");
 
         RestClient.Put(path, latency).Then(response =>
@@ -432,7 +454,7 @@ public class SessionGenerator : MonoBehaviour
     private void pushCountToFirebase(float count)
     {
         int resetTime = (int)(Time.realtimeSinceStartup * 1000) % 1000;
-        string path = persistentDataPath + "/PlayerData/"+resetTime+"pressCount.json";
+        string path = persistentDataPath + "/PlayerData/" + resetTime + "pressCount.json";
         Debug.Log($"Writing press count data to Firebase at {path}");
 
         RestClient.Put(path, count).Then(response =>
@@ -464,6 +486,171 @@ public class SessionGenerator : MonoBehaviour
 
         return await tcs.Task;
     }
+
+    #region Session Based Logging:
+
+    public async Task<string> CreateSessionBasedDataPath(string username)
+    {
+        try
+        {
+            // First check if user exists in database
+            UserSessionInfo sessionInfo = await GetUserSessionInfo(username);
+
+            int currentSession;
+            if (sessionInfo == null)
+            {
+                // New user - start with session 1
+                currentSession = 1;
+                sessionInfo = new UserSessionInfo
+                {
+                    sessionCount = 1,
+                    lastSessionDate = System.DateTime.Now.ToString(),
+                    currentCondition = DetermineConditionForSession(1)
+                };
+            }
+            else
+            {
+                // Existing user - increment session
+                currentSession = sessionInfo.sessionCount + 1;
+                sessionInfo.sessionCount = currentSession;
+                sessionInfo.lastSessionDate = System.DateTime.Now.ToString();
+                sessionInfo.currentCondition = DetermineConditionForSession(currentSession);
+            }
+
+            // Update user session info in database
+            await UpdateUserSessionInfo(username, sessionInfo);
+
+            // Create session-based path: username/session#/
+            string sessionBasedPath = dataBasePath + username + "/session" + currentSession + "/";
+
+            // Store the current session info for later use
+            PlayerPrefs.SetInt("CurrentSession", currentSession);
+            PlayerPrefs.SetString("SessionCondition", sessionInfo.currentCondition);
+
+            Debug.Log($"User: {username}, Session: {currentSession}, Condition: {sessionInfo.currentCondition}");
+            Debug.Log($"Session-based path created: {sessionBasedPath}");
+
+            return sessionBasedPath;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error creating session-based data path: {e.Message}");
+            // Fallback to original method if there's an error
+            return CreatePersistentPath(username);
+        }
+    }
+
+    private async Task<UserSessionInfo> GetUserSessionInfo(string username)
+    {
+        var tcs = new TaskCompletionSource<UserSessionInfo>();
+        string userInfoPath = dataBasePath + username + "/userSessionInfo.json";
+
+        RestClient.Get(userInfoPath).Then(response =>
+        {
+            if (!string.IsNullOrEmpty(response.Text) && response.Text != "null")
+            {
+                UserSessionInfo info = JsonUtility.FromJson<UserSessionInfo>(response.Text);
+                tcs.SetResult(info);
+            }
+            else
+            {
+                // User doesn't exist yet
+                tcs.SetResult(null);
+            }
+        }).Catch(err =>
+        {
+            Debug.Log($"User {username} not found in database (new user)");
+            tcs.SetResult(null);
+        });
+
+        return await tcs.Task;
+    }
+    
+        private async Task UpdateUserSessionInfo(string username, UserSessionInfo sessionInfo)
+    {
+        var tcs = new TaskCompletionSource<bool>();
+        string userInfoPath = dataBasePath + username + "/userSessionInfo.json";
+        
+        RestClient.Put(userInfoPath, sessionInfo).Then(response =>
+        {
+            Debug.Log($"Successfully updated session info for user: {username}");
+            tcs.SetResult(true);
+        }).Catch(err =>
+        {
+            Debug.LogError($"Failed to update session info for user {username}: {err.Message}");
+            tcs.SetException(err);
+        });
+        
+        await tcs.Task;
+    }
+
+    private string DetermineConditionForSession(int sessionNumber)
+    {
+        // Implement your condition assignment logic here
+        // This is just an example - modify based on your experimental design
+        
+        switch (sessionNumber % 5) // Cycling through 5 conditions
+        {
+            case 1:
+                return "acornGame_1";
+            case 2:
+                return "acornGame_2";
+            case 3:
+                return "acornGame_3";
+            case 4:
+                return "acornGame_4";
+            case 0:
+                return "acornGame_5";
+            default:
+                return "acornGame_1";
+        }
+        
+
+    }
+
+    // Modified version of your existing functions to use session-based paths
+    public async void MainGameButtonWithSessions()
+    {
+        username = PlayerPrefs.GetString("userID");
+        PlayerPrefs.SetFloat("StartTime", Time.realtimeSinceStartup);
+
+        // Use the new session-based path creation
+        persistentDataPath = await CreateSessionBasedDataPath(username);
+        PlayerPrefs.SetString("DataPath", persistentDataPath);
+        
+        // Get the condition determined by session
+        conditionFile = PlayerPrefs.GetString("SessionCondition");
+        PlayerPrefs.SetString("ConditionFile", conditionFile);
+        
+        //SET KEYS
+        PlayerPrefs.SetString("CheckPoint", "MainGame");
+        PlayerPrefs.SetString("GameState", "MainGame");
+        
+        Debug.Log($"Starting main game - Session: {PlayerPrefs.GetInt("CurrentSession")}, Condition: {conditionFile}");
+        GenerateExperiment(conditionFile);
+    }
+
+    public async void AcornButtonWithSessions()
+    {
+        username = PlayerPrefs.GetString("userID");
+
+        // Use the new session-based path creation
+        persistentDataPath = await CreateSessionBasedDataPath(username);
+        PlayerPrefs.SetString("DataPath", persistentDataPath);
+        
+        //SET KEYS
+        PlayerPrefs.SetString("CheckPoint", "AcornGame");
+        PlayerPrefs.SetString("GameState", "AcornGame");
+        
+        // For acorn game, you might want a specific condition or use session-based
+        conditionFile = PlayerPrefs.GetString("SessionCondition");
+        PlayerPrefs.SetString("ConditionFile", conditionFile);
+        
+        Debug.Log($"Starting acorn game - Session: {PlayerPrefs.GetInt("CurrentSession")}");
+        GenerateExperiment(conditionFile);
+    }
+
+    #endregion
 
 
 }

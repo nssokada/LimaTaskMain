@@ -453,6 +453,18 @@ void AdjustSpeed()
 
     #endregion
 
+    #region Escape Control
+    void OnEscape() //we're going to map the escape key to the spacebar
+    {
+        if (acornPeriod == true)
+        {
+            dataHandler.recordEscape();
+            mainCamera.GetComponent<CameraGreyScale>().SetGreyscale(true);
+            HeadsUpDisplay.GetComponent<UIController>().SetInstructText("Return to safety!");
+            playerManager.canCollectAcorns = true;
+        }
+    }
+    #endregion
     #region Old Code
     /// OLD MOVEMENT CODE DO NOT DELETE UNTIL GAME IS LIVE
     // void move()

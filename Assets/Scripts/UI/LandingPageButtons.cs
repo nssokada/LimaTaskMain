@@ -15,31 +15,40 @@ public class LandingPageButtons : MonoBehaviour
 
     public InputField participantID;
 
-public void LoginButton()
-{
-    PlayerPrefs.SetString(GameStateKey, "Login");
-    string username = participantID.text?.Trim();
-
-    if (string.IsNullOrEmpty(username))
+    public void LoginButton()
     {
-        Debug.LogWarning("Login failed: Username is empty.");
-        return;
-    }    
-    if (username != null)
-    {
-        // Replace any non-alphanumeric character with an empty string
-        username = Regex.Replace(username, "[^a-zA-Z0-9]", "");
-    }
+        PlayerPrefs.SetString(GameStateKey, "Login");
+        string username = participantID.text?.Trim();
 
-    string existingUsername = PlayerPrefs.GetString(UserIdKey, null);
-
-    if (!string.IsNullOrEmpty(existingUsername))
-    {
-        if (existingUsername.Equals(username))
+        if (string.IsNullOrEmpty(username))
         {
-            LoadFromOldUser();
+            Debug.LogWarning("Login failed: Username is empty.");
+            return;
         }
-        else if(username.IndexOf("skipTutorial", StringComparison.OrdinalIgnoreCase) >= 0)
+        if (username != null)
+        {
+            // Replace any non-alphanumeric character with an empty string
+            username = Regex.Replace(username, "[^a-zA-Z0-9]", "");
+        }
+
+        string existingUsername = PlayerPrefs.GetString(UserIdKey, null);
+
+        if (!string.IsNullOrEmpty(existingUsername))
+        {
+            if (existingUsername.Equals(username))
+            {
+                LoadFromOldUser();
+            }
+            else if (username.IndexOf("skipTutorial", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                SkipTutorial(username);
+            }
+            else
+            {
+                GenerateNewUser(username);
+            }
+        }
+        else if (username.IndexOf("skipTutorial", StringComparison.OrdinalIgnoreCase) >= 0)
         {
             SkipTutorial(username);
         }
@@ -47,40 +56,40 @@ public void LoginButton()
         {
             GenerateNewUser(username);
         }
-    }
-    else if(username.IndexOf("skipTutorial", StringComparison.OrdinalIgnoreCase) >= 0)
-    {
-        SkipTutorial(username);
-    }
-    else
-    {
-        GenerateNewUser(username);
+
+        PlayerPrefs.Save();
     }
 
-    PlayerPrefs.Save();
-}
 
-
-public void ResetButton()
-{
-    PlayerPrefs.SetString(GameStateKey, "Login");
-    string username = participantID.text?.Trim();
-
-    if (string.IsNullOrEmpty(username))
+    public void ResetButton()
     {
-        Debug.LogWarning("Login failed: Username is empty.");
-        return;
-    } 
+        PlayerPrefs.SetString(GameStateKey, "Login");
+        string username = participantID.text?.Trim();
+
+        if (string.IsNullOrEmpty(username))
+        {
+            Debug.LogWarning("Login failed: Username is empty.");
+            return;
+        }
 
         string existingUsername = PlayerPrefs.GetString(UserIdKey, null);
 
-    if (!string.IsNullOrEmpty(existingUsername))
-    {
-        if (existingUsername.Equals(username))
+        if (!string.IsNullOrEmpty(existingUsername))
         {
-            LoadFromOldUser();
+            if (existingUsername.Equals(username))
+            {
+                LoadFromOldUser();
+            }
+            else if (username.IndexOf("skipTutorial", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                SkipTutorial(username);
+            }
+            else
+            {
+                GenerateReset1(username);
+            }
         }
-        else if(username.IndexOf("skipTutorial", StringComparison.OrdinalIgnoreCase) >= 0)
+        else if (username.IndexOf("skipTutorial", StringComparison.OrdinalIgnoreCase) >= 0)
         {
             SkipTutorial(username);
         }
@@ -88,27 +97,18 @@ public void ResetButton()
         {
             GenerateReset1(username);
         }
-    }
-    else if(username.IndexOf("skipTutorial", StringComparison.OrdinalIgnoreCase) >= 0)
-    {
-        SkipTutorial(username);
-    }
-    else
-    {
-        GenerateReset1(username);
-    }
 
-    PlayerPrefs.Save(); 
-}
-private void SkipTutorial(string username)
-{
-    Debug.Log("Tutorial skipped.");
-    PlayerPrefs.DeleteAll();
-    PlayerPrefs.SetString(UserIdKey, username);
-    Debug.Log($"New user generated: {username}");
-    SceneManager.LoadScene("EffortCalibrator");
-    // Implement logic to skip the tutorial and go to the main game
-}
+        PlayerPrefs.Save();
+    }
+    private void SkipTutorial(string username)
+    {
+        Debug.Log("Tutorial skipped.");
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.SetString(UserIdKey, username);
+        Debug.Log($"New user generated: {username}");
+        SceneManager.LoadScene("EffortCalibrator");
+        // Implement logic to skip the tutorial and go to the main game
+    }
 
 
     // Generate a new user and go to the tutorial for this user
@@ -191,5 +191,33 @@ private void SkipTutorial(string username)
             Debug.LogError($"Error: Checkpoint '{oldCheckPoint}' not found. Unable to load scene.");
         }
     }
+
+
+
+    #region  Adding Acorn Game Additions:
+
+    public void AcornLoginButton()
+    {
+        string username = participantID.text?.Trim();
+
+        if (string.IsNullOrEmpty(username))
+        {
+            Debug.LogWarning("Login failed: Username is empty.");
+            return;
+        }
+        if (username != null)
+        {
+            // Replace any non-alphanumeric character with an empty string
+            username = Regex.Replace(username, "[^a-zA-Z0-9]", "");
+        }
+
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.SetString(UserIdKey, username);
+        PlayerPrefs.Save();
+
+        SceneManager.LoadScene("HomeScreen");
+    }
+    
+    #endregion
 }
 

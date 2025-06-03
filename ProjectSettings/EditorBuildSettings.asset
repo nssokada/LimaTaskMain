@@ -8,35 +8,47 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/IntroScene.unity
     guid: 470851144ff72b04ca30b5c3563abd94
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/EffortCalibrator.unity
     guid: 526c6f04a4c97b34bb2c17a7208c3da0
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MainGame.unity
     guid: 12cdda01ebed5c642860bff320206f36
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Tutorial.unity
     guid: 017438218e6b74c74a5b86b010e9567e
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/AcornTutorial.unity
     guid: c3b096fb8cea749878505dd5ee7cc43b
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/AcornGame.unity
     guid: 889cd13a429c94c1ab6aea580cc18783
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SurveyScene.unity
     guid: c7bd60477da46d44685ae664463f8b9e
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/EndGame.unity
     guid: 826ee342e98974eaca6ca36bc0b3f1a2
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MoveTutorial.unity
     guid: fb5c5f06fbfa6472aa1b6e69c35874db
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MainTutorial.unity
     guid: 8ada687dac2654b36bf631022a52fb86
+  - enabled: 1
+    path: Assets/Scenes/AcornGame_Collab/AcornGame_IntroScene.unity
+    guid: 14df8caad4ce1a140a2013253ebe72a8
+  - enabled: 1
+    path: Assets/Scenes/AcornGame_Collab/AcornGame_GameScene.unity
+    guid: 4ef5fcaac13a0b74b838e87c514dafb0
+  - enabled: 1
+    path: Assets/Scenes/AcornGame_Collab/GameCompletionScreen.unity
+    guid: 5a90a723630604a489cd69695b9c5bc9
+  - enabled: 1
+    path: Assets/Scenes/AcornGame_Collab/HomeScreen.unity
+    guid: 83cf97f2a1735254cacba5673199d11f
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 78c1db26323dc0b45a0bf9cf26d1b580, type: 2}

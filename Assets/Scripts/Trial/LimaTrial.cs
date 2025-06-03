@@ -39,6 +39,7 @@ public class LimaTrial
     public CookieChoice trialCookie;
     public List<PositionHandler> acornsSpawned;
     public List<PositionHandler> acornsCollected;
+    public float escapeSignal;
 
     // Constructor with parameters
     public LimaTrial(float attackingProb, float attackingTime, int isAttackTrial, int cookie1PosX, int cookie1PosY, float cookie1Weight, int cookie1RewardValue,
@@ -79,6 +80,7 @@ public class LimaTrial
         trialCookie = new CookieChoice();
         acornsSpawned = new List<PositionHandler>();
         acornsCollected = new List<PositionHandler>();
+        escapeSignal = float.NaN;
     }
 
     // Default constructor
@@ -118,5 +120,7 @@ public class LimaTrial
         trialCookie = new CookieChoice();
         acornsSpawned = new List<PositionHandler>();
         acornsCollected = new List<PositionHandler>();
+        escapeSignal = float.NaN;
+
     }
 }
